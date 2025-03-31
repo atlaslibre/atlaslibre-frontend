@@ -1,0 +1,161 @@
+import {
+  SidebarLayer,
+  SidebarLayerGroup,
+} from "../components/sidebar/StaticLayersMenu";
+
+export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
+  {
+    type: "group",
+    title: "Basemap",
+    layers: [
+      {
+        type: "layer",
+        id: "landcover",
+        title: "Landcover",
+      },
+      {
+        type: "layer",
+        id: "waterway",
+        title: "Waterways",
+      },
+      {
+        type: "layer",
+        id: "satellite_basemap",
+        title: "Satellite basemap",
+      },
+      {
+        type: "layer",
+        id: "osm_basemap",
+        title: "OpenStreetMap basemap",
+      },
+    ],
+  },
+
+  {
+    type: "group",
+    title: "Boundaries",
+    layers: [
+      {
+        type: "layer",
+        id: "borders",
+        title: "Borders between countries, states, municipalities, etc.",
+      },
+      {
+        type: "layer",
+        id: "labels_regions",
+        title: "Names for continents, countries and states",
+      },
+      {
+        type: "layer",
+        id: "labels_water",
+        title: "Names for bodies of water",
+      },
+      {
+        type: "layer",
+        id: "boundary_country_outline_water",
+        title: "Extend country borders into water",
+      },
+    ],
+  },
+  {
+    type: "group",
+    title: "Urban",
+    layers: [
+      {
+        type: "layer",
+        id: "labels_cities",
+        title: "Larger cities",
+      },
+      {
+        type: "layer",
+        id: "labels_small_towns",
+        title: "Towns, suburbs and smaller settlements",
+      },
+      {
+        type: "layer",
+        id: "buildings",
+        title: "Buildings",
+      },
+      {
+        type: "layer",
+        id: "labels_poi",
+        title: "Local places",
+      },
+    ],
+  },
+
+  {
+    type: "group",
+    title: "Transportation",
+    layers: [
+      {
+        type: "layer",
+        id: "roads",
+        title: "Roads",
+      },
+      {
+        type: "layer",
+        id: "labels_roads",
+        title: "Street names",
+      },
+      {
+        type: "layer",
+        id: "rail",
+        title: "Rail",
+      },
+      {
+        type: "layer",
+        id: "airports",
+        title: "Airports",
+      },
+    ],
+  },
+  {
+    type: "group",
+    title: "Communication",
+    layers: [
+      {
+        type: "layer",
+        id: "infrastructure_terrestrial_communication",
+        title: "Terrestrial communication cables",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_underwater_communication",
+        title: "Underwater communication cables",
+      },
+    ],
+  },
+  {
+    type: "group",
+    title: "Power",
+    layers: [
+      {
+        type: "layer",
+        id: "infrastructure_terrestrial_powerline",
+        title: "Terrestrial power cables",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_underwater_powerline",
+        title: "Underwater power cables",
+      },
+    ],
+  },
+  {
+    type: "group",
+    title: "Oil and gas",
+    layers: [
+      {
+        type: "layer",
+        id: "infrastructure_terrestrial_pipeline",
+        title: "Terrestrial pipelines",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_underwater_pipeline",
+        title: "Underwater pipelines",
+      },
+    ],
+  },
+];
