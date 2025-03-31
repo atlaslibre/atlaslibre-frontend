@@ -14,11 +14,12 @@ import { setViewState } from "../features/map/mapSlice";
 import DeckGLLayers from "./layers/DeckGLLayers";
 import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import BaseLayers from "./layers/BaseLayers";
-import MainMapSources, { emptyMapStyle } from "./services/Sources";
+import MainMapSources from "./services/Sources";
 import LabelLayers from "./layers/LabelLayers";
 import BoundariesLayers from "./layers/BoundariesLayers";
 import UrbanLayers from "./layers/UrbanLayers";
 import TransportInfrastructure from "./layers/TransportInfrastructure";
+import { emptyMapStyle } from "../features/map/mapStyle";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ export default function MainMap() {
 
   const onMove = useCallback((evt: ViewStateChangeEvent) => {
     dispatch(setViewState(evt.viewState));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full h-screen">

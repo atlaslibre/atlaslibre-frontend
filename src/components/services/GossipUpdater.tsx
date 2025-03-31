@@ -11,7 +11,7 @@ const GossipUpdater = () => {
         dispatch(update(request));
       });
   } catch {
-
+    // if chrome top level variable is missing, the app might crash
   }
 
   return <></>;

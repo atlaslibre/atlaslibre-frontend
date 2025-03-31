@@ -22,7 +22,7 @@ export default function (actors: IActor[], model: string, sizeScale: number = 10
     },
     _lighting: "pbr",
     getOrientation: (d) => {
-      let yaw = (180 + (d.pos.course ?? 0)) % 360;
+      const yaw = (180 + (d.pos.course ?? 0)) % 360;
       return [0, -yaw, 90];
     },
     //onHover: (info: PickingInfo<IActor>) => console.log("Hovered:", info.object?.name),

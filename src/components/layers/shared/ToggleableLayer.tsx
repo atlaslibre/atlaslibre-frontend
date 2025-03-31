@@ -5,7 +5,7 @@ interface ToggleableLayerProps {
     group?: string;
 }
 
-export default function(props: (FillLayerSpecification | LineLayerSpecification | SymbolLayerSpecification | CircleLayerSpecification | RasterLayerSpecification) & ToggleableLayerProps ) {
+export default function ToggleableLayer(props: (FillLayerSpecification | LineLayerSpecification | SymbolLayerSpecification | CircleLayerSpecification | RasterLayerSpecification) & ToggleableLayerProps ) {
 
     const { layerVisiblity } = useAppSelector((state) => state.map);
 

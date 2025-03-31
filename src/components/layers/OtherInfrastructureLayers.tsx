@@ -1,6 +1,6 @@
 import ToggleableLayer from "./shared/ToggleableLayer";
 
-export default function () {
+export default function OtherInfrastructureLayers() {
   const underwaterDashes = [1, 1, 5, 1];
   const terrestrialDashes = [5, 1, 5, 1];
   return (

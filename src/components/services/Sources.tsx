@@ -1,14 +1,6 @@
-import { Source, StyleSpecification } from "react-map-gl/maplibre";
+import { Source } from "react-map-gl/maplibre";
 
-export const emptyMapStyle: StyleSpecification = {
-  version: 8,
-  sources: {},
-  layers: [],
-  glyphs: "https://tiles.basemaps.cartocdn.com/fonts/{fontstack}/{range}.pbf",
-  sprite: "https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/sprite"
-};
-
-export default function () {
+export default function Sources() {
   return (
     <>
       <Source

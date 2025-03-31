@@ -11,15 +11,15 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
   return null;
 }
 
-export default function () {
+export default function DeckGLLayers() {
   const actors = useAppSelector((state) => state.gossip.actors);
 
-  let aircraft = gossipLayer(actors.filter((s) => s.type == "aircraft"), "airplane.glb", 25, 0.1, 3);
+  const aircraft = gossipLayer(actors.filter((s) => s.type == "aircraft"), "airplane.glb", 25, 0.1, 3);
 
-  let navigation = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "navigation"), "buoy.glb");
-  let tankers = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "tanker"), "tanker.glb", 15, 0.1, 1);
-  let cargo = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "cargo"), "cargo.glb", 15, 0.1, 1);
-  let container = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "container"), "container.glb", 15, 0.1, 1);
+  const navigation = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "navigation"), "buoy.glb");
+  const tankers = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "tanker"), "tanker.glb", 15, 0.1, 1);
+  const cargo = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "cargo"), "cargo.glb", 15, 0.1, 1);
+  const container = gossipLayer(actors.filter((s) => s.type == "ship" && s.class == "container"), "container.glb", 15, 0.1, 1);
 
 /*
   other
@@ -31,7 +31,7 @@ export default function () {
   military
   */
 
-  let ships = gossipLayer(actors.filter((s) => s.type == "ship" && s.class != "navigation" && s.class != "tanker" && s.class != "cargo" && s.class != "container"), "duck.glb");
+  const ships = gossipLayer(actors.filter((s) => s.type == "ship" && s.class != "navigation" && s.class != "tanker" && s.class != "cargo" && s.class != "container"), "duck.glb");
 
   return <DeckGLOverlay layers={[aircraft, navigation, tankers, cargo, container, ships]} interleaved={true}/>;
 }

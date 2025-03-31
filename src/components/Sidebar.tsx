@@ -10,7 +10,7 @@ import { Button, ButtonGroup, ListSubheader, Stack } from "@mui/material";
 import DebuggingSwitch from "./sidebar/DebuggingSwitch";
 import StaticLayersMenu from "./sidebar/StaticLayersMenu";
 
-export default function () {
+export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
 

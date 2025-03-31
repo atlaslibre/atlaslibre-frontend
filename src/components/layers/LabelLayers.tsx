@@ -34,7 +34,7 @@ const mediumFonts = [
 
 const name = "{name_en}";
 
-export default function () {
+export default function LabelLayers() {
   return (
     <>
       {/* water layers */}

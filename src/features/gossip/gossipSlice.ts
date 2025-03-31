@@ -18,7 +18,7 @@ export const gossipSlice = createSlice({
       const newActors: IActor[] = [];
       const updatedActors: IActor[] = [];
       for (let i = 0; i < action.payload.length; i++) {
-        let parseResult = actorSchema.safeParse(action.payload[i]);
+        const parseResult = actorSchema.safeParse(action.payload[i]);
 
         if (!parseResult.success) {
           console.error(
@@ -29,9 +29,9 @@ export const gossipSlice = createSlice({
           continue;
         }
 
-        let actorGossipUpdate = parseResult.data;
+        const actorGossipUpdate = parseResult.data;
 
-        let knownActor = state.actors.find((a) => a.id == actorGossipUpdate.id);
+        const knownActor = state.actors.find((a) => a.id == actorGossipUpdate.id);
 
         if (knownActor) {
           updatedActors.push(actorGossipUpdate);

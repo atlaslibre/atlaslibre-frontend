@@ -2,7 +2,7 @@ import { Layer } from "react-map-gl/maplibre";
 
 import ToggleableLayer from "./shared/ToggleableLayer";
 
-export default function () {
+export default function BaseLayers() {
 
   return (
     <>
