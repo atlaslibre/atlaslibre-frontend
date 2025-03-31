@@ -54,7 +54,16 @@ export default function () {
         <StaticLayersMenu />
       </div>
 
-      <div className="p-4">
+      <div className="p-4 ">
+      {debuggingEnabled && (
+        <div className="text-xs text-neutral-300 pb-4 text-right w-full">
+         <code>
+         <strong>Version {__APP_VERSION__}</strong>
+         <br />{__COMMIT_DATE__.trim()} commit {__COMMIT_HASH__}
+        </code>
+        </div>
+      )}
+
         <Stack direction="row" spacing={1} justifyContent="flex-end">
           <DebuggingSwitch />
           <ProjectionSwitch />
