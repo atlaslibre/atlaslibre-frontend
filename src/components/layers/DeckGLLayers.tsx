@@ -62,7 +62,6 @@ export default function DeckGLLayers() {
   highspeed
   ferry
   recreational
-  military
   */
 
   const ships = gossipLayer(
