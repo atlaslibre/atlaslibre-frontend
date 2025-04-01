@@ -155,7 +155,31 @@ export default function OtherInfrastructureLayers() {
         filter={["!=", "location", "underwater"]}
       />
 
+      <ToggleableLayer
+        type="circle"
+        id="infrastructure_telecoms_mast"
+        source="openinframap_telecom"
+        source-layer="telecoms_mast"
+        paint={{
+          "circle-radius": {
+            type: "interval",
+            stops: [
+              [5, 2],
+              [15, 5],
+            ],
+          },
+          "circle-color": {
+            type: "interval",
+            stops: [
+              [5, "rgba(255, 128, 0, 0.5)"],
+              [10, "rgba(255, 128, 0, 0.75)"],
+            ],
+          },
+        }}
+      />
+
       {/* Power */}
+
 
       <ToggleableLayer
         type="line"
@@ -258,6 +282,96 @@ export default function OtherInfrastructureLayers() {
         }}
         filter={["!=", "location", "underwater"]}
       />
+
+      <ToggleableLayer
+        type="fill"
+        group="infrastructure_power_generation"
+        id="infrastructure_power_plant_generic"
+        source="openinframap_power"
+        source-layer="power_plant"
+        paint={{
+          "fill-color": {
+            type: "interval",
+            stops: [
+              [0, "rgba(255, 0, 0, 0.2)"],
+              [3, "rgba(255, 0, 0, 0.35)"],
+              [5, "rgba(255, 0, 0, 0.5)"],
+              [10, "rgba(255, 0, 0, 1)"],
+            ],
+          }
+        }}
+        filter={["all", ["!=", "source", "wind"], ["!=","source","solar"]]}
+      />
+
+      <ToggleableLayer
+        type="line"
+        group="infrastructure_power_generation"
+        id="infrastructure_windfarm"
+        source="openinframap_power"
+        source-layer="power_plant"
+        paint={{
+          "line-color": {
+            type: "interval",
+            stops: [
+              [0, "rgba(255, 0, 0, 0.2)"],
+              [3, "rgba(255, 0, 0, 0.35)"],
+              [5, "rgba(255, 0, 0, 0.5)"],
+              [10, "rgba(255, 0, 0, 1)"],
+            ],
+          }
+        }}
+        filter={["==", "source", "wind"]}
+      />
+
+      <ToggleableLayer
+        type="line"
+        group="infrastructure_power_generation"
+        id="infrastructure_solar_farm"
+        source="openinframap_power"
+        source-layer="power_plant"
+        paint={{
+          "line-color": {
+            type: "interval",
+            stops: [
+              [0, "rgba(255, 0, 0, 0.2)"],
+              [3, "rgba(255, 0, 0, 0.35)"],
+              [5, "rgba(255, 0, 0, 0.5)"],
+              [10, "rgba(255, 0, 0, 1)"],
+            ],
+          }
+        }}
+        filter={["==", "source", "solar"]}
+      />
+
+      <ToggleableLayer
+        type="symbol"
+        group="infrastructure_power_generation"
+        id="infrastructure_power_generation_label"
+        source-layer="power_plant"
+        source="openinframap_power"
+        minzoom={9}
+        layout={{
+          "symbol-placement": "point",
+          "text-field": "{name}",
+          "text-font": italicRegularFonts,
+          "symbol-spacing": 300,
+          "symbol-avoid-edges": false,
+          "text-size": {
+            type: "interval",
+            stops: [
+              [9, 9],
+              [10, 11],
+            ],
+          },
+        }}
+        paint={{
+          "text-color": "#eee",
+          "text-halo-color": "#181818",
+          "text-halo-width": 1,
+          "text-halo-blur": 1,
+        }}
+      />
+
 
       {/* Oil and gas */}
 

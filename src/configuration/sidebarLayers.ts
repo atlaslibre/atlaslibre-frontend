@@ -134,12 +134,22 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
         id: "infrastructure_underwater_communication",
         title: "Underwater communication cables",
       },
+      {
+        type: "layer",
+        id: "infrastructure_telecoms_mast",
+        title: "Communication masts",
+      },
     ],
   },
   {
     type: "group",
     title: "Power",
     layers: [
+      {
+        type: "layer",
+        id: "infrastructure_power_generation",
+        title: "Power generation",
+      },
       {
         type: "layer",
         id: "infrastructure_terrestrial_powerline",
