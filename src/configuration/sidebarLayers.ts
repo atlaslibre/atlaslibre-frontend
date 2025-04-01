@@ -55,6 +55,11 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
         id: "boundary_country_outline_water",
         title: "Extend country borders into water",
       },
+      {
+        type: "layer",
+        id: "timezones",
+        title: "Timezones",
+      },
     ],
   },
   {

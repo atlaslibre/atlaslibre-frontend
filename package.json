@@ -20,6 +20,7 @@
     "@types/chrome": "^0.0.312",
     "deck.gl": "^9.1.8",
     "maplibre-gl": "^5.2.0",
+    "maplibre-gl-vector-text-protocol": "^0.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-map-gl": "^8.0.1",

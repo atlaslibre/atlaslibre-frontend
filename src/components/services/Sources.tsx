@@ -34,6 +34,12 @@ export default function Sources() {
         url="https://openinframap.org/map.json"
         id="openinframap"
       />
+
+      <Source
+        type="geojson"
+        data="topojson://./datasets/timezones.topo.json"
+        id="timezones"
+      />
     </>
   );
 }
