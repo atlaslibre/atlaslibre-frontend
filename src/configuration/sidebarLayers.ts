@@ -181,6 +181,11 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
         id: "infrastructure_underwater_pipeline",
         title: "Underwater pipelines",
       },
+      {
+        type: "layer",
+        id: "infrastructure_petroleum_wells",
+        title: "Wells",
+      },
     ],
   },
   {

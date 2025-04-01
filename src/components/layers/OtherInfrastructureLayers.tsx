@@ -502,6 +502,30 @@ export default function OtherInfrastructureLayers() {
         filter={["!=", "location", "underwater"]}
       />
 
+<ToggleableLayer
+        type="circle"
+        group="infrastructure_petroleum_wells"
+        id="infrastructure_petroleum_well"
+        source="openinframap_petroleum"
+        source-layer="petroleum_well"
+        paint={{
+          "circle-radius": {
+            type: "interval",
+            stops: [
+              [5, 2],
+              [15, 5],
+            ],
+          },
+          "circle-color": {
+            type: "interval",
+            stops: [
+              [5, "rgba(255, 255, 0, 0.5)"],
+              [10, "rgba(255, 255, 0, 0.75)"],
+            ],
+          },
+        }}
+      />
+
       <ToggleableLayer
         type="fill"
         group="infrastructure_petroleum_site"
