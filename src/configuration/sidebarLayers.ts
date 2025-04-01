@@ -121,6 +121,11 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
     layers: [
       {
         type: "layer",
+        id: "infrastructure_telecoms_data_center",
+        title: "Datacenters and exchanges",
+      },
+      {
+        type: "layer",
         id: "infrastructure_terrestrial_communication",
         title: "Terrestrial communication cables",
       },

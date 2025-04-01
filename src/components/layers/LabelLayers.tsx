@@ -1,40 +1,12 @@
+import { italicMediumFonts, italicRegularFonts, mediumFonts, regularFonts } from "../../features/map/fonts";
 import ToggleableLayer from "./shared/ToggleableLayer";
 
-const italicRegularFonts = [
-  "Montserrat Regular Italic",
-  "Open Sans Italic",
-  "Noto Sans Regular",
-  "HanWangHeiLight Regular",
-  "NanumBarunGothic Regular",
-];
 
-const italicMediumFonts = [
-  "Montserrat Medium Italic",
-  "Open Sans Italic",
-  "Noto Sans Regular",
-  "HanWangHeiLight Regular",
-  "NanumBarunGothic Regular",
-];
-
-const regularFonts = [
-  "Montserrat Regular",
-  "Open Sans Regular",
-  "Noto Sans Regular",
-  "HanWangHeiLight Regular",
-  "NanumBarunGothic Regular",
-];
-
-const mediumFonts = [
-  "Montserrat Medium",
-  "Open Sans Bold",
-  "Noto Sans Regular",
-  "HanWangHeiLight Regular",
-  "NanumBarunGothic Regular",
-];
-
-const name = "{name_en}";
 
 export default function LabelLayers() {
+
+  const name = "{name_en}";
+
   return (
     <>
       {/* water layers */}
