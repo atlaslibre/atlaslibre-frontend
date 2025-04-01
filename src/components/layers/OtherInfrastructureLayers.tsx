@@ -180,7 +180,6 @@ export default function OtherInfrastructureLayers() {
 
       {/* Power */}
 
-
       <ToggleableLayer
         type="line"
         group="infrastructure_underwater_powerline"
@@ -298,9 +297,29 @@ export default function OtherInfrastructureLayers() {
               [5, "rgba(255, 0, 0, 0.5)"],
               [10, "rgba(255, 0, 0, 1)"],
             ],
-          }
+          },
         }}
-        filter={["all", ["!=", "source", "wind"], ["!=","source","solar"]]}
+        filter={["all", ["!=", "source", "wind"], ["!=", "source", "solar"]]}
+      />
+
+      <ToggleableLayer
+        type="line"
+        group="infrastructure_power_generation"
+        id="infrastructure_power_substation"
+        source="openinframap_power"
+        source-layer="power_substation"
+        paint={{
+          "line-color": {
+            type: "interval",
+            stops: [
+              [0, "rgba(255, 0, 0, 0.2)"],
+              [3, "rgba(255, 0, 0, 0.35)"],
+              [5, "rgba(255, 0, 0, 0.5)"],
+              [10, "rgba(255, 0, 0, 1)"],
+            ],
+          },
+          "line-dasharray": [1, 1]
+        }}
       />
 
       <ToggleableLayer
@@ -318,7 +337,7 @@ export default function OtherInfrastructureLayers() {
               [5, "rgba(255, 0, 0, 0.5)"],
               [10, "rgba(255, 0, 0, 1)"],
             ],
-          }
+          },
         }}
         filter={["==", "source", "wind"]}
       />
@@ -338,7 +357,7 @@ export default function OtherInfrastructureLayers() {
               [5, "rgba(255, 0, 0, 0.5)"],
               [10, "rgba(255, 0, 0, 1)"],
             ],
-          }
+          },
         }}
         filter={["==", "source", "solar"]}
       />
@@ -371,7 +390,6 @@ export default function OtherInfrastructureLayers() {
           "text-halo-blur": 1,
         }}
       />
-
 
       {/* Oil and gas */}
 
