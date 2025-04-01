@@ -1,6 +1,8 @@
 import { ExpressionSpecification } from "maplibre-gl";
 import { italicRegularFonts, mediumFonts } from "../../features/map/fonts";
 import ToggleableLayer from "./shared/ToggleableLayer";
+import { useAppSelector } from "../../app/hooks";
+import { useMediaQuery } from "@mui/material";
 
 export default function OtherInfrastructureLayers() {
   const underwaterDashes = [1, 1, 5, 1];
@@ -11,6 +13,17 @@ export default function OtherInfrastructureLayers() {
     ["get", "name"],
     ["get", "operator"],
   ];
+
+  const { colorMode } = useAppSelector((state) => state.flags);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const c = (light: any, dark: any) => {
+    if (colorMode == "system") return prefersDarkMode ? dark : light;
+    return colorMode == "light" ? light : dark;
+  };
+
+  const textColor = c("#181818","#eee");
+  const haloColor = c("#fff","#181818");
 
   return (
     <>
@@ -54,8 +67,8 @@ export default function OtherInfrastructureLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#151515",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
         }}
       />
@@ -103,8 +116,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -154,8 +167,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -230,8 +243,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -281,8 +294,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -391,8 +404,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -443,8 +456,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -494,15 +507,15 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
         filter={["!=", "location", "underwater"]}
       />
 
-<ToggleableLayer
+      <ToggleableLayer
         type="circle"
         group="infrastructure_petroleum_wells"
         id="infrastructure_petroleum_well"
@@ -567,8 +580,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -616,8 +629,8 @@ export default function OtherInfrastructureLayers() {
           },
         }}
         paint={{
-          "text-color": "#eee",
-          "text-halo-color": "#181818",
+          "text-color": textColor,
+          "text-halo-color": haloColor,
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}

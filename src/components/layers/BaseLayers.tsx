@@ -193,14 +193,14 @@ export default function BaseLayers() {
         type="raster"
         id="satellite_basemap"
         source="ersi"
-        paint={{ "raster-brightness-max": 0.8 }}
+        paint={{ "raster-brightness-max": c(1, 0.6), "raster-brightness-min": c(0.4, 0) }}
       ></ToggleableLayer>
 
       <ToggleableLayer
         type="raster"
         id="osm_basemap"
         source="osm"
-        paint={{ "raster-brightness-max": 0.8 }}
+        paint={{ "raster-brightness-max": c(1, 0.6), "raster-brightness-min": c(0.4, 0) }}
       ></ToggleableLayer>
 
       <ToggleableLayer

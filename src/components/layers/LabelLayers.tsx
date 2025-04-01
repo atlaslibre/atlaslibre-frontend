@@ -1,11 +1,23 @@
-import { italicMediumFonts, italicRegularFonts, mediumFonts, regularFonts } from "../../features/map/fonts";
+import { useMediaQuery } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
+import {
+  italicMediumFonts,
+  italicRegularFonts,
+  mediumFonts,
+  regularFonts,
+} from "../../features/map/fonts";
 import ToggleableLayer from "./shared/ToggleableLayer";
 
-
-
 export default function LabelLayers() {
-
   const name = "{name_en}";
+
+  const { colorMode } = useAppSelector((state) => state.flags);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const c = (light: any, dark: any) => {
+    if (colorMode == "system") return prefersDarkMode ? dark : light;
+    return colorMode == "light" ? light : dark;
+  };
 
   return (
     <>
@@ -45,8 +57,8 @@ export default function LabelLayers() {
           "text-keep-upright": true,
         }}
         paint={{
-          "text-color": "rgba(164, 164, 164, 1)",
-          "text-halo-color": "#181818",
+          "text-color": c("#7a96a0", "rgba(164, 164, 164, 1)"),
+          "text-halo-color": c("#f5f5f3", "#181818"),
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -88,8 +100,8 @@ export default function LabelLayers() {
           "text-letter-spacing": 0.1,
         }}
         paint={{
-          "text-color": "rgba(109, 123, 129, 1)",
-          "text-halo-color": "#181818",
+          "text-color": c("#abb6be", "rgba(109, 123, 129, 1)"),
+          "text-halo-color": c("#d4dadc", "#181818"),
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -123,8 +135,8 @@ export default function LabelLayers() {
           "text-letter-spacing": 0.1,
         }}
         paint={{
-          "text-color": "#3c3c3c",
-          "text-halo-color": "rgba(0,0,0,0.7)",
+          "text-color": c("#abb6be", "#3c3c3c"),
+          "text-halo-color": c("#d4dadc", "rgba(0,0,0,0.7)"),
           "text-halo-width": 1,
           "text-halo-blur": 0,
         }}
@@ -165,8 +177,8 @@ export default function LabelLayers() {
           "text-rotation-alignment": "auto",
         }}
         paint={{
-          "text-color": "rgba(155, 155, 155, 1)",
-          "text-halo-color": "#181818",
+          "text-color": c("#7a96a0", "rgba(155, 155, 155, 1)"),
+          "text-halo-color": c("#f5f5f3", "#181818"),
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -200,8 +212,8 @@ export default function LabelLayers() {
           "text-line-height": 1.2,
         }}
         paint={{
-          "text-color": "#444",
-          "text-halo-color": "#181818",
+          "text-color": c("#7a96a0", "#444"),
+          "text-halo-color": c("#f5f5f3", "#181818"),
           "text-halo-width": 1,
           "text-halo-blur": 1,
         }}
@@ -246,8 +258,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "rgba(182, 180, 180, 1)",
-          "text-halo-color": "rgba(53, 52, 52, 1)",
+          "text-color": c("#697b89", "rgba(182, 180, 180, 1)"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "rgba(53, 52, 52, 1)"),
           "text-halo-width": 1,
         }}
       />
@@ -287,8 +299,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "#666",
-          "text-halo-color": "#222",
+          "text-color": c("#697b89", "#666"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -328,8 +340,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "rgba(154, 153, 153, 1)",
-          "text-halo-color": "#222",
+          "text-color": c("#697b89", "rgba(154, 153, 153, 1)"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -363,8 +375,8 @@ export default function LabelLayers() {
           "text-transform": "none",
         }}
         paint={{
-          "text-color": "rgba(204, 208, 228, 1)",
-          "text-halo-color": "#222",
+          "text-color": c("#697b89", "rgba(204, 208, 228, 1)"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -400,8 +412,8 @@ export default function LabelLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "rgba(168, 176, 180, 1)",
-          "text-halo-color": "#222",
+          "text-color": c("#697b89", "rgba(168, 176, 180, 1)"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -439,8 +451,8 @@ export default function LabelLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "rgba(211, 228, 236, 1)",
-          "text-halo-color": "#222",
+          "text-color": c("#697b89", "rgba(211, 228, 236, 1)"),
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -467,10 +479,10 @@ export default function LabelLayers() {
           "text-offset": [0.2, 0.2],
         }}
         paint={{
-          "text-color": "rgba(174, 191, 207, 1)",
-          "icon-color": "rgba(94, 105, 106, 1)",
+          "text-color": c("#697b89", "rgba(174, 191, 207, 1)"),
+          "icon-color": c("#697b89", "rgba(94, 105, 106, 1)"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -497,10 +509,10 @@ export default function LabelLayers() {
           "text-offset": [0.2, 0.2],
         }}
         paint={{
-          "text-color": "rgba(233, 239, 246, 1)",
-          "icon-color": "#666",
+          "text-color": c("#697b89", "rgba(233, 239, 246, 1)"),
+          "icon-color": c("#697b89", "#666"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -527,10 +539,10 @@ export default function LabelLayers() {
           "text-offset": [0.2, 0.2],
         }}
         paint={{
-          "text-color": "rgba(175, 194, 217, 1)",
-          "icon-color": "rgba(131, 164, 189, 1)",
+          "text-color": c("#697b89", "rgba(175, 194, 217, 1)"),
+          "icon-color": c("#697b89", "rgba(131, 164, 189, 1)"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -557,10 +569,10 @@ export default function LabelLayers() {
           "text-offset": [0.2, 0.2],
         }}
         paint={{
-          "text-color": "rgba(175, 194, 217, 1)",
-          "icon-color": "rgba(131, 164, 189, 1)",
+          "text-color": c("#697b89", "rgba(175, 194, 217, 1)"),
+          "icon-color": c("#697b89", "rgba(131, 164, 189, 1)"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -591,10 +603,10 @@ export default function LabelLayers() {
           "text-offset": [0.2, 0.2],
         }}
         paint={{
-          "text-color": "rgba(160, 179, 191, 1)",
-          "icon-color": "rgba(113, 128, 147, 1)",
+          "text-color": c("#697b89", "rgba(160, 179, 191, 1)"),
+          "icon-color": c("#697b89", "rgba(113, 128, 147, 1)"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -622,10 +634,10 @@ export default function LabelLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "rgba(177, 201, 214, 1)",
-          "icon-color": "#666",
+          "text-color": c("#697b89", "rgba(177, 201, 214, 1)"),
+          "icon-color": c("#697b89", "#666"),
           "icon-translate-anchor": "map",
-          "text-halo-color": "#222",
+          "text-halo-color": c("rgba(255,255,255,0.5)", "#222"),
           "text-halo-width": 1,
         }}
       />
@@ -655,8 +667,8 @@ export default function LabelLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "rgba(203, 230, 230, 1)",
-          "text-halo-color": "#111",
+          "text-color": c("#97a4ae", "rgba(203, 230, 230, 1)"),
+          "text-halo-color": c("#fafaf8", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -694,12 +706,12 @@ export default function LabelLayers() {
           "text-color": {
             type: "interval",
             stops: [
-              [3, "rgba(157, 157, 157, 1)"],
-              [5, "rgba(114, 114, 114, 1)"],
-              [6, "rgba(112, 112, 112, 1)"],
+              [3, c("#8a99a4", "rgba(157, 157, 157, 1)")],
+              [5, c("#a1adb6", "rgba(114, 114, 114, 1)")],
+              [6, c("#b9c2c9", "rgba(112, 112, 112, 1)")],
             ],
           },
-          "text-halo-color": "#111",
+          "text-halo-color": c("#fafaf8", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -740,12 +752,12 @@ export default function LabelLayers() {
           "text-color": {
             type: "interval",
             stops: [
-              [3, "rgba(158, 182, 189, 1)"],
-              [5, "rgba(118, 126, 137, 1)"],
-              [6, "rgba(120, 141, 147, 1)"],
+              [3, c("#8a99a4", "rgba(158, 182, 189, 1)")],
+              [5, c("#a1adb6", "rgba(118, 126, 137, 1)")],
+              [6, c("#b9c2c9", "rgba(120, 141, 147, 1)")],
             ],
           },
-          "text-halo-color": "#111",
+          "text-halo-color": c("#fafaf8", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -770,8 +782,8 @@ export default function LabelLayers() {
           "text-keep-upright": false,
         }}
         paint={{
-          "text-color": "rgba(135, 164, 179, 1)",
-          "text-halo-color": "#111",
+          "text-color": c("#697b89", "rgba(135, 164, 179, 1)"),
+          "text-halo-color": c("#fafaf8", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -808,8 +820,8 @@ export default function LabelLayers() {
           "text-transform": "uppercase",
         }}
         paint={{
-          "text-color": "#515151",
-          "text-halo-color": "#151515",
+          "text-color": c("#7d9c83", "#515151"),
+          "text-halo-color": c("#f5f5f3", "#151515"),
           "text-halo-width": 1,
         }}
       />
@@ -836,8 +848,8 @@ export default function LabelLayers() {
           "text-justify": "center",
         }}
         paint={{
-          "text-color": "rgba(181, 180, 180, 1)",
-          "text-halo-color": "#111",
+          "text-color": c("#838383", "rgba(181, 180, 180, 1)"),
+          "text-halo-color": c("#fff", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -869,8 +881,8 @@ export default function LabelLayers() {
           "text-justify": "center",
         }}
         paint={{
-          "text-color": "rgba(146, 146, 146, 1)",
-          "text-halo-color": "rgba(34, 34, 34, 1)",
+          "text-color": c("#838383", "rgba(146, 146, 146, 1)"),
+          "text-halo-color": c("#fff", "rgba(34, 34, 34, 1)"),
           "text-halo-width": 1,
         }}
       />
@@ -917,8 +929,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "rgba(189, 189, 189, 1)",
-          "text-halo-color": "#111",
+          "text-color": c("#838383", "rgba(189, 189, 189, 1)"),
+          "text-halo-color": c("#fff", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -965,8 +977,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "#383838",
-          "text-halo-color": "#111",
+          "text-color": c("#838383", "#383838"),
+          "text-halo-color": c("#fff", "#111"),
           "text-halo-width": 1,
         }}
       />
@@ -1010,8 +1022,8 @@ export default function LabelLayers() {
           },
         }}
         paint={{
-          "text-color": "rgba(189, 189, 189, 0.2)",
-          "text-halo-color": "#111",
+          "text-color": c("rgba(0, 0, 0, 0.3)", "rgba(189, 189, 189, 0.2)"),
+          "text-halo-color": c("#fff", "#111"),
           "text-halo-width": 1,
         }}
       />

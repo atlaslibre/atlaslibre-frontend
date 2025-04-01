@@ -35,7 +35,7 @@ export default function TransportInfrastructure() {
               [16, 10],
             ],
           },
-          "line-color": c("e8e8e8", "#111"),
+          "line-color": c("#e8e8e8", "#111"),
         }}
       />
 
@@ -58,7 +58,7 @@ export default function TransportInfrastructure() {
               [16, 4],
             ],
           },
-          "line-color": c("e8e8e8", "#111"),
+          "line-color": c("#e8e8e8", "#111"),
         }}
       />
 
