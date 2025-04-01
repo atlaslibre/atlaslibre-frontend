@@ -31,8 +31,30 @@ export default function Sources() {
 
       <Source
         type="vector"
-        url="https://openinframap.org/map.json"
-        id="openinframap"
+        tiles={["https://openinframap.org/map/power/{z}/{x}/{y}.pbf"]}
+        id="openinframap_power"
+        attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://openinframap.org/copyright">Open Infrastructure Map</a>'
+      />
+
+      <Source
+        type="vector"
+        tiles={["https://openinframap.org/map/petroleum/{z}/{x}/{y}.pbf"]}
+        id="openinframap_petroleum"
+        attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://openinframap.org/copyright">Open Infrastructure Map</a>'
+      />
+
+      <Source
+        type="vector"
+        tiles={["https://openinframap.org/map/telecoms/{z}/{x}/{y}.pbf"]}
+        id="openinframap_telecom"
+        attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://openinframap.org/copyright">Open Infrastructure Map</a>'
+      />
+
+      <Source
+        type="vector"
+        tiles={["https://openinframap.org/map/water/{z}/{x}/{y}.pbf"]}
+        id="openinframap_water"
+        attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="https://openinframap.org/copyright">Open Infrastructure Map</a>'
       />
 
       <Source

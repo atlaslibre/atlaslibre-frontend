@@ -168,4 +168,30 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
       },
     ],
   },
+  {
+    type: "group",
+    title: "Water",
+    layers: [
+      {
+        type: "layer",
+        id: "infrastructure_water_reservoir",
+        title: "Reservoirs",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_water_production",
+        title: "Water production",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_water_pipeline",
+        title: "Pipelines",
+      },
+      {
+        type: "layer",
+        id: "infrastructure_sewage",
+        title: "Wastewater",
+      },
+    ],
+  },
 ];
