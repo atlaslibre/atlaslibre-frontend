@@ -1,9 +1,16 @@
+import { ExpressionSpecification } from "maplibre-gl";
 import { italicRegularFonts, mediumFonts } from "../../features/map/fonts";
 import ToggleableLayer from "./shared/ToggleableLayer";
 
 export default function OtherInfrastructureLayers() {
   const underwaterDashes = [1, 1, 5, 1];
   const terrestrialDashes = [5, 1, 5, 1];
+  const name: ExpressionSpecification = [
+    "coalesce",
+    ["get", "name_en"],
+    ["get", "name"],
+    ["get", "operator"],
+  ];
 
   return (
     <>
@@ -34,7 +41,7 @@ export default function OtherInfrastructureLayers() {
         source-layer="telecoms_data_center"
         minzoom={15}
         layout={{
-          "text-field": "{name} {operator}",
+          "text-field": name,
           "text-font": mediumFonts,
           "text-size": {
             type: "interval",
@@ -83,7 +90,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_telecom"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -134,7 +141,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_telecom"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -210,7 +217,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_power"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -261,7 +268,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_power"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -315,10 +322,10 @@ export default function OtherInfrastructureLayers() {
               [0, "rgba(255, 0, 0, 0.2)"],
               [3, "rgba(255, 0, 0, 0.35)"],
               [5, "rgba(255, 0, 0, 0.5)"],
-              [10, "rgba(255, 0, 0, 1)"],
+              [10, "rgba(255, 0, 0, 0.75)"],
             ],
           },
-          "line-dasharray": [1, 1]
+          "line-dasharray": [1, 1],
         }}
       />
 
@@ -371,7 +378,7 @@ export default function OtherInfrastructureLayers() {
         minzoom={9}
         layout={{
           "symbol-placement": "point",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -423,7 +430,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_petroleum"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -474,7 +481,7 @@ export default function OtherInfrastructureLayers() {
         source="openinframap_petroleum"
         layout={{
           "symbol-placement": "line",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "symbol-avoid-edges": false,
@@ -493,6 +500,54 @@ export default function OtherInfrastructureLayers() {
           "text-halo-blur": 1,
         }}
         filter={["!=", "location", "underwater"]}
+      />
+
+      <ToggleableLayer
+        type="fill"
+        group="infrastructure_petroleum_site"
+        id="infrastructure_petroleum_site_fill"
+        source="openinframap_petroleum"
+        source-layer="petroleum_site"
+        paint={{
+          "fill-color": {
+            type: "interval",
+            stops: [
+              [0, "rgba(255, 255, 0, 0.2)"],
+              [3, "rgba(255, 255, 0, 0.35)"],
+              [5, "rgba(255, 255, 0, 0.5)"],
+              [10, "rgba(255, 255, 0, 0.75)"],
+            ],
+          },
+        }}
+      />
+
+      <ToggleableLayer
+        type="symbol"
+        group="infrastructure_petroleum_site"
+        id="infrastructure_petroleum_site_label"
+        source-layer="petroleum_site"
+        source="openinframap_petroleum"
+        minzoom={9}
+        layout={{
+          "symbol-placement": "point",
+          "text-field": name,
+          "text-font": italicRegularFonts,
+          "symbol-spacing": 300,
+          "symbol-avoid-edges": false,
+          "text-size": {
+            type: "interval",
+            stops: [
+              [9, 9],
+              [10, 11],
+            ],
+          },
+        }}
+        paint={{
+          "text-color": "#eee",
+          "text-halo-color": "#181818",
+          "text-halo-width": 1,
+          "text-halo-blur": 1,
+        }}
       />
 
       {/* Water */}
@@ -525,7 +580,7 @@ export default function OtherInfrastructureLayers() {
         minzoom={10}
         layout={{
           "symbol-placement": "point",
-          "text-field": "{name}",
+          "text-field": name,
           "text-font": italicRegularFonts,
           "symbol-spacing": 300,
           "text-size": {

@@ -168,6 +168,11 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
     layers: [
       {
         type: "layer",
+        id: "infrastructure_petroleum_site",
+        title: "Processing facilities",
+      },
+      {
+        type: "layer",
         id: "infrastructure_terrestrial_pipeline",
         title: "Terrestrial pipelines",
       },
