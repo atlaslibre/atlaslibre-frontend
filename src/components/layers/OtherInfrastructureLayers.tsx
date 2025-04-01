@@ -423,10 +423,10 @@ export default function OtherInfrastructureLayers() {
           "line-color": {
             type: "interval",
             stops: [
-              [0, "rgba(255, 255, 0, 0.2)"],
-              [3, "rgba(255, 255, 0, 0.35)"],
-              [5, "rgba(255, 255, 0, 0.5)"],
-              [10, "rgba(255, 255, 0, 1)"],
+              [0, "rgba(235, 235, 0, 0.2)"],
+              [3, "rgba(235, 235, 0, 0.35)"],
+              [5, "rgba(235, 235, 0, 0.5)"],
+              [10, "rgba(235, 235, 0, 1)"],
             ],
           },
           "line-width": 1.5,
@@ -474,10 +474,10 @@ export default function OtherInfrastructureLayers() {
           "line-color": {
             type: "interval",
             stops: [
-              [0, "rgba(255, 255, 0, 0.2)"],
-              [3, "rgba(255, 255, 0, 0.35)"],
-              [5, "rgba(255, 255, 0, 0.5)"],
-              [10, "rgba(255, 255, 0, 1)"],
+              [0, "rgba(235, 235, 0, 0.2)"],
+              [3, "rgba(235, 235, 0, 0.35)"],
+              [5, "rgba(235, 235, 0, 0.5)"],
+              [10, "rgba(235, 235, 0, 1)"],
             ],
           },
           "line-width": 1.5,
@@ -532,8 +532,8 @@ export default function OtherInfrastructureLayers() {
           "circle-color": {
             type: "interval",
             stops: [
-              [5, "rgba(255, 255, 0, 0.5)"],
-              [10, "rgba(255, 255, 0, 0.75)"],
+              [5, "rgba(235, 235, 0, 0.5)"],
+              [10, "rgba(235, 235, 0, 0.75)"],
             ],
           },
         }}
@@ -549,10 +549,10 @@ export default function OtherInfrastructureLayers() {
           "fill-color": {
             type: "interval",
             stops: [
-              [0, "rgba(255, 255, 0, 0.2)"],
-              [3, "rgba(255, 255, 0, 0.35)"],
-              [5, "rgba(255, 255, 0, 0.5)"],
-              [10, "rgba(255, 255, 0, 0.75)"],
+              [0, "rgba(235, 235, 0, 0.2)"],
+              [3, "rgba(235, 235, 0, 0.35)"],
+              [5, "rgba(235, 235, 0, 0.5)"],
+              [10, "rgba(235, 235, 0, 0.75)"],
             ],
           },
         }}
