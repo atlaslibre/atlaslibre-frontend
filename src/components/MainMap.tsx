@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import maplibregl from "maplibre-gl";
+import maplibregl, { MapLibreEvent } from "maplibre-gl";
 
 import {
   Map,
@@ -25,9 +25,17 @@ import { emptyMapStyle } from "../features/map/mapStyle";
 
 import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
 
+import { Geoman } from "@geoman-io/maplibre-geoman-free";
+
+import "@geoman-io/maplibre-geoman-free/dist/maplibre-geoman.css";
+import { geomanOptions } from "../features/map/geoman";
+
 export default function MainMap() {
   const dispatch = useAppDispatch();
-  const { projection, viewState, unitSystem } = useAppSelector((state) => state.map);
+
+  const { projection, viewState, unitSystem } = useAppSelector(
+    (state) => state.map
+  );
 
   const onMove = useCallback(
     (evt: ViewStateChangeEvent) => {
@@ -35,6 +43,13 @@ export default function MainMap() {
     },
     [dispatch]
   );
+
+  function onLoad(evt: MapLibreEvent) {
+    const geoman = new Geoman(evt.target, geomanOptions);
+    geoman.setGlobalEventsListener((x: any) => {
+      console.log(x);
+    });
+  }
 
   // add support for TopoJSON etc
   useEffect(() => {
@@ -52,9 +67,10 @@ export default function MainMap() {
         touchZoomRotate={projection !== "globe"}
         keyboard={projection !== "globe"}
         mapStyle={emptyMapStyle}
+        onLoad={onLoad}
       >
         <NavigationControl position="top-left" />
-        <ScaleControl unit={unitSystem}/>
+        <ScaleControl unit={unitSystem} />
         <MainMapSources />
 
         <BaseLayers />
