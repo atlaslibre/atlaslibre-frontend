@@ -1,19 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
 
-interface LayerVisiblityMap
-{
-  [key: string]: boolean
+interface LayerVisiblityMap {
+  [key: string]: boolean;
 }
 
 interface MapState {
   projection: "mercator" | "globe";
-  layerVisiblity: LayerVisiblityMap ;
+  layerVisiblity: LayerVisiblityMap;
   viewState: ViewState;
+  unitSystem: "metric" | "nautical" | "imperial";
 }
 
 const initialState: MapState = {
   projection: "mercator",
+  unitSystem: "metric",
   layerVisiblity: {},
   viewState: {
     latitude: 56,
@@ -22,9 +23,9 @@ const initialState: MapState = {
     bearing: 0,
     pitch: 0,
     padding: {
-      right: 0
-    }
-  }
+      right: 0,
+    },
+  },
 };
 
 export const mapSlice = createSlice({
@@ -32,14 +33,13 @@ export const mapSlice = createSlice({
   initialState,
   reducers: {
     toggleProjection: (state) => {
-      if (state.projection === "globe"){
+      if (state.projection === "globe") {
         state.projection = "mercator";
-      }
-      else{
+      } else {
         state.projection = "globe";
         state.viewState.bearing = 0;
         state.viewState.pitch = 0;
-      } 
+      }
     },
     showLayer: (state, layer: PayloadAction<string>) => {
       state.layerVisiblity[layer.payload] = true;
@@ -49,10 +49,19 @@ export const mapSlice = createSlice({
     },
     setViewState: (state, payload: PayloadAction<ViewState>) => {
       state.viewState = payload.payload;
+    },
+    nextUnit: (state) => {
+      if(state.unitSystem == "metric")
+        state.unitSystem = "nautical";
+      else if(state.unitSystem == "nautical")
+        state.unitSystem = "imperial";
+      else
+        state.unitSystem = "metric";
     }
   },
 });
 
-export const { toggleProjection, showLayer, hideLayer, setViewState } = mapSlice.actions;
+export const { toggleProjection, showLayer, hideLayer, setViewState, nextUnit } =
+  mapSlice.actions;
 
 export default mapSlice.reducer;

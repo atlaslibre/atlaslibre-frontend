@@ -27,7 +27,7 @@ import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
-  const { projection, viewState } = useAppSelector((state) => state.map);
+  const { projection, viewState, unitSystem } = useAppSelector((state) => state.map);
 
   const onMove = useCallback(
     (evt: ViewStateChangeEvent) => {
@@ -54,7 +54,7 @@ export default function MainMap() {
         mapStyle={emptyMapStyle}
       >
         <NavigationControl position="top-left" />
-        <ScaleControl />
+        <ScaleControl unit={unitSystem}/>
         <MainMapSources />
 
         <BaseLayers />

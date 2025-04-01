@@ -9,6 +9,7 @@ import ProjectionSwitch from "./sidebar/ProjectionSwitch";
 import { Button, ButtonGroup, ListSubheader, Stack } from "@mui/material";
 import DebuggingSwitch from "./sidebar/DebuggingSwitch";
 import StaticLayersMenu from "./sidebar/StaticLayersMenu";
+import UnitsSwitch from "./sidebar/UnitsSwtich";
 
 export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
@@ -80,6 +81,7 @@ export default function Sidebar() {
 
         <Stack direction="row" spacing={1} justifyContent="flex-end">
           <DebuggingSwitch />
+          <UnitsSwitch />
           <ProjectionSwitch />
         </Stack>
       </div>

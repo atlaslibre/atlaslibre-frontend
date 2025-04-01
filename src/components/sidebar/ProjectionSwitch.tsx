@@ -14,6 +14,7 @@ export default function ProjectionSwitch() {
 
   return (
     <ToggleButton
+      title="Change projection"
       value="check"
       selected={projection === "globe"}
       onChange={handleChange}

@@ -13,6 +13,7 @@ export default function ProjectionSwitch() {
 
   return (
     <ToggleButton
+      title="Show debugging tools"
       value="check"
       selected={debuggingEnabled}
       onChange={handleChange}

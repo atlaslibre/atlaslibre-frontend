@@ -507,7 +507,7 @@ export default function OtherInfrastructureLayers() {
         group="infrastructure_petroleum_wells"
         id="infrastructure_petroleum_well"
         source="openinframap_petroleum"
-        source-layer="petroleum_well"
+        source-layer="petroleum_well  "
         paint={{
           "circle-radius": {
             type: "interval",
