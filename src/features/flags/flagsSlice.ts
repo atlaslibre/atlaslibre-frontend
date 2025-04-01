@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface FeatureFlagState {
   debuggingEnabled: boolean;
+  colorMode: "light" | "dark" | "system";
 }
 
 const initialState: FeatureFlagState = {
-  debuggingEnabled: false
+  debuggingEnabled: false,
+  colorMode: "system",
 };
 
 export const flagsSlice = createSlice({
@@ -16,9 +18,14 @@ export const flagsSlice = createSlice({
       state.debuggingEnabled = !state.debuggingEnabled;
     },
 
+    toggleColorMode: (state) => {
+      if (state.colorMode === "light") state.colorMode = "dark";
+      else if (state.colorMode === "dark") state.colorMode = "system";
+      else state.colorMode = "light";
+    },
   },
 });
 
-export const { toggleDebugging } = flagsSlice.actions;
+export const { toggleDebugging, toggleColorMode } = flagsSlice.actions;
 
 export default flagsSlice.reducer;
