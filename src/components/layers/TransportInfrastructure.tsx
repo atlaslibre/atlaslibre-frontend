@@ -1,6 +1,16 @@
+import { useMediaQuery } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
 import ToggleableLayer from "./shared/ToggleableLayer";
 
 export default function TransportInfrastructure() {
+  const { colorMode } = useAppSelector((state) => state.flags);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const c = (light: any, dark: any) => {
+    if (colorMode == "system") return prefersDarkMode ? dark : light;
+    return colorMode == "light" ? light : dark;
+  };
+
   return (
     <>
       {/* airports */}
@@ -25,7 +35,7 @@ export default function TransportInfrastructure() {
               [16, 10],
             ],
           },
-          "line-color": "#111",
+          "line-color": c("e8e8e8", "#111"),
         }}
       />
 
@@ -48,7 +58,7 @@ export default function TransportInfrastructure() {
               [16, 4],
             ],
           },
-          "line-color": "#111",
+          "line-color": c("e8e8e8", "#111"),
         }}
       />
 
@@ -78,7 +88,7 @@ export default function TransportInfrastructure() {
               [18, 8],
             ],
           },
-          "line-color": "#1a1a1a",
+          "line-color":  c("#ddd", "#232323"),
         }}
       />
 
@@ -105,7 +115,7 @@ export default function TransportInfrastructure() {
               [18, 14],
             ],
           },
-          "line-color": "#1a1a1a",
+          "line-color":  c("#ddd", "#232323"),
         }}
       />
 
@@ -137,7 +147,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "#1a1a1a",
+          "line-color":  c("#ddd", "#232323"),
         }}
       />
 
@@ -179,7 +189,7 @@ export default function TransportInfrastructure() {
               [7, 1],
             ],
           },
-          "line-color": "#1a1a1a",
+          "line-color":  c("#ddd", "#232323"),
         }}
       />
 
@@ -224,7 +234,7 @@ export default function TransportInfrastructure() {
               [7, 1],
             ],
           },
-          "line-color": "#232323",
+          "line-color": c("#ddd", "#232323"),
         }}
       />
 
@@ -267,7 +277,7 @@ export default function TransportInfrastructure() {
               [7, 1],
             ],
           },
-          "line-color": "#232323",
+          "line-color": c("#ddd", "#232323"),
         }}
       />
 
@@ -297,7 +307,7 @@ export default function TransportInfrastructure() {
               [18, [3, 3]],
             ],
           },
-          "line-color": "#262626",
+          "line-color": c("#d5d5d5", "#262626"),
         }}
       />
 
@@ -325,7 +335,7 @@ export default function TransportInfrastructure() {
               [18, 6],
             ],
           },
-          "line-color": "#161616",
+          "line-color": c("#eee", "#161616"),
         }}
       />
 
@@ -349,7 +359,7 @@ export default function TransportInfrastructure() {
               [18, 12],
             ],
           },
-          "line-color": "rgba(22, 22, 22, 1)",
+          "line-color": c("rgba(238, 238, 238, 1)", "rgba(22, 22, 22, 1)"),
         }}
       />
 
@@ -380,7 +390,7 @@ export default function TransportInfrastructure() {
               [18, 14],
             ],
           },
-          "line-color": "#161616",
+          "line-color": c("#eee", "#161616"),
         }}
       />
 
@@ -412,7 +422,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -444,7 +454,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "#161616",
+          "line-color": c("#eee", c("#eee", "#161616")),
         }}
       />
 
@@ -477,7 +487,7 @@ export default function TransportInfrastructure() {
               [18, 20],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -503,7 +513,7 @@ export default function TransportInfrastructure() {
             ],
           },
           "line-opacity": 0.5,
-          "line-color": "#1a1a1a",
+          "line-color":  c("#ddd", "#232323"),
         }}
       />
 
@@ -535,7 +545,7 @@ export default function TransportInfrastructure() {
             ],
           },
           "line-opacity": 0.5,
-          "line-color": "#111",
+          "line-color": c("#fff", "#111"),
         }}
       />
 
@@ -560,7 +570,7 @@ export default function TransportInfrastructure() {
               [18, 8],
             ],
           },
-          "line-color": "#1c1c1c",
+          "line-color": c("#ddd", "#1c1c1c"),
         }}
       />
 
@@ -590,9 +600,9 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [13, "rgba(65, 71, 88, 1)"],
-              [15.7, "rgba(65, 71, 88, 1)"],
-              [16, "rgba(65, 71, 88, 1)"],
+              [13, c("#fff", "rgba(65, 71, 88, 1)")],
+              [15.7, c("#fff", "rgba(65, 71, 88, 1)")],
+              [16, c("#fff", "rgba(65, 71, 88, 1)")],
             ],
           },
         }}
@@ -627,7 +637,7 @@ export default function TransportInfrastructure() {
               [7, 1],
             ],
           },
-          "line-color": "#232323",
+          "line-color": c("#ddd", "#232323"),
         }}
       />
 
@@ -656,8 +666,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [12, "#1a1a1a"],
-              [14, "#232323"],
+              [12,  c("#ddd", "#232323")],
+              [14, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -688,8 +698,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [12, "#1a1a1a"],
-              [14, "#232323"],
+              [12,  c("#ddd", "#232323")],
+              [14, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -726,9 +736,9 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [11, "rgba(65, 71, 88, 1)"],
-              [12.99, "rgba(65, 71, 88, 1)"],
-              [13, "rgba(65, 71, 88, 1)"],
+              [11, c("#fff", "rgba(65, 71, 88, 1)")],
+              [12.99, c("#fff", "rgba(65, 71, 88, 1)")],
+              [13, c("#fff", "rgba(65, 71, 88, 1)")],
             ],
           },
         }}
@@ -768,8 +778,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [7, "#1a1a1a"],
-              [12, "#232323"],
+              [7,  c("#ddd", "#232323")],
+              [12, c("#ddd", "#232323")],
             ],
           },
           "line-opacity": {
@@ -816,8 +826,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [5, "#1a1a1a"],
-              [12, "#232323"],
+              [5,  c("#ddd", "#232323")],
+              [12, c("#ddd", "#232323")],
             ],
           },
           "line-opacity": {
@@ -865,8 +875,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [5, "#1a1a1a"],
-              [12, "#232323"],
+              [5,  c("#ddd", "#232323")],
+              [12, c("#ddd", "#232323")],
             ],
           },
           "line-opacity": {
@@ -898,7 +908,7 @@ export default function TransportInfrastructure() {
               [18, 3],
             ],
           },
-          "line-color": "#262626",
+          "line-color": c("#d5d5d5", "#262626"),
           "line-dasharray": {
             type: "interval",
             stops: [
@@ -929,7 +939,7 @@ export default function TransportInfrastructure() {
               [18, 6],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -953,7 +963,7 @@ export default function TransportInfrastructure() {
               [18, 12],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -979,7 +989,7 @@ export default function TransportInfrastructure() {
               [17, 8],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1005,7 +1015,7 @@ export default function TransportInfrastructure() {
               [17, 8],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1031,7 +1041,7 @@ export default function TransportInfrastructure() {
               [17, 8],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -1062,7 +1072,7 @@ export default function TransportInfrastructure() {
               [18, 14],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -1094,7 +1104,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "rgba(83, 86, 102, 1)",
+          "line-color": c("#fff","rgba(83, 86, 102, 1)"),
         }}
       />
 
@@ -1126,7 +1136,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -1136,7 +1146,7 @@ export default function TransportInfrastructure() {
         id="road_mot_fill_noramp"
         source="carto"
         source-layer="transportation"
-        minzoom={10}
+        minzoom={11}
         maxzoom={24}
         filter={[
           "all",
@@ -1159,7 +1169,7 @@ export default function TransportInfrastructure() {
               [18, 20],
             ],
           },
-          "line-color": "rgba(73, 73, 73, 1)",
+          "line-color": c("#fff", "rgba(73, 73, 73, 1)"),
         }}
       />
 
@@ -1187,8 +1197,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [5, "#222"],
-              [12, "#1a1a1a"],
+              [5,  c("#ccc", "#222")],
+              [12,  c("#ccc", "#232323")],
             ],
           },
         }}
@@ -1211,7 +1221,7 @@ export default function TransportInfrastructure() {
               [20, 5],
             ],
           },
-          "line-color": "#111",
+          "line-color": c("#fff","#111"),
           "line-dasharray": {
             type: "interval",
             stops: [
@@ -1247,7 +1257,7 @@ export default function TransportInfrastructure() {
               [18, 8],
             ],
           },
-          "line-color": "#1c1c1c",
+          "line-color": c("#ddd", "#1c1c1c"),
         }}
       />
 
@@ -1275,9 +1285,9 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [13, "#161616"],
-              [15.7, "#161616"],
-              [16, "#1c1c1c"],
+              [13, c("#eee", "#161616")],
+              [15.7, c("#eee", "#161616")],
+              [16, c("#ddd", "#1c1c1c")],
             ],
           },
         }}
@@ -1312,9 +1322,9 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [11, "#1a1a1a"],
-              [12.99, "#1a1a1a"],
-              [13, "#232323"],
+              [11,  c("#ddd", "#232323")],
+              [12.99,  c("#ddd", "#232323")],
+              [13, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -1360,8 +1370,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [8, "#1a1a1a"],
-              [12, "#232323"],
+              [8,  c("#ddd", "#232323")],
+              [12, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -1407,8 +1417,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [5, "#1a1a1a"],
-              [12, "#232323"],
+              [5,  c("#ddd", "#232323")],
+              [12, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -1455,8 +1465,8 @@ export default function TransportInfrastructure() {
           "line-color": {
             type: "interval",
             stops: [
-              [5, "#1a1a1a"],
-              [10, "#232323"],
+              [5,  c("#ddd", "#232323")],
+              [10, c("#ddd", "#232323")],
             ],
           },
         }}
@@ -1480,7 +1490,7 @@ export default function TransportInfrastructure() {
               [18, 3],
             ],
           },
-          "line-color": "#262626",
+          "line-color": c("#d5d5d5", "#262626"),
           "line-dasharray": {
             type: "interval",
             stops: [
@@ -1514,7 +1524,7 @@ export default function TransportInfrastructure() {
               [18, 6],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1537,7 +1547,7 @@ export default function TransportInfrastructure() {
               [18, 12],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1567,7 +1577,7 @@ export default function TransportInfrastructure() {
               [18, 14],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1598,7 +1608,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "#0b0b0b",
+          "line-color": c("#fdfdfd", "#0b0b0b"),
         }}
       />
 
@@ -1629,7 +1639,7 @@ export default function TransportInfrastructure() {
               [18, 16],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
 
@@ -1661,7 +1671,7 @@ export default function TransportInfrastructure() {
               [18, 20],
             ],
           },
-          "line-color": "rgba(65, 71, 88, 1)",
+          "line-color": c("#fff", "rgba(65, 71, 88, 1)"),
         }}
       />
     </>

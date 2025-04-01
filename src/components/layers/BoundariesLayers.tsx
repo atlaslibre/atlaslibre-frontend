@@ -6,7 +6,7 @@ export default function BoundariesLayers() {
   const { colorMode } = useAppSelector((state) => state.flags);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const c = (light: string, dark: string): string => {
+  const c = (light: any, dark: any) => {
     if (colorMode == "system") return prefersDarkMode ? dark : light;
     return colorMode == "light" ? light : dark;
   };
