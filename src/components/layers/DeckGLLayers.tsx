@@ -4,6 +4,9 @@ import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 
 import gossipLayer from "./3d/gossipLayer";
 import { useAppSelector } from "../../app/hooks";
+import { LightingEffect } from "deck.gl";
+import { _CameraLight, AmbientLight } from "@deck.gl/core";
+import { useMediaQuery } from "@mui/material";
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
   const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
@@ -13,6 +16,26 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 
 export default function DeckGLLayers() {
   const actors = useAppSelector((state) => state.gossip.actors);
+  const { colorMode } = useAppSelector((state) => state.flags);
+
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const c = (light: any, dark: any) => {
+    if (colorMode == "system") return prefersDarkMode ? dark : light;
+    return colorMode == "light" ? light : dark;
+  };
+
+  const ambientLight = new AmbientLight({
+    color: [255, 255, 255],
+    intensity: c(5, 1),
+  });
+
+  const cameraLight = new _CameraLight({
+    color: [255, 255, 255],
+    intensity: c(2, 1),
+  });
+
+  const lightingEffect = new LightingEffect({ ambientLight, cameraLight });
 
   const aircraft = gossipLayer(
     actors.filter((s) => s.type == "aircraft"),
@@ -89,6 +112,7 @@ export default function DeckGLLayers() {
         ships,
       ]}
       interleaved={true}
+      effects={[lightingEffect]}
     />
   );
 }
