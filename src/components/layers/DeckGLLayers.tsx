@@ -3,10 +3,12 @@ import { useControl } from "react-map-gl/maplibre";
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 
 import gossipLayer from "./3d/gossipLayer";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { LightingEffect } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { useMediaQuery } from "@mui/material";
+import { IActor } from "../../interfaces/schemas";
+import { setTooltip, clearTooltip } from "../../features/map/tooltipSlice";
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
   const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
@@ -17,12 +19,23 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 export default function DeckGLLayers() {
   const actors = useAppSelector((state) => state.gossip.actors);
   const { colorMode } = useAppSelector((state) => state.flags);
+  const dispatch = useAppDispatch();
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  function c<T>(light: T, dark: T) : T {
+  function c<T>(light: T, dark: T): T {
     if (colorMode == "system") return prefersDarkMode ? dark : light;
     return colorMode == "light" ? light : dark;
+  }
+
+  const onHover = (actor?: IActor) => {
+    if (actor) dispatch(setTooltip({ type: "actor", actor: actor }));
+    else dispatch(clearTooltip("actor"));
+  };
+
+  const onClick = (actor?: IActor) => {
+    if (actor) dispatch(setTooltip({ type: "activeActor", actor: actor }));
+    else dispatch(clearTooltip("activeActor"));
   };
 
   const ambientLight = new AmbientLight({
@@ -38,41 +51,53 @@ export default function DeckGLLayers() {
   const lightingEffect = new LightingEffect({ ambientLight, cameraLight });
 
   const aircraft = gossipLayer(
-    actors.filter((s) => s.type == "aircraft"),
+    actors.filter((s: IActor) => s.type == "aircraft"),
     "airplane.glb",
+    onHover,
+    onClick,
     25,
     0.1,
     3
   );
 
   const navigation = gossipLayer(
-    actors.filter((s) => s.type == "ship" && s.class == "navigation"),
-    "buoy.glb"
+    actors.filter((s: IActor) => s.type == "ship" && s.class == "navigation"),
+    "buoy.glb",
+    onHover,
+    onClick
   );
   const tankers = gossipLayer(
-    actors.filter((s) => s.type == "ship" && s.class == "tanker"),
+    actors.filter((s: IActor) => s.type == "ship" && s.class == "tanker"),
     "tanker.glb",
+    onHover,
+    onClick,
     15,
     0.1,
     1
   );
   const cargo = gossipLayer(
-    actors.filter((s) => s.type == "ship" && s.class == "cargo"),
+    actors.filter((s: IActor) => s.type == "ship" && s.class == "cargo"),
     "cargo.glb",
+    onHover,
+    onClick,
     15,
     0.1,
     1
   );
   const container = gossipLayer(
-    actors.filter((s) => s.type == "ship" && s.class == "container"),
+    actors.filter((s: IActor) => s.type == "ship" && s.class == "container"),
     "container.glb",
+    onHover,
+    onClick,
     15,
     0.1,
     1
   );
   const military = gossipLayer(
-    actors.filter((s) => s.type == "ship" && s.class == "military"),
+    actors.filter((s: IActor) => s.type == "ship" && s.class == "military"),
     "military.glb",
+    onHover,
+    onClick,
     15,
     0.1,
     1
@@ -89,7 +114,7 @@ export default function DeckGLLayers() {
 
   const ships = gossipLayer(
     actors.filter(
-      (s) =>
+      (s: IActor) =>
         s.type == "ship" &&
         s.class != "navigation" &&
         s.class != "tanker" &&
@@ -97,7 +122,9 @@ export default function DeckGLLayers() {
         s.class != "container" &&
         s.class != "military"
     ),
-    "duck.glb"
+    "duck.glb",
+    onHover,
+    onClick
   );
 
   return (
@@ -111,8 +138,10 @@ export default function DeckGLLayers() {
         military,
         ships,
       ]}
+      pickingRadius={10}
       interleaved={true}
       effects={[lightingEffect]}
+      getCursor={(state) => state.isHovering ?  "crosshair" : "grab"}
     />
   );
 }

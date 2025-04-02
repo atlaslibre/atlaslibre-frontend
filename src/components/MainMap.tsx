@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 
-import maplibregl, { MapLibreEvent } from "maplibre-gl";
+import maplibregl, { MapLayerMouseEvent, MapLibreEvent } from "maplibre-gl";
 
 import {
   Map,
@@ -29,6 +29,8 @@ import {
 } from "@geoman-io/maplibre-geoman-free";
 import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
 import { saveActiveCustomMap } from "../features/map/customMapSlice";
+import TooltipControl from "./controls/TooltipControl";
+import { setLatLon } from "../features/map/tooltipSlice";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -62,6 +64,14 @@ export default function MainMap() {
     );
   }
 
+  function onClick(evt: MapLayerMouseEvent) {
+    console.log("MainMap onclick", evt);
+  }
+
+  function onMouseMove(evt: MapLayerMouseEvent) {
+    dispatch(setLatLon({ lat: evt.lngLat.lat, lon: evt.lngLat.lng }));
+  }
+
   // add support for TopoJSON etc
   useEffect(() => {
     addVectorTextProtocols(maplibregl);
@@ -79,9 +89,12 @@ export default function MainMap() {
         keyboard={projection !== "globe"}
         mapStyle={emptyMapStyle}
         onLoad={onLoad}
+        onClick={onClick}
+        onMouseMove={onMouseMove}
         attributionControl={{ compact: false }}
       >
         <NavigationControl position="top-left" />
+        <TooltipControl position="bottom-right" />
         <ScaleControl unit={unitSystem} />
         <MainMapSources />
 

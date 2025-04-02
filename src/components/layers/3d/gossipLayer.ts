@@ -6,6 +6,8 @@ import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 export default function (
   actors: IActor[],
   model: string,
+  onHover: (actor?: IActor) => void,
+  onClick: (actor?: IActor) => void,
   sizeScale: number = 100,
   sizeMinPixels = 1.75,
   sizeMaxPixels = 10
@@ -18,6 +20,7 @@ export default function (
     scenegraph: "/models/" + model,
     sizeMinPixels: sizeMinPixels,
     sizeMaxPixels: sizeMaxPixels,
+    autoHighlight: true,
     getPosition: (d) => [d.pos.lon ?? 0, d.pos.lat ?? 0, 0],
     _animations: {
       "*": { speed: 1 },
@@ -27,9 +30,12 @@ export default function (
       const yaw = (180 + (d.pos.course ?? 0)) % 360;
       return [0, -yaw, 90];
     },
-    //onHover: (info: PickingInfo<IActor>) => console.log("Hovered:", info.object?.name),
-    // Callback when the pointer clicks on an object
-    onClick: (info: PickingInfo<IActor>) => console.log(info.object?.name),
+    onHover: (info: PickingInfo<IActor>) => {
+      onHover(info.object);
+    },
+    onClick: (info: PickingInfo<IActor>) => {
+      onClick(info.object);
+    },
   });
 
   return layer;
