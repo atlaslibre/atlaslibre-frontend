@@ -1,7 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 
-import "maplibre-gl/dist/maplibre-gl.css";
-
 import maplibregl, { MapLibreEvent } from "maplibre-gl";
 
 import {
@@ -26,8 +24,6 @@ import { emptyMapStyle } from "../features/map/mapStyle";
 import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
 
 import { Geoman } from "@geoman-io/maplibre-geoman-free";
-
-import "@geoman-io/maplibre-geoman-free/dist/maplibre-geoman.css";
 import { geomanOptions } from "../features/map/geoman";
 
 export default function MainMap() {
@@ -47,7 +43,7 @@ export default function MainMap() {
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
     geoman.setGlobalEventsListener((x: any) => {
-      console.log(x);
+      //console.log(x);
     });
   }
 
@@ -68,6 +64,7 @@ export default function MainMap() {
         keyboard={projection !== "globe"}
         mapStyle={emptyMapStyle}
         onLoad={onLoad}
+        attributionControl={{ compact: false }}
       >
         <NavigationControl position="top-left" />
         <ScaleControl unit={unitSystem} />
