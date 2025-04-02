@@ -26,35 +26,31 @@ class Tooltip implements IControl {
 }
 
 export default function TooltipControl(props: { position: ControlPosition }) {
-  const { actor, activeActor, lat, lon } = useAppSelector(
-    (state) => state.tooltip
-  );
-
-  const ref = createRef<HTMLDivElement>();
-
   const control = useControl(() => new Tooltip(), props);
-
-  const content = (
-    <div ref={ref} className="bg-gray-200 p-2 cursor-default">
-      {actor && (
-        <>
-          <p>
-            {actor.cc && <ReactCountryFlag countryCode={actor.cc} svg />}{" "}
-            {actor.type} {actor.class}
-          </p>
-          <p className="font-medium">{actor.name}</p>
-        </>
-      )}
-
-      <p>
-        {lat.toFixed(6)} {lon.toFixed(6)}
-      </p>
-    </div>
+  const ref = createRef<HTMLDivElement>();
+  const { actor, lat, lon } = useAppSelector(
+    (state) => state.tooltip
   );
 
   useEffect(() => {
     if (ref.current) control.attach(ref.current);
-  }, [actor, activeActor]);
+  }, [ref, control]);
 
-  return content;
+  return (
+      <div ref={ref} className="bg-gray-200 p-2 cursor-default">
+          {actor && (
+              <>
+                  <p>
+                      {actor.cc && <ReactCountryFlag countryCode={actor.cc} svg />}{" "}
+                      {actor.type} {actor.class}
+                  </p>
+                  <p className="font-medium">{actor.name}</p>
+              </>
+          )}
+
+          <p>
+              {lat.toFixed(6)} {lon.toFixed(6)}
+          </p>
+      </div>
+  );
 }

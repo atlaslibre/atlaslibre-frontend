@@ -139,9 +139,8 @@ export default function DeckGLLayers() {
         ships,
       ]}
       pickingRadius={10}
-      interleaved={true}
+      interleaved={false}
       effects={[lightingEffect]}
-      getCursor={(state) => state.isHovering ?  "crosshair" : "grab"}
     />
   );
 }

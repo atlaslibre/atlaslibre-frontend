@@ -92,6 +92,7 @@ export default function MainMap() {
         onClick={onClick}
         onMouseMove={onMouseMove}
         attributionControl={{ compact: false }}
+        cursor="crosshair"
       >
         <NavigationControl position="top-left" />
         <TooltipControl position="bottom-right" />
