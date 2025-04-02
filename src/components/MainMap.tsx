@@ -23,8 +23,12 @@ import { emptyMapStyle } from "../features/map/mapStyle";
 
 import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
 
-import { Geoman } from "@geoman-io/maplibre-geoman-free";
-import { geomanOptions } from "../features/map/geoman";
+import {
+  Geoman,
+  GlobalEventsListenerParameters,
+} from "@geoman-io/maplibre-geoman-free";
+import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
+import { saveActiveCustomMap } from "../features/map/customMapSlice";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -32,6 +36,8 @@ export default function MainMap() {
   const { projection, viewState, unitSystem } = useAppSelector(
     (state) => state.map
   );
+
+  const { activeCustomMap } = useAppSelector((state) => state.customMap);
 
   const onMove = useCallback(
     (evt: ViewStateChangeEvent) => {
@@ -42,9 +48,18 @@ export default function MainMap() {
 
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
-    geoman.setGlobalEventsListener((x: any) => {
-      console.log(x);
-    });
+    geoman.setGlobalEventsListener(
+      ({ type, name }: GlobalEventsListenerParameters) => {
+        if (type == "converted") {
+          // import and export based on events fired
+          if (geomanSaveTriggers.find((t) => t == name)) {
+            dispatch(saveActiveCustomMap(geoman.features.exportGeoJson()));
+          }
+          if (name == "gm:loaded")
+            geoman.features.importGeoJson(activeCustomMap);
+        }
+      }
+    );
   }
 
   // add support for TopoJSON etc

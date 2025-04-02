@@ -1,4 +1,14 @@
-import { GmOptionsPartial } from "@geoman-io/maplibre-geoman-free";
+import {
+  GmFwdEventNameWithPrefix,
+  GmOptionsPartial,
+} from "@geoman-io/maplibre-geoman-free";
+
+export const geomanSaveTriggers: GmFwdEventNameWithPrefix[] = [
+  "gm:create",
+  "gm:dragend",
+  "gm:editend",
+  "gm:remove",
+];
 
 export const geomanOptions: GmOptionsPartial = {
   settings: {
@@ -12,24 +22,24 @@ export const geomanOptions: GmOptionsPartial = {
       },
     },
     edit: {
-        cut: {
-            uiEnabled: false
-        },
-        rotate: {
-            uiEnabled: false
-        }
+      cut: {
+        uiEnabled: false,
+      },
+      rotate: {
+        uiEnabled: false,
+      },
     },
     helper: {
       snapping: {
         active: true,
-        uiEnabled: false
+        uiEnabled: false,
       },
       zoom_to_features: {
-        uiEnabled: false
+        uiEnabled: false,
       },
       shape_markers: {
-        uiEnabled: false
-      }
+        uiEnabled: false,
+      },
     },
   },
 };

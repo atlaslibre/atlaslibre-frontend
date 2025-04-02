@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import { gossipSlice } from '../features/gossip/gossipSlice'
 import { mapSlice } from '../features/map/mapSlice'
 import { flagsSlice } from '../features/flags/flagsSlice';
+import { customMapSlice}  from '../features/map/customMapSlice';
 
 const persistConfig = {
   key: "root",
@@ -12,7 +13,7 @@ const persistConfig = {
   blacklist: ['gossip']
 };
 
-const rootReducer = combineSlices(gossipSlice, mapSlice, flagsSlice)
+const rootReducer = combineSlices(gossipSlice, mapSlice, flagsSlice, customMapSlice)
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

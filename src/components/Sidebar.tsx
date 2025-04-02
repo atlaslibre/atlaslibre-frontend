@@ -15,6 +15,7 @@ import ThemeSwitch from "./sidebar/ThemeSwitch";
 export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
+  const { activeCustomMap } = useAppSelector((state) => state.customMap);
 
   const dispatch = useAppDispatch();
 
@@ -40,6 +41,8 @@ export default function Sidebar() {
             </ListSubheader>
             <div className="pl-4 pr-4 pb-4">
               <div className="text-sm pb-4">Actors loaded: {actors.length}</div>
+              <div className="text-sm pb-4">Active custom map features: {activeCustomMap.features.length}</div>
+
               <ButtonGroup
                 size="small"
                 orientation="vertical"

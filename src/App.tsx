@@ -11,6 +11,8 @@ import {
 import React from "react";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useAppSelector } from "./app/hooks";
+import { ErrorBoundary } from "react-error-boundary";
+import Whoops from "./components/Whoops";
 
 const drawerWidth = 360;
 
@@ -55,71 +57,73 @@ function App() {
       : lightTheme;
 
   return (
-    <ThemeProvider theme={selectedTheme} storageManager={null}>
-      <GossipUpdater />
+    <ErrorBoundary FallbackComponent={Whoops}>
+      <ThemeProvider theme={selectedTheme} storageManager={null}>
+        <GossipUpdater />
+        
+        <div className="flex">
+          <Fab
+            color="default"
+            aria-label="Open menu"
+            onClick={handleDrawerToggle}
+            size="small"
+            sx={{
+              mr: 2,
+              display: { lg: "none" },
+              float: "right",
+              position: "absolute",
+              top: "10px",
+              right: "-3px",
+              zIndex: 9999,
+            }}
+          >
+            <MenuIcon />
+          </Fab>
 
-      <div className="flex">
-        <Fab
-          color="default"
-          aria-label="Open menu"
-          onClick={handleDrawerToggle}
-          size="small"
-          sx={{
-            mr: 2,
-            display: { lg: "none" },
-            float: "right",
-            position: "absolute",
-            top: "10px",
-            right: "-3px",
-            zIndex: 9999,
-          }}
-        >
-          <MenuIcon />
-        </Fab>
+          <div style={{ flexGrow: 1 }}>
+            <MainMap />
+          </div>
 
-        <div style={{ flexGrow: 1 }}>
-          <MainMap />
+          <Drawer
+            open={mobileOpen}
+            onTransitionEnd={handleDrawerTransitionEnd}
+            onClose={handleDrawerClose}
+            anchor="right"
+            sx={{
+              minWidth: drawerWidth,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                minWidth: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            slotProps={{
+              root: {
+                keepMounted: true, // Better open performance on mobile.
+              },
+            }}
+          >
+            <Sidebar />
+          </Drawer>
+
+          <Drawer
+            variant="permanent"
+            anchor="right"
+            sx={{
+              minWidth: drawerWidth,
+              display: { xs: "none", lg: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                minWidth: drawerWidth,
+              },
+            }}
+            open
+          >
+            <Sidebar />
+          </Drawer>
         </div>
-
-        <Drawer
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          anchor="right"
-          sx={{
-            minWidth: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              minWidth: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          slotProps={{
-            root: {
-              keepMounted: true, // Better open performance on mobile.
-            },
-          }}
-        >
-          <Sidebar />
-        </Drawer>
-
-        <Drawer
-          variant="permanent"
-          anchor="right"
-          sx={{
-            minWidth: drawerWidth,
-            display: { xs: "none", lg: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              minWidth: drawerWidth,
-            },
-          }}
-          open
-        >
-          <Sidebar />
-        </Drawer>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
