@@ -49,6 +49,23 @@ export default function Whoops({ error, resetErrorBoundary }: FallbackProps) {
           >
             Clear all data
           </Button>
+
+          <div className="pt-8 text-xs">
+            <div>
+              Report bugs at{" "}
+              <a
+                href="https://github.com/atlaslibre/design/issues"
+                className="text-blue-500"
+                target="_blank"
+              >
+                https://github.com/atlaslibre/design/issues
+              </a>
+              <div className="pt-4 text-xs">Version: {__APP_VERSION__}</div>
+              <div>
+                Commit: {__COMMIT_HASH__} ({__COMMIT_DATE__.trim()})
+              </div>
+            </div>
+          </div>
         </Container>
       </div>
     </div>
