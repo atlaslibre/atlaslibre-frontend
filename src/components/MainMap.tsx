@@ -45,7 +45,7 @@ export default function MainMap() {
     },
     [dispatch]
   );
-  
+
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
     geoman.setGlobalEventsListener(
@@ -65,7 +65,7 @@ export default function MainMap() {
   // add support for TopoJSON etc
   useEffect(() => {
     addVectorTextProtocols(maplibregl);
-  }, [maplibregl]);
+  });
 
   return (
     <div className="w-full h-screen">

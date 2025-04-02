@@ -8,7 +8,7 @@ export default function BaseLayers() {
   const { colorMode } = useAppSelector((state) => state.flags);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const c = (light: any, dark: any) => {
+  function c<T>(light: T, dark: T) : T {
     if (colorMode == "system") return prefersDarkMode ? dark : light;
     return colorMode == "light" ? light : dark;
   };
