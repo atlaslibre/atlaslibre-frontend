@@ -43,7 +43,7 @@ export default function MainMap() {
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
     geoman.setGlobalEventsListener((x: any) => {
-      //console.log(x);
+      console.log(x);
     });
   }
 
