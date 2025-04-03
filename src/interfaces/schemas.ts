@@ -41,6 +41,22 @@ export const actorSchema = z.object({
   pos: locationRecordSchema,
 });
 
+const basePluginDefinitionSchema = z.object({
+  name: z.string(),
+});
+
+export const pluginDefinitionSchema = z.discriminatedUnion("type", [
+  basePluginDefinitionSchema.extend({
+    type: z.literal("actor"),
+    replay: z.boolean().optional().transform((x) => x ?? false),
+    locate: z.boolean().optional().transform((x) => x ?? false),
+  }),
+  basePluginDefinitionSchema.extend({
+    type: z.literal("tile"),
+  }),
+]);
+
 export type ILocationRecord = z.infer<typeof locationRecordSchema>;
 export type IDimensions = z.infer<typeof dimensionsSchema>;
 export type IActor = z.infer<typeof actorSchema>;
+export type IPluginDefinition = z.infer<typeof pluginDefinitionSchema>;

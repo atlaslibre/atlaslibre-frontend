@@ -10,7 +10,7 @@ import {
 } from "react-map-gl/maplibre";
 
 import { useCallback, useEffect } from "react";
-import { setViewState } from "../features/map/mapSlice";
+import { setBounds, setViewState } from "../features/map/mapSlice";
 import DeckGLLayers from "./layers/DeckGLLayers";
 import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import BaseLayers from "./layers/BaseLayers";
@@ -44,6 +44,7 @@ export default function MainMap() {
   const onMove = useCallback(
     (evt: ViewStateChangeEvent) => {
       dispatch(setViewState(evt.viewState));
+      dispatch(setBounds(evt.target.getBounds().toArray()))
     },
     [dispatch]
   );

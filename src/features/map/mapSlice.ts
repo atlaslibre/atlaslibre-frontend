@@ -10,6 +10,7 @@ interface MapState {
   layerVisiblity: LayerVisiblityMap;
   viewState: ViewState;
   unitSystem: "metric" | "nautical" | "imperial";
+  bounds: [number, number][];
 }
 
 const initialState: MapState = {
@@ -26,6 +27,7 @@ const initialState: MapState = {
       right: 0,
     },
   },
+  bounds: [],
 };
 
 export const mapSlice = createSlice({
@@ -50,18 +52,27 @@ export const mapSlice = createSlice({
     setViewState: (state, payload: PayloadAction<ViewState>) => {
       state.viewState = payload.payload;
     },
+    setBounds: (
+      state,
+      payload: PayloadAction<[number, number][]>
+    ) => {
+      state.bounds = payload.payload;
+    },
     nextUnit: (state) => {
-      if(state.unitSystem == "metric")
-        state.unitSystem = "nautical";
-      else if(state.unitSystem == "nautical")
-        state.unitSystem = "imperial";
-      else
-        state.unitSystem = "metric";
-    }
+      if (state.unitSystem == "metric") state.unitSystem = "nautical";
+      else if (state.unitSystem == "nautical") state.unitSystem = "imperial";
+      else state.unitSystem = "metric";
+    },
   },
 });
 
-export const { toggleProjection, showLayer, hideLayer, setViewState, nextUnit } =
-  mapSlice.actions;
+export const {
+  toggleProjection,
+  showLayer,
+  hideLayer,
+  setViewState,
+  setBounds,
+  nextUnit,
+} = mapSlice.actions;
 
 export default mapSlice.reducer;

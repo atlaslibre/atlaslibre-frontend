@@ -11,6 +11,7 @@ import DebuggingSwitch from "./sidebar/DebuggingSwitch";
 import StaticLayersMenu from "./sidebar/StaticLayersMenu";
 import UnitsSwitch from "./sidebar/UnitsSwtich";
 import ThemeSwitch from "./sidebar/ThemeSwitch";
+import PluginsMenu from "./sidebar/PluginsMenu";
 
 export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
@@ -56,6 +57,7 @@ export default function Sidebar() {
           </>
         )}
 
+        <PluginsMenu />
         <StaticLayersMenu />
       </div>
 

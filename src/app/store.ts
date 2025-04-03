@@ -1,20 +1,28 @@
-import { combineSlices, configureStore } from '@reduxjs/toolkit'
+import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { gossipSlice } from '../features/gossip/gossipSlice'
-import { mapSlice } from '../features/map/mapSlice'
-import { flagsSlice } from '../features/flags/flagsSlice';
-import { customMapSlice}  from '../features/map/customMapSlice';
-import { tooltipSlice}  from '../features/map/tooltipSlice';
+import { gossipSlice } from "../features/gossip/gossipSlice";
+import { mapSlice } from "../features/map/mapSlice";
+import { flagsSlice } from "../features/flags/flagsSlice";
+import { customMapSlice } from "../features/map/customMapSlice";
+import { tooltipSlice } from "../features/map/tooltipSlice";
+import { pluginSlice } from "../features/gossip/pluginSlice";
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ['gossip', 'tooltip']
+  blacklist: ["gossip", "tooltip", "plugin"],
 };
 
-const rootReducer = combineSlices(gossipSlice, mapSlice, flagsSlice, customMapSlice, tooltipSlice)
+const rootReducer = combineSlices(
+  gossipSlice,
+  mapSlice,
+  flagsSlice,
+  customMapSlice,
+  tooltipSlice,
+  pluginSlice
+);
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
@@ -30,12 +38,5 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-
-
-
-
-
-
-
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

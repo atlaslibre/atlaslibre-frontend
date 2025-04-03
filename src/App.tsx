@@ -1,4 +1,3 @@
-import GossipUpdater from "./components/services/GossipUpdater";
 import MainMap from "./components/MainMap";
 import Sidebar from "./components/Sidebar";
 import {
@@ -13,6 +12,7 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { useAppSelector } from "./app/hooks";
 import { ErrorBoundary } from "react-error-boundary";
 import Whoops from "./components/Whoops";
+import PluginDiscovery from "./components/services/PluginDiscovery";
 
 const drawerWidth = 360;
 
@@ -59,7 +59,7 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={Whoops}>
       <ThemeProvider theme={selectedTheme} storageManager={null}>
-        <GossipUpdater />
+        <PluginDiscovery />
         
         <div className="flex">
           <Fab
