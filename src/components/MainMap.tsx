@@ -1,7 +1,10 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-
+import {
+  Geoman,
+  GlobalEventsListenerParameters,
+} from "@geoman-io/maplibre-geoman-free";
 import maplibregl, { MapLayerMouseEvent, MapLibreEvent } from "maplibre-gl";
-
+import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
+import { useEffect } from "react";
 import {
   Map,
   NavigationControl,
@@ -9,28 +12,22 @@ import {
   ViewStateChangeEvent,
 } from "react-map-gl/maplibre";
 
-import { useCallback, useEffect } from "react";
-import { setBounds, setViewState } from "../features/map/mapSlice";
-import DeckGLLayers from "./layers/DeckGLLayers";
-import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
-import BaseLayers from "./layers/BaseLayers";
-import MainMapSources from "./services/Sources";
-import LabelLayers from "./layers/LabelLayers";
-import BoundariesLayers from "./layers/BoundariesLayers";
-import UrbanLayers from "./layers/UrbanLayers";
-import TransportInfrastructure from "./layers/TransportInfrastructure";
-import { emptyMapStyle } from "../features/map/mapStyle";
-
-import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
-
-import {
-  Geoman,
-  GlobalEventsListenerParameters,
-} from "@geoman-io/maplibre-geoman-free";
-import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { saveActiveCustomMap } from "../features/map/customMapSlice";
-import TooltipControl from "./controls/TooltipControl";
+import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
+import { setBounds, setViewState } from "../features/map/mapSlice";
+import { emptyMapStyle } from "../features/map/mapStyle";
 import { setLatLon } from "../features/map/tooltipSlice";
+import InspectControl from "./controls/InspectControl";
+import TooltipControl from "./controls/TooltipControl";
+import BaseLayers from "./layers/BaseLayers";
+import BoundariesLayers from "./layers/BoundariesLayers";
+import DeckGLLayers from "./layers/DeckGLLayers";
+import LabelLayers from "./layers/LabelLayers";
+import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
+import TransportInfrastructure from "./layers/TransportInfrastructure";
+import UrbanLayers from "./layers/UrbanLayers";
+import MainMapSources from "./services/Sources";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -40,14 +37,13 @@ export default function MainMap() {
   );
 
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
+  const { debuggingEnabled } = useAppSelector((state) => state.flags);
 
-  const onMove = useCallback(
-    (evt: ViewStateChangeEvent) => {
-      dispatch(setViewState(evt.viewState));
-      dispatch(setBounds(evt.target.getBounds().toArray()))
-    },
-    [dispatch]
-  );
+
+  const onMove = (evt: ViewStateChangeEvent) => {
+    dispatch(setViewState(evt.viewState));
+    dispatch(setBounds(evt.target.getBounds().toArray()));
+  };
 
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
@@ -96,6 +92,7 @@ export default function MainMap() {
         cursor="crosshair"
       >
         <NavigationControl position="top-left" />
+        {debuggingEnabled && <InspectControl position="top-left" />}
         <TooltipControl position="bottom-right" />
         <ScaleControl unit={unitSystem} />
         <MainMapSources />

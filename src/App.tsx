@@ -13,6 +13,9 @@ import { useAppSelector } from "./app/hooks";
 import { ErrorBoundary } from "react-error-boundary";
 import Whoops from "./components/Whoops";
 import PluginDiscovery from "./components/services/PluginDiscovery";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { MapProvider } from "react-map-gl/maplibre";
 
 const drawerWidth = 360;
 
@@ -59,69 +62,73 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={Whoops}>
       <ThemeProvider theme={selectedTheme} storageManager={null}>
-        <PluginDiscovery />
-        
-        <div className="flex">
-          <Fab
-            color="default"
-            aria-label="Open menu"
-            onClick={handleDrawerToggle}
-            size="small"
-            sx={{
-              mr: 2,
-              display: { lg: "none" },
-              float: "right",
-              position: "absolute",
-              top: "10px",
-              right: "-3px",
-              zIndex: 9999,
-            }}
-          >
-            <MenuIcon />
-          </Fab>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <MapProvider>
+            <PluginDiscovery />
 
-          <div style={{ flexGrow: 1 }}>
-            <MainMap />
-          </div>
+            <div className="flex">
+              <Fab
+                color="default"
+                aria-label="Open menu"
+                onClick={handleDrawerToggle}
+                size="small"
+                sx={{
+                  mr: 2,
+                  display: { lg: "none" },
+                  float: "right",
+                  position: "absolute",
+                  top: "10px",
+                  right: "-3px",
+                  zIndex: 9999,
+                }}
+              >
+                <MenuIcon />
+              </Fab>
 
-          <Drawer
-            open={mobileOpen}
-            onTransitionEnd={handleDrawerTransitionEnd}
-            onClose={handleDrawerClose}
-            anchor="right"
-            sx={{
-              minWidth: drawerWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
-                minWidth: drawerWidth,
-                boxSizing: "border-box",
-              },
-            }}
-            slotProps={{
-              root: {
-                keepMounted: true, // Better open performance on mobile.
-              },
-            }}
-          >
-            <Sidebar />
-          </Drawer>
+              <div style={{ flexGrow: 1 }}>
+                <MainMap />
+              </div>
 
-          <Drawer
-            variant="permanent"
-            anchor="right"
-            sx={{
-              minWidth: drawerWidth,
-              display: { xs: "none", lg: "block" },
-              "& .MuiDrawer-paper": {
-                boxSizing: "border-box",
-                minWidth: drawerWidth,
-              },
-            }}
-            open
-          >
-            <Sidebar />
-          </Drawer>
-        </div>
+              <Drawer
+                open={mobileOpen}
+                onTransitionEnd={handleDrawerTransitionEnd}
+                onClose={handleDrawerClose}
+                anchor="right"
+                sx={{
+                  minWidth: drawerWidth,
+                  flexShrink: 0,
+                  "& .MuiDrawer-paper": {
+                    minWidth: drawerWidth,
+                    boxSizing: "border-box",
+                  },
+                }}
+                slotProps={{
+                  root: {
+                    keepMounted: true, // Better open performance on mobile.
+                  },
+                }}
+              >
+                <Sidebar />
+              </Drawer>
+
+              <Drawer
+                variant="permanent"
+                anchor="right"
+                sx={{
+                  minWidth: drawerWidth,
+                  display: { xs: "none", lg: "block" },
+                  "& .MuiDrawer-paper": {
+                    boxSizing: "border-box",
+                    minWidth: drawerWidth,
+                  },
+                }}
+                open
+              >
+                <Sidebar />
+              </Drawer>
+            </div>
+          </MapProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

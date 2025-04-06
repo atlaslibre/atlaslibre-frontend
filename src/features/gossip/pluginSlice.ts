@@ -9,6 +9,7 @@ export interface ActorGossipPlugin extends BaseGossipPlugin {
   type: "actor"
   replay: boolean
   locate: boolean,
+  status: boolean,
 }
 
 export interface TileGossipPlugin extends BaseGossipPlugin {

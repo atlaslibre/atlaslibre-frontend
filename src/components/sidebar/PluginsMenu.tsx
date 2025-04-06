@@ -7,7 +7,7 @@ import { ActorPluginMenuItem } from "./plugins/ActorPluginMenuItem";
 export default function PluginsMenu() {
   const { plugins } = useAppSelector((state) => state.plugin);
 
-  if (plugins.length === 0) return false;
+  if (plugins.length === 0) return <></>;
 
   return (
     <List

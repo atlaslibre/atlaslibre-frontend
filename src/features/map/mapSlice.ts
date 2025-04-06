@@ -11,6 +11,7 @@ interface MapState {
   viewState: ViewState;
   unitSystem: "metric" | "nautical" | "imperial";
   bounds: [number, number][];
+  timezone: string;
 }
 
 const initialState: MapState = {
@@ -28,6 +29,7 @@ const initialState: MapState = {
     },
   },
   bounds: [],
+  timezone: "Europe/Paris",
 };
 
 export const mapSlice = createSlice({
@@ -52,10 +54,10 @@ export const mapSlice = createSlice({
     setViewState: (state, payload: PayloadAction<ViewState>) => {
       state.viewState = payload.payload;
     },
-    setBounds: (
-      state,
-      payload: PayloadAction<[number, number][]>
-    ) => {
+    setTimezone: (state, action: PayloadAction<string>) => {
+      state.timezone = action.payload;
+    },
+    setBounds: (state, payload: PayloadAction<[number, number][]>) => {
       state.bounds = payload.payload;
     },
     nextUnit: (state) => {
@@ -73,6 +75,7 @@ export const {
   setViewState,
   setBounds,
   nextUnit,
+  setTimezone,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

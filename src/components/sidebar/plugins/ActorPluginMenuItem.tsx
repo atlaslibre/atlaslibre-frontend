@@ -6,11 +6,13 @@ import { LocationSearching, Refresh } from "@mui/icons-material";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { useAppSelector } from "../../../app/hooks";
+import { useEffect, useState } from "react";
 
 export function ActorPluginMenuItem({
   plugin,
 }: PluginMenuItemProps<ActorGossipPlugin>) {
   const { bounds, viewState } = useAppSelector((state) => state.map);
+  const [status, setStatus] = useState("Connecting");
 
   const locate = () => {
     chrome.runtime.sendMessage(plugin.id, {
@@ -21,10 +23,21 @@ export function ActorPluginMenuItem({
     });
   };
 
+  const updateStatus = () => {
+    chrome.runtime.sendMessage(plugin.id, {
+      type: "status"
+    }, (response) => setStatus(response));
+  };
+
+  useEffect(() => {
+    const interval = setInterval(updateStatus, 1000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <div>
       <ListItem>
-        <ListItemText primary={plugin.name} secondary="Current storage: 20.32 GB"/>
+        <ListItemText primary={plugin.name} secondary={status}/>
 
         {plugin.locate && (
           <IconButton onClick={locate}>

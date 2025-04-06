@@ -12,6 +12,7 @@ import StaticLayersMenu from "./sidebar/StaticLayersMenu";
 import UnitsSwitch from "./sidebar/UnitsSwtich";
 import ThemeSwitch from "./sidebar/ThemeSwitch";
 import PluginsMenu from "./sidebar/PluginsMenu";
+import TimeControl from "./sidebar/TimeControl";
 
 export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
@@ -28,13 +29,13 @@ export default function Sidebar() {
     dispatch(update(dataset));
   };
 
-  const dump = () => () => {
-    console.log(JSON.stringify(actors));
-  };
-
   return (
     <>
       <div className="h-screen overflow-y-scroll overflow-x-clip w-full">
+        <TimeControl />
+        <PluginsMenu />
+        <StaticLayersMenu />
+
         {debuggingEnabled && (
           <>
             <ListSubheader component="div" id="nested-list-subheader">
@@ -42,23 +43,20 @@ export default function Sidebar() {
             </ListSubheader>
             <div className="pl-4 pr-4 pb-4">
               <div className="text-sm pb-4">Actors loaded: {actors.length}</div>
-              <div className="text-sm pb-4">Active custom map features: {activeCustomMap.features.length}</div>
+              <div className="text-sm pb-4">
+                Active custom map features: {activeCustomMap.features.length}
+              </div>
 
               <ButtonGroup
                 size="small"
                 orientation="vertical"
                 className="w-full"
               >
-                <Button onClick={load(1000)}>Load small sample</Button>
-                <Button onClick={load()}>Load huge sample</Button>
-                <Button onClick={dump()}>Dump actors to console</Button>
+                <Button onClick={load()}>Load sample</Button>
               </ButtonGroup>
             </div>
           </>
         )}
-
-        <PluginsMenu />
-        <StaticLayersMenu />
       </div>
 
       <div className="p-4">

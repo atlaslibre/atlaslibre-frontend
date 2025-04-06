@@ -50,6 +50,7 @@ export const pluginDefinitionSchema = z.discriminatedUnion("type", [
     type: z.literal("actor"),
     replay: z.boolean().optional().transform((x) => x ?? false),
     locate: z.boolean().optional().transform((x) => x ?? false),
+    status: z.boolean().optional().transform((x) => x ?? false),
   }),
   basePluginDefinitionSchema.extend({
     type: z.literal("tile"),
