@@ -1,6 +1,7 @@
 import { useMediaQuery } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import ToggleableLayer from "./shared/ToggleableLayer";
+import { Layer } from "react-map-gl/maplibre";
 
 export default function BoundariesLayers() {
   const { colorMode } = useAppSelector((state) => state.flags);
@@ -49,6 +50,15 @@ export default function BoundariesLayers() {
             ],
           },
           "line-offset": 0,
+        }}
+      />
+
+      <Layer
+        type="fill"
+        id="timezones_lookup"
+        source="timezones"
+        paint={{
+          "fill-opacity": 0,
         }}
       />
     </>

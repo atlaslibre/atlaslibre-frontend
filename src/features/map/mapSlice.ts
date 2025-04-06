@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
+import { Dayjs } from "dayjs";
 
 interface LayerVisiblityMap {
   [key: string]: boolean;
@@ -11,7 +12,9 @@ interface MapState {
   viewState: ViewState;
   unitSystem: "metric" | "nautical" | "imperial";
   bounds: [number, number][];
-  timezone: string;
+  fixedTime?: Dayjs;
+  timezoneType: string;
+  mapTimezone: string;
 }
 
 const initialState: MapState = {
@@ -29,7 +32,9 @@ const initialState: MapState = {
     },
   },
   bounds: [],
-  timezone: "Europe/Paris",
+  fixedTime: undefined,
+  mapTimezone: "Europe/Paris",
+  timezoneType: "map",
 };
 
 export const mapSlice = createSlice({
@@ -54,8 +59,17 @@ export const mapSlice = createSlice({
     setViewState: (state, payload: PayloadAction<ViewState>) => {
       state.viewState = payload.payload;
     },
-    setTimezone: (state, action: PayloadAction<string>) => {
-      state.timezone = action.payload;
+    setMapTimezone: (state, action: PayloadAction<string>) => {
+      state.mapTimezone = action.payload;
+    },
+    setTimezoneType: (state, action: PayloadAction<string>) => {
+      state.timezoneType = action.payload;
+    },
+    setFixedTime: (state, action: PayloadAction<Dayjs>) => {
+      state.fixedTime = action.payload;
+    },
+    clearFixedTime: (state) => {
+      state.fixedTime = undefined;
     },
     setBounds: (state, payload: PayloadAction<[number, number][]>) => {
       state.bounds = payload.payload;
@@ -75,7 +89,10 @@ export const {
   setViewState,
   setBounds,
   nextUnit,
-  setTimezone,
+  setMapTimezone,
+  setTimezoneType,
+  setFixedTime,
+  clearFixedTime
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

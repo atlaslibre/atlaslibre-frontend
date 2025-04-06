@@ -38,12 +38,12 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
       {
         type: "layer",
         id: "borders",
-        title: "Borders between countries, states, municipalities, etc.",
+        title: "Borders between countries, states, etc.",
       },
       {
         type: "layer",
         id: "labels_regions",
-        title: "Names for continents, countries and states",
+        title: "Names for continents, countries, states",
       },
       {
         type: "layer",
