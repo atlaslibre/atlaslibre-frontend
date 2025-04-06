@@ -3,7 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import { gossipSlice } from "../features/gossip/gossipSlice";
-import { mapSlice } from "../features/map/mapSlice";
+import { mapSlice, mapSliceTransform } from "../features/map/mapSlice";
 import { flagsSlice } from "../features/flags/flagsSlice";
 import { customMapSlice } from "../features/map/customMapSlice";
 import { tooltipSlice } from "../features/map/tooltipSlice";
@@ -23,6 +23,7 @@ const rootReducer = combineSlices(
   tooltipSlice,
   pluginSlice
 );
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

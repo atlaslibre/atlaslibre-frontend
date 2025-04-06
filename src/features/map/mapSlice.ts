@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { createTransform, Transform } from "redux-persist";
 
 interface LayerVisiblityMap {
   [key: string]: boolean;
@@ -36,6 +37,22 @@ const initialState: MapState = {
   mapTimezone: "Europe/Paris",
   timezoneType: "map",
 };
+
+type InboundState = { fixedTime?: Dayjs };
+type OutboundState = { fixedTime?: Dayjs };
+
+export const mapSliceTransform: Transform<InboundState, OutboundState> = createTransform(
+  (inboundState) => ({
+    ...inboundState,
+  }),
+  (outboundState) => ({
+    ...outboundState,
+    fixedTime: outboundState.fixedTime
+      ? dayjs(outboundState.fixedTime)
+      : undefined,
+  }),
+  { whitelist: ["map"] }
+);
 
 export const mapSlice = createSlice({
   name: "map",
@@ -92,7 +109,7 @@ export const {
   setMapTimezone,
   setTimezoneType,
   setFixedTime,
-  clearFixedTime
+  clearFixedTime,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

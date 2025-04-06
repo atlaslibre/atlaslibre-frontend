@@ -21,7 +21,7 @@ export default function TimeControl() {
   const { timezoneType, mapTimezone, fixedTime, viewState } = useAppSelector(
     (state) => state.map
   );
-
+  
   const [nowTime, setNowTime] = useState(dayjs.utc());
   const [effectiveTimezone, setEffectiveTimezone] = useState<string>();
   const [effectiveTimezoneLabel, setEffectiveTimezoneLabel] =
