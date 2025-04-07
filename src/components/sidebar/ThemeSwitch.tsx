@@ -1,9 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { ToggleButton, useMediaQuery } from "@mui/material";
+import { ToggleButton } from "@mui/material";
 import { toggleColorMode } from "../../features/flags/flagsSlice";
 
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
+import { Brightness4, Brightness5, BrightnessAuto } from "@mui/icons-material";
 
 export default function ThemeSwitch() {
   const { colorMode } = useAppSelector((state) => state.flags);
@@ -13,8 +12,6 @@ export default function ThemeSwitch() {
     dispatch(toggleColorMode());
   };
 
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
   return (
     <ToggleButton
       title="Change color mode"
@@ -23,11 +20,9 @@ export default function ThemeSwitch() {
       onChange={handleChange}
       size="small"
     >
-      {colorMode === "light" && <LightModeIcon />}
-      {colorMode === "dark" && <DarkModeIcon />}
-
-      {colorMode === "system" && !prefersDarkMode && <LightModeIcon />}
-      {colorMode === "system" && prefersDarkMode && <DarkModeIcon />}
+      {colorMode === "light" && <Brightness5 />}
+      {colorMode === "dark" && <Brightness4 />}
+      {colorMode === "system" && <BrightnessAuto />}
     </ToggleButton>
   );
 }
