@@ -13,6 +13,7 @@ import {
   clearFixedTime,
   setFixedTime,
   setMapTimezone,
+  setMapTimezoneObjectId,
   setTimezoneType,
 } from "../../features/map/mapSlice";
 import { useMap } from "react-map-gl/maplibre";
@@ -21,7 +22,7 @@ export default function TimeControl() {
   const { timezoneType, mapTimezone, fixedTime, viewState } = useAppSelector(
     (state) => state.map
   );
-  
+
   const [nowTime, setNowTime] = useState(dayjs.utc());
   const [effectiveTimezone, setEffectiveTimezone] = useState<string>();
   const [effectiveTimezoneLabel, setEffectiveTimezoneLabel] =
@@ -65,6 +66,9 @@ export default function TimeControl() {
     if (features.length === 0) return;
     const mapTzName = features[0].properties.tz_name1st;
     const mapTzAlt = features[0].properties.time_zone;
+    const objectId = features[0].properties.objectid;
+
+    dispatch(setMapTimezoneObjectId(objectId))
 
     if (mapTzName) {
       dispatch(setMapTimezone(mapTzName));
@@ -86,9 +90,9 @@ export default function TimeControl() {
         >
           <DateTimePicker
             label={effectiveTimezoneLabel}
-            value={fixedTime ?? nowTime}
+            value={fixedTime ? dayjs(fixedTime) : nowTime}
             timezone={effectiveTimezone}
-            onChange={(newValue) => dispatch(setFixedTime(newValue!))}
+            onChange={(newValue) => dispatch(setFixedTime(newValue?.toISOString()))}
             format="YYYY-MM-DD HH:mm:ss"
             disableFuture={true}
             ampm={false}

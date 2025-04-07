@@ -1,19 +1,13 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 
 import { gossipSlice } from "../features/gossip/gossipSlice";
-import { mapSlice, mapSliceTransform } from "../features/map/mapSlice";
+import { mapSlice } from "../features/map/mapSlice";
 import { flagsSlice } from "../features/flags/flagsSlice";
 import { customMapSlice } from "../features/map/customMapSlice";
 import { tooltipSlice } from "../features/map/tooltipSlice";
 import { pluginSlice } from "../features/gossip/pluginSlice";
 
-const persistConfig = {
-  key: "root",
-  storage,
-  blacklist: ["gossip", "tooltip", "plugin"],
-};
+import { rememberReducer, rememberEnhancer } from 'redux-remember';
 
 const rootReducer = combineSlices(
   gossipSlice,
@@ -24,10 +18,19 @@ const rootReducer = combineSlices(
   pluginSlice
 );
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const rememberedSlices = [ 'map', 'customMap', 'flags' ];
+
+const reducer = rememberReducer(rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  //reducer: persistedReducer,
+  reducer,
+  enhancers: (getDefaultEnhancers) => getDefaultEnhancers().concat(
+    rememberEnhancer(
+      window.localStorage, // or window.sessionStorage, or your own custom storage driver
+      rememberedSlices
+    )
+  ),
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -36,8 +39,6 @@ export const store = configureStore({
       },
     }),
 });
-
-export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

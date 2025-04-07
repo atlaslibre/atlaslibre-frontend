@@ -7,6 +7,8 @@ export default function BoundariesLayers() {
   const { colorMode } = useAppSelector((state) => state.flags);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
+  const { mapTimezoneObjectId } = useAppSelector((state) => state.map);
+
   function c<T>(light: T, dark: T): T {
     if (colorMode == "system") return prefersDarkMode ? dark : light;
     return colorMode == "light" ? light : dark;
@@ -38,7 +40,8 @@ export default function BoundariesLayers() {
 
       <ToggleableLayer
         type="line"
-        id="timezones"
+        id="timezones_lines"
+        group="timezones"
         source="timezones"
         paint={{
           "line-color": c("rgb(200, 200, 255)", "rgb(50, 101, 101)"),
@@ -51,6 +54,18 @@ export default function BoundariesLayers() {
           },
           "line-offset": 0,
         }}
+      />
+
+      <ToggleableLayer
+        type="fill"
+        id="timezones_highlight"
+        group="timezones"
+        source="timezones"
+        paint={{
+          "fill-opacity": 0.3,
+          "fill-color": c("rgb(200, 200, 255)", "rgb(50, 101, 101)")
+        }}
+        filter={["==", "objectid", mapTimezoneObjectId]}
       />
 
       <Layer

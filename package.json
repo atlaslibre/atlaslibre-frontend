@@ -30,7 +30,7 @@
     "react-error-boundary": "^5.0.0",
     "react-map-gl": "^8.0.1",
     "react-redux": "^9.2.0",
-    "redux-persist": "^6.0.0",
+    "redux-remember": "^5.2.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
-import dayjs, { Dayjs } from "dayjs";
-import { createTransform, Transform } from "redux-persist";
 
 interface LayerVisiblityMap {
   [key: string]: boolean;
@@ -13,9 +11,10 @@ interface MapState {
   viewState: ViewState;
   unitSystem: "metric" | "nautical" | "imperial";
   bounds: [number, number][];
-  fixedTime?: Dayjs;
+  fixedTime?: string;
   timezoneType: string;
   mapTimezone: string;
+  mapTimezoneObjectId: number;
 }
 
 const initialState: MapState = {
@@ -35,24 +34,9 @@ const initialState: MapState = {
   bounds: [],
   fixedTime: undefined,
   mapTimezone: "Europe/Paris",
+  mapTimezoneObjectId: 16,
   timezoneType: "map",
 };
-
-type InboundState = { fixedTime?: Dayjs };
-type OutboundState = { fixedTime?: Dayjs };
-
-export const mapSliceTransform: Transform<InboundState, OutboundState> = createTransform(
-  (inboundState) => ({
-    ...inboundState,
-  }),
-  (outboundState) => ({
-    ...outboundState,
-    fixedTime: outboundState.fixedTime
-      ? dayjs(outboundState.fixedTime)
-      : undefined,
-  }),
-  { whitelist: ["map"] }
-);
 
 export const mapSlice = createSlice({
   name: "map",
@@ -79,10 +63,13 @@ export const mapSlice = createSlice({
     setMapTimezone: (state, action: PayloadAction<string>) => {
       state.mapTimezone = action.payload;
     },
+    setMapTimezoneObjectId: (state, action: PayloadAction<number>) => {
+      state.mapTimezoneObjectId = action.payload;
+    },
     setTimezoneType: (state, action: PayloadAction<string>) => {
       state.timezoneType = action.payload;
     },
-    setFixedTime: (state, action: PayloadAction<Dayjs>) => {
+    setFixedTime: (state, action: PayloadAction<string | undefined>) => {
       state.fixedTime = action.payload;
     },
     clearFixedTime: (state) => {
@@ -107,6 +94,7 @@ export const {
   setBounds,
   nextUnit,
   setMapTimezone,
+  setMapTimezoneObjectId,
   setTimezoneType,
   setFixedTime,
   clearFixedTime,
