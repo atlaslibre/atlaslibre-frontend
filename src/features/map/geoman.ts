@@ -8,6 +8,7 @@ export const geomanSaveTriggers: GmFwdEventNameWithPrefix[] = [
   "gm:dragend",
   "gm:editend",
   "gm:remove",
+  "gm:globalshape_markersmodetoggled"
 ];
 
 export const geomanOptions: GmOptionsPartial = {
@@ -30,10 +31,6 @@ export const geomanOptions: GmOptionsPartial = {
       },
     },
     helper: {
-      snapping: {
-        active: true,
-        uiEnabled: false,
-      },
       zoom_to_features: {
         uiEnabled: false,
       },

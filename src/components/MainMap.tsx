@@ -52,7 +52,12 @@ export default function MainMap() {
         if (type == "converted") {
           // import and export based on events fired
           if (geomanSaveTriggers.find((t) => t == name)) {
-            dispatch(saveActiveCustomMap(geoman.features.exportGeoJson()));
+            // if the helper mode is activated, the shape markers is visible and get
+            // accententially exported when running exportGeoJson()
+            const isEditing = geoman.getActiveHelperModes().includes("shape_markers");
+
+            if(!isEditing)
+              dispatch(saveActiveCustomMap(geoman.features.exportGeoJson()));
           }
           if (name == "gm:loaded")
             geoman.features.importGeoJson(activeCustomMap);
