@@ -24,9 +24,13 @@ export function ActorPluginMenuItem({
   };
 
   const updateStatus = () => {
-    chrome.runtime.sendMessage(plugin.id, {
-      type: "status"
-    }, (response) => setStatus(response));
+    chrome.runtime.sendMessage(
+      plugin.id,
+      {
+        type: "status",
+      },
+      (response) => setStatus(response)
+    );
   };
 
   useEffect(() => {
@@ -36,17 +40,21 @@ export function ActorPluginMenuItem({
 
   return (
     <div>
-      <ListItem>
-        <ListItemText primary={plugin.name} secondary={status}/>
-
-        {plugin.locate && (
-          <IconButton onClick={locate}>
-            <LocationSearching />
-          </IconButton>
-        )}
-        <IconButton>
-          <Refresh />
-        </IconButton>
+      <ListItem
+        secondaryAction={
+          <>
+            {plugin.locate && (
+              <IconButton onClick={locate}>
+                <LocationSearching />
+              </IconButton>
+            )}
+            <IconButton edge="end">
+              <Refresh />
+            </IconButton>
+          </>
+        }
+      >
+        <ListItemText primary={plugin.name} secondary={status} />
       </ListItem>
     </div>
   );

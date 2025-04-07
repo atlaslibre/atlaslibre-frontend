@@ -13,6 +13,7 @@ import UnitsSwitch from "./sidebar/UnitsSwtich";
 import ThemeSwitch from "./sidebar/ThemeSwitch";
 import PluginsMenu from "./sidebar/PluginsMenu";
 import TimeControl from "./sidebar/TimeControl";
+import CustomMapMenu from "./sidebar/CustomMapMenu";
 
 export default function Sidebar() {
   const { actors } = useAppSelector((state) => state.gossip);
@@ -34,6 +35,7 @@ export default function Sidebar() {
       <div className="h-screen overflow-y-scroll overflow-x-clip w-full">
         <TimeControl />
         <PluginsMenu />
+        <CustomMapMenu />
         <StaticLayersMenu />
 
         {debuggingEnabled && (

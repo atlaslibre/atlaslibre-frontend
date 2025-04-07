@@ -28,6 +28,7 @@ import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import TransportInfrastructure from "./layers/TransportInfrastructure";
 import UrbanLayers from "./layers/UrbanLayers";
 import MainMapSources from "./services/Sources";
+import CustomMapLayers from "./layers/CustomMapLayers";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -38,7 +39,6 @@ export default function MainMap() {
 
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
-
 
   const onMove = (evt: ViewStateChangeEvent) => {
     dispatch(setViewState(evt.viewState));
@@ -59,10 +59,6 @@ export default function MainMap() {
         }
       }
     );
-  }
-
-  function onClick(evt: MapLayerMouseEvent) {
-    console.log("MainMap onclick", evt);
   }
 
   function onMouseMove(evt: MapLayerMouseEvent) {
@@ -86,7 +82,6 @@ export default function MainMap() {
         keyboard={projection !== "globe"}
         mapStyle={emptyMapStyle}
         onLoad={onLoad}
-        onClick={onClick}
         onMouseMove={onMouseMove}
         attributionControl={{ compact: false }}
         cursor="crosshair"
@@ -104,6 +99,7 @@ export default function MainMap() {
         <OtherInfrastructureLayers />
         <DeckGLLayers />
         <LabelLayers />
+        <CustomMapLayers />
       </Map>
     </div>
   );
