@@ -19,6 +19,7 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(packageConfig.version),
     __COMMIT_HASH__: JSON.stringify(commitHash),
     __COMMIT_DATE__: JSON.stringify(commitDate),
+    global: {}
   },
   plugins: [
     react(),

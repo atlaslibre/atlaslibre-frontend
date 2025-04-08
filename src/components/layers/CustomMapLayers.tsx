@@ -22,6 +22,7 @@ export default function CustomMapLayers() {
             layout={{
               visibility: customMap.visible ? "visible" : "none",
             }}
+            filter={["!=", "shape", "line"]}
           />
 
           <Layer

@@ -29,6 +29,8 @@ import TransportInfrastructure from "./layers/TransportInfrastructure";
 import UrbanLayers from "./layers/UrbanLayers";
 import MainMapSources from "./services/Sources";
 import CustomMapLayers from "./layers/CustomMapLayers";
+import MeasureControl from "./controls/MeasureControl";
+import MeasureControlLayers from "./layers/MeasureControlLayers";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -54,9 +56,11 @@ export default function MainMap() {
           if (geomanSaveTriggers.find((t) => t == name)) {
             // if the helper mode is activated, the shape markers is visible and get
             // accententially exported when running exportGeoJson()
-            const isEditing = geoman.getActiveHelperModes().includes("shape_markers");
+            const isEditing = geoman
+              .getActiveHelperModes()
+              .includes("shape_markers");
 
-            if(!isEditing)
+            if (!isEditing)
               dispatch(saveActiveCustomMap(geoman.features.exportGeoJson()));
           }
           if (name == "gm:loaded")
@@ -89,9 +93,9 @@ export default function MainMap() {
         onLoad={onLoad}
         onMouseMove={onMouseMove}
         attributionControl={{ compact: false }}
-        cursor="crosshair"
       >
         <NavigationControl position="top-left" />
+        <MeasureControl />
         {debuggingEnabled && <InspectControl position="top-left" />}
         <TooltipControl position="bottom-right" />
         <ScaleControl unit={unitSystem} />
@@ -105,6 +109,7 @@ export default function MainMap() {
         <DeckGLLayers />
         <LabelLayers />
         <CustomMapLayers />
+        <MeasureControlLayers />
       </Map>
     </div>
   );

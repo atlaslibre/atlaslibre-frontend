@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
 
+export type UnitSystem = "metric" | "nautical" | "imperial";
+
 interface LayerVisiblityMap {
   [key: string]: boolean;
 }
@@ -9,7 +11,7 @@ interface MapState {
   projection: "mercator" | "globe";
   layerVisiblity: LayerVisiblityMap;
   viewState: ViewState;
-  unitSystem: "metric" | "nautical" | "imperial";
+  unitSystem: UnitSystem;
   bounds: [number, number][];
   fixedTime?: string;
   timezoneType: string;

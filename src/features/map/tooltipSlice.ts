@@ -6,6 +6,7 @@ interface TooltipState {
   activeActor?: IActor | undefined;
   lat: number;
   lon: number;
+  distance?: string | undefined
 }
 
 const initialState: TooltipState = { lat: 0, lon: 0 };
@@ -15,7 +16,12 @@ interface SetActorTooltipParams {
   actor: IActor;
 }
 
-type SetTooltipParams = SetActorTooltipParams;
+interface SetDistanceToolipParams {
+  type: "distance";
+  distance: string | undefined;
+}
+
+type SetTooltipParams = SetActorTooltipParams | SetDistanceToolipParams;
 
 interface SetLatLonParams {
   lat: number;
@@ -35,12 +41,14 @@ export const tooltipSlice = createSlice({
 
       if (type == "actor") state.actor = payload.payload.actor;
       else if (type == "activeActor") state.activeActor = payload.payload.actor;
+      else if (type == "distance") state.distance = payload.payload.distance;
     },
-    clearTooltip: (state, payload: PayloadAction<string>) => {
+    clearTooltip: (state, payload: PayloadAction<SetTooltipParams["type"]>) => {
       const type = payload.payload;
 
       if (type == "actor") state.actor = undefined;
       else if (type == "activeActor") state.activeActor = undefined;
+      else if (type == "distance") state.distance = undefined;
     },
   },
 });

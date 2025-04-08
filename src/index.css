@@ -7,3 +7,8 @@
 .maplibregl-ctrl-group button.gm-control-button {
   color: black;
 }
+
+.maplibregl-measure button.active {
+  color: #005f7c;
+  background-color: #c4eaff;
+}

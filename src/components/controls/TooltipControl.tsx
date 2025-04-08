@@ -28,7 +28,7 @@ class Tooltip implements IControl {
 export default function TooltipControl(props: { position: ControlPosition }) {
   const control = useControl(() => new Tooltip(), props);
   const ref = createRef<HTMLDivElement>();
-  const { actor, lat, lon } = useAppSelector(
+  const { actor, distance, lat, lon } = useAppSelector(
     (state) => state.tooltip
   );
 
@@ -46,6 +46,12 @@ export default function TooltipControl(props: { position: ControlPosition }) {
                   </p>
                   <p className="font-medium">{actor.name}</p>
               </>
+          )}
+
+          {distance && (
+              <p>
+                  Measured distance: <span className="font-medium">{distance}</span>
+              </p>
           )}
 
           <p>
