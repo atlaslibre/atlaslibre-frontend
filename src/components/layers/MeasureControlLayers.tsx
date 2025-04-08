@@ -18,11 +18,19 @@ export default function MeasureControlLayers() {
         type="line"
         id="measure-control-line"
         source="measure-control-source"
+        paint={{
+            "line-color": c("#f66", "#f33"),
+            "line-dasharray": [2,2]
+        }}
       />
       <Layer
         type="circle"
         id="measure-control-points"
         source="measure-control-source"
+        paint={{
+            "circle-color": c("#000", "#fff"),
+            "circle-radius": 4
+        }}
       />
 
       <Layer
@@ -38,8 +46,8 @@ export default function MeasureControlLayers() {
         paint={{
           "text-color": c("#111", "#eee"),
           "text-halo-color": c("#fff", "#000"),
-          "text-halo-width": 4  ,
-          "text-halo-blur": 2
+          "text-halo-width": 1  ,
+          
         }}
       />
     </>

@@ -1,5 +1,5 @@
 import { Geoman } from "@geoman-io/maplibre-geoman-free";
-import { length as turfDistance, Units as TurfUnits } from "@turf/turf";
+import { length as turfDistance } from "@turf/turf";
 import { Feature, FeatureCollection, LineString, Point } from "geojson";
 import { IControl, Map, MapMouseEvent, Subscription } from "maplibre-gl";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { Source, useControl } from "react-map-gl/maplibre";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { UnitSystem } from "../../features/map/mapSlice";
 import { clearTooltip, setTooltip } from "../../features/map/tooltipSlice";
-import convert, { Unit as ConvertUnit, BestKind } from "convert";
+import convert, { BestKind } from "convert";
 
 class MeasureControlImpl implements IControl {
   private _map?: Map;
@@ -17,9 +17,7 @@ class MeasureControlImpl implements IControl {
   private _fc: FeatureCollection;
   private _setter;
   private _onClickSubscription?: Subscription;
-  private _convertUnit: ConvertUnit | "best" = "best";
-  private _convertKind?: BestKind;
-    private _unitSystem: string;
+  private _unitSystem: string;
 
   constructor(
     unitSystem: UnitSystem,
@@ -50,10 +48,10 @@ class MeasureControlImpl implements IControl {
   onAdd(map: Map): HTMLElement {
     this._map = map;
     this._onClickSubscription = this._map.on("click", this._onMapClick);
+    this._map.on("contextmenu", this._onClearMap);
     this._container = document.createElement("div");
     this._container.className =
       "maplibregl-ctrl maplibregl-ctrl-group maplibregl-measure";
-
     this._container.appendChild(this._button);
     return this._container;
   }
@@ -84,15 +82,28 @@ class MeasureControlImpl implements IControl {
   private _convertedLabel = (meters: number) => {
     const converter = convert(meters, "meters");
 
-
-    if(this._unitSystem === "nautical"){
-        let quantity = converter.to("nautical miles")
-        return `${quantity.toFixed(1)} nm`;
+    if (this._unitSystem === "nautical") {
+      let quantity = converter.to("nautical miles");
+      return `${quantity.toFixed(1)} nm`;
     }
 
-    const c = converter.to("best", this._unitSystem as BestKind)
+    const c = converter.to("best", this._unitSystem as BestKind);
     return `${c.quantity.toFixed(1)} ${c.unit}`;
-  }
+  };
+
+  private _onClearMap = () => {
+    if (!this._active) return;
+
+    const existingPoints = this._fc.features
+    .filter((point) => point.geometry.type == "Point")
+    .map((point) => point as Feature<Point>);
+
+    if(existingPoints.length > 0)
+        existingPoints.pop();
+
+    this._fc = { type: "FeatureCollection", features: existingPoints };
+    this._onMapClick();
+  };
 
   private _onMapClick = (evt?: MapMouseEvent) => {
     if (!this._active) return;
@@ -141,7 +152,7 @@ class MeasureControlImpl implements IControl {
         };
 
         const distance = turfDistance(linestring, { units: "meters" });
-    
+
         totalDistance += distance;
         properties.distance = distance;
         properties.distance_label = this._convertedLabel(distance);
