@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { discovered } from "../../features/gossip/pluginSlice";
-import { pluginDefinitionSchema } from "../../interfaces/schemas";
+import { pluginDefinitionSchema } from "../../interfaces/plugins";
 
 const pluginPrefix = "data-albp-";
 

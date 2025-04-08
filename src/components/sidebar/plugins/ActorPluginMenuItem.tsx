@@ -1,17 +1,19 @@
-import ListItemText from "@mui/material/ListItemText";
-
-import { IconButton, ListItem } from "@mui/material";
-
 import { LocationSearching, Refresh } from "@mui/icons-material";
-import { PluginMenuItemProps } from "../../../interfaces/properties";
-import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
-import { useAppSelector } from "../../../app/hooks";
+import { IconButton, ListItem } from "@mui/material";
+import ListItemText from "@mui/material/ListItemText";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { updateValidatedGossip } from "../../../features/gossip/gossipSlice";
+import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
+import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
+import { PluginMenuItemProps } from "../../../interfaces/properties";
 
 export function ActorPluginMenuItem({
   plugin,
 }: PluginMenuItemProps<ActorGossipPlugin>) {
-  const { bounds, viewState } = useAppSelector((state) => state.map);
+  const dispatch = useAppDispatch();
+  const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
   const [status, setStatus] = useState("Connecting");
 
   const locate = () => {
@@ -21,6 +23,40 @@ export function ActorPluginMenuItem({
       zoom: viewState.zoom,
       bounds: bounds,
     });
+  };
+
+  const update = () => {
+    const ts: dayjs.Dayjs = fixedTime ? dayjs(fixedTime) : dayjs.utc();
+
+    chrome.runtime.sendMessage(
+      plugin.id,
+      {
+        type: "query",
+        ts: ts.utc().unix(),
+        maxDelta: 300000,
+        limit: 10000,
+        bounds: bounds,
+      },
+      (response) => {
+        const parseResult = pluginActorQueryResponseSchema.safeParse(response);
+
+        if (!parseResult.success) {
+          console.error(
+            "Failed to parse query response from plugin",
+            parseResult.error
+          );
+          console.log(response);
+          return;
+        }
+
+        dispatch(
+          updateValidatedGossip({
+            plugin: plugin.id,
+            actors: parseResult.data.actors,
+          })
+        );
+      }
+    );
   };
 
   const updateStatus = () => {
@@ -34,9 +70,18 @@ export function ActorPluginMenuItem({
   };
 
   useEffect(() => {
-    const interval = setInterval(updateStatus, 1000);
+    const interval = setInterval(() => {
+      updateStatus();
+
+      if(!fixedTime)
+        update();
+    }, 1000);
     return () => clearInterval(interval);
   });
+
+  useEffect(() => {
+    update();
+  }, [fixedTime]);
 
   return (
     <div>
@@ -48,7 +93,7 @@ export function ActorPluginMenuItem({
                 <LocationSearching />
               </IconButton>
             )}
-            <IconButton edge="end">
+            <IconButton edge="end" onClick={update}>
               <Refresh />
             </IconButton>
           </>

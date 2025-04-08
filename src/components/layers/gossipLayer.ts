@@ -1,18 +1,18 @@
 import { PickingInfo } from "deck.gl";
-import { IActor } from "../../../interfaces/schemas";
+import { Actor } from "../../interfaces/actor";
 
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 
 export default function (
-  actors: IActor[],
+  actors: Actor[],
   model: string,
-  onHover: (actor?: IActor) => void,
-  onClick: (actor?: IActor) => void,
+  onHover: (actor?: Actor) => void,
+  onClick: (actor?: Actor) => void,
   sizeScale: number = 100,
   sizeMinPixels = 1.75,
-  sizeMaxPixels = 10
+  sizeMaxPixels = 10,
 ) {
-  const layer = new ScenegraphLayer<IActor>({
+  const layer = new ScenegraphLayer<Actor>({
     id: "gossip-layer-" + model,
     data: actors,
     pickable: true,
@@ -27,13 +27,13 @@ export default function (
     },
     _lighting: "pbr",
     getOrientation: (d) => {
-      const yaw = (180 + (d.pos.course ?? 0)) % 360;
+      const yaw = d.pos.heading ?? 0;
       return [0, -yaw, 90];
     },
-    onHover: (info: PickingInfo<IActor>) => {
+    onHover: (info: PickingInfo<Actor>) => {
       onHover(info.object);
     },
-    onClick: (info: PickingInfo<IActor>) => {
+    onClick: (info: PickingInfo<Actor>) => {
       onClick(info.object);
     },
   });

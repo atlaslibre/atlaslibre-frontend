@@ -68,7 +68,7 @@ export default function TimeControl() {
     const mapTzAlt = features[0].properties.time_zone;
     const objectId = features[0].properties.objectid;
 
-    dispatch(setMapTimezoneObjectId(objectId))
+    dispatch(setMapTimezoneObjectId(objectId));
 
     if (mapTzName) {
       dispatch(setMapTimezone(mapTzName));
@@ -90,9 +90,17 @@ export default function TimeControl() {
         >
           <DateTimePicker
             label={effectiveTimezoneLabel}
-            value={fixedTime ? dayjs(fixedTime) : nowTime}
+            value={fixedTime ? dayjs.utc(fixedTime) : nowTime}
             timezone={effectiveTimezone}
-            onChange={(newValue) => dispatch(setFixedTime(newValue?.toISOString()))}
+            onChange={(newValue) => {
+              if (!newValue) return;
+              if (effectiveTimezone === "utc") {
+                // some very strange offset bug going on there
+                const offsetBug = dayjs().local().utcOffset();
+                newValue = newValue.subtract(offsetBug, "minutes");
+              }
+              return dispatch(setFixedTime(newValue.toISOString()));
+            }}
             format="YYYY-MM-DD HH:mm:ss"
             disableFuture={true}
             ampm={false}
