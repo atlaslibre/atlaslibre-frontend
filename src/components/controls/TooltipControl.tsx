@@ -37,26 +37,31 @@ export default function TooltipControl(props: { position: ControlPosition }) {
   }, [ref, control]);
 
   return (
-      <div ref={ref} className="bg-gray-200 p-2 cursor-default">
-          {actor && (
-              <>
-                  <p>
-                      {actor.cc && <ReactCountryFlag countryCode={actor.cc} svg />}{" "}
-                      {actor.type} {actor.class}
-                  </p>
-                  <p className="font-medium">{actor.name}</p>
-              </>
-          )}
-
-          {distance && (
-              <p>
-                  Measured distance: <span className="font-medium">{distance}</span>
-              </p>
-          )}
-
+    <div ref={ref} className="bg-gray-200 p-2 cursor-default">
+      {actor && (
+        <>
+          <p>{actor.type}</p>
           <p>
-              {lat.toFixed(6)} {lon.toFixed(6)}
+            {actor.type == "ship" && (
+              <>
+                <ReactCountryFlag countryCode={actor.flag} svg />
+                {actor.class}
+              </>
+            )}
           </p>
-      </div>
+          <p className="font-medium">{actor.name}</p>
+        </>
+      )}
+
+      {distance && (
+        <p>
+          Measured distance: <span className="font-medium">{distance}</span>
+        </p>
+      )}
+
+      <p>
+        {lat.toFixed(6)} {lon.toFixed(6)}
+      </p>
+    </div>
   );
 }
