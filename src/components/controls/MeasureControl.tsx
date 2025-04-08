@@ -56,7 +56,7 @@ class MeasureControlImpl implements IControl {
     return this._container;
   }
 
-  onRemove(_map: Map): void {
+  onRemove(): void {
     if (this._container?.parentNode)
       this._container.parentNode.removeChild(this._container);
     if (this._onClickSubscription) this._onClickSubscription.unsubscribe();
@@ -69,6 +69,7 @@ class MeasureControlImpl implements IControl {
     if (this._active) this._button.classList.add("active");
     else this._button.classList.remove("active");
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const geoman = (this._map as any).gm as Geoman | undefined;
     if (geoman) {
       geoman.disableDraw();
@@ -83,7 +84,7 @@ class MeasureControlImpl implements IControl {
     const converter = convert(meters, "meters");
 
     if (this._unitSystem === "nautical") {
-      let quantity = converter.to("nautical miles");
+      const quantity = converter.to("nautical miles");
       return `${quantity.toFixed(1)} nm`;
     }
 
@@ -95,11 +96,10 @@ class MeasureControlImpl implements IControl {
     if (!this._active) return;
 
     const existingPoints = this._fc.features
-    .filter((point) => point.geometry.type == "Point")
-    .map((point) => point as Feature<Point>);
+      .filter((point) => point.geometry.type == "Point")
+      .map((point) => point as Feature<Point>);
 
-    if(existingPoints.length > 0)
-        existingPoints.pop();
+    if (existingPoints.length > 0) existingPoints.pop();
 
     this._fc = { type: "FeatureCollection", features: existingPoints };
     this._onMapClick();
@@ -134,8 +134,8 @@ class MeasureControlImpl implements IControl {
       const linestrings = [];
 
       for (let i = 1; i < this._fc.features.length; i++) {
-        let a = existingPoints[i - 1].geometry.coordinates;
-        let b = existingPoints[i].geometry.coordinates;
+        const a = existingPoints[i - 1].geometry.coordinates;
+        const b = existingPoints[i].geometry.coordinates;
 
         const properties = {
           distance: 0,

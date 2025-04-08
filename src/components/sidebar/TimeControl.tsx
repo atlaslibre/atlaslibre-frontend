@@ -78,7 +78,7 @@ export default function TimeControl() {
       dispatch(setMapTimezone(mapTzAlt.replace("UTC", "")));
       if (timezoneType === "map") setEffectiveTimezoneLabel(mapTzAlt);
     }
-  }, [viewState, timezoneType]);
+  }, [viewState, timezoneType]); 
 
   return (
     <div className="p-4">

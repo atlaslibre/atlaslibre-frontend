@@ -38,7 +38,8 @@ export default function CustomMapMenu() {
   const map = useMap();
 
   useEffect(() => {
-    // @ts-ignore GM is GeoMans namespace, which is not visible on the map type
+    // GM is GeoMans namespace, which is not visible on the map type
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const innerMap = map.default?.getMap() as any;
     if (innerMap) {
       const geoman = innerMap.gm as Geoman;
