@@ -1,5 +1,6 @@
 import { useAppSelector } from "../../app/hooks";
 import { Layer, Source } from "react-map-gl/maplibre";
+import { regularFonts } from "../../features/map/fonts";
 
 export default function CustomMapLayers() {
   const { inactiveCustomMap } = useAppSelector((state) => state.customMap);
@@ -69,6 +70,21 @@ export default function CustomMapLayers() {
               visibility: customMap.visible ? "visible" : "none",
             }}
             filter={["==", "shape", "marker"]}
+          />
+
+          <Layer
+            type="symbol"
+            id={`custom-map-${index}-text`}
+            layout={{
+              "text-field": "{text}",
+              "text-size": 20,
+              "text-font": regularFonts,
+              visibility: customMap.visible ? "visible" : "none",
+            }}
+            paint={{
+              "text-color": customMap.color,
+            }}
+            filter={["==", "shape", "text_marker"]}
           />
         </Source>
       ))}
