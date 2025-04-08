@@ -6,7 +6,7 @@ interface TooltipState {
   activeActor?: IActor | undefined;
   lat: number;
   lon: number;
-  distance?: string | undefined
+  distance?: string | undefined;
 }
 
 const initialState: TooltipState = { lat: 0, lon: 0 };
