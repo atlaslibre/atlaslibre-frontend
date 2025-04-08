@@ -192,7 +192,7 @@ export default function MeasureControl() {
 
   useEffect(() => {
     impl.setUnitSystem(unitSystem);
-  }, [unitSystem]);
+  }, [unitSystem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

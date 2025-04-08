@@ -50,14 +50,14 @@ export default function CustomMapMenu() {
       geoman.features.featureCounter = 0;
       geoman.features.importGeoJson(activeCustomMap);
     }
-  }, [activeCustomMap]);
+  }, [activeCustomMap]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (filesContent.length === 0) return;
     const [{ content }] = filesContent;
     const geojson = JSON.parse(content);
     dispatch(saveActiveCustomMap(geojson));
-  }, [filesContent]);
+  }, [filesContent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
