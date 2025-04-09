@@ -29,7 +29,9 @@ export default function MeasureControlLayers() {
         source="measure-control-source"
         paint={{
             "circle-color": c("#000", "#fff"),
-            "circle-radius": 4
+            "circle-radius": 4,
+            "circle-pitch-scale": "map",
+            "circle-pitch-alignment": "map",
         }}
       />
 
@@ -46,8 +48,7 @@ export default function MeasureControlLayers() {
         paint={{
           "text-color": c("#111", "#eee"),
           "text-halo-color": c("#fff", "#000"),
-          "text-halo-width": 1  ,
-          
+          "text-halo-width": 1,
         }}
       />
     </>

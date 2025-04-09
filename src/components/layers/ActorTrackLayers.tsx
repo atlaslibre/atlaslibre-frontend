@@ -18,9 +18,9 @@ export default function ActorTrackLayers() {
         id="actor-track-line"
         source="actor-track"
         paint={{
-            "line-width": 1.5,
-            "line-color": c("#000", "#fff"),
-            "line-opacity": 0.3
+          "line-width": 1.5,
+          "line-color": c("#000", "#fff"),
+          "line-opacity": 0.3,
         }}
       />
 
@@ -29,9 +29,11 @@ export default function ActorTrackLayers() {
         id="actor-track-marker"
         source="actor-track"
         paint={{
-            "circle-color": c("#000", "#fff"),
-            "circle-radius": 2.5,
-            "circle-opacity": 0.2
+          "circle-color": c("#000", "#fff"),
+          "circle-radius": 2.5,
+          "circle-opacity": 0.2,
+          "circle-pitch-scale": "map",
+          "circle-pitch-alignment": "map",
         }}
         filter={["!=", "type", "current_position"]}
       />
@@ -41,17 +43,18 @@ export default function ActorTrackLayers() {
         id="actor-track-current-marker"
         source="actor-track"
         paint={{
-            "circle-stroke-color": c("#f66", "#f33"),
-            "circle-stroke-opacity": 0.8,
-            "circle-stroke-width": 1, 
-            "circle-radius": {
-              "type": "exponential",
-              "stops": [
-                  [2, 2],
-                  [9, 20]
-              ]
-            },
-            "circle-color": "transparent",
+          "circle-color": c("#000", "#fff"),
+          "circle-blur": 0.5,
+          "circle-opacity": 0.5,
+          "circle-radius": {
+            type: "exponential",
+            stops: [
+              [2, 2],
+              [9, 20],
+            ],
+          },
+          "circle-pitch-scale": "map",
+          "circle-pitch-alignment": "map",
         }}
         filter={["==", "type", "current_position"]}
       />

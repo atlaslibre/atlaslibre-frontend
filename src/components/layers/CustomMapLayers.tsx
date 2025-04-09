@@ -48,6 +48,8 @@ export default function CustomMapLayers() {
               "circle-stroke-width": 1,
               "circle-stroke-color": customMap.color,
               "circle-stroke-opacity": 0.5,
+              "circle-pitch-scale": "map",
+              "circle-pitch-alignment": "map",
             }}
             layout={{
               visibility: customMap.visible ? "visible" : "none",
@@ -65,6 +67,8 @@ export default function CustomMapLayers() {
               "circle-stroke-width": 1,
               "circle-stroke-color": customMap.color,
               "circle-stroke-opacity": 0.5,
+              "circle-pitch-scale": "map",
+              "circle-pitch-alignment": "map",
             }}
             layout={{
               visibility: customMap.visible ? "visible" : "none",
@@ -80,6 +84,7 @@ export default function CustomMapLayers() {
               "text-size": 20,
               "text-font": regularFonts,
               visibility: customMap.visible ? "visible" : "none",
+              "text-pitch-alignment": "map",
             }}
             paint={{
               "text-color": customMap.color,

@@ -22,7 +22,7 @@ export default function (
     sizeMinPixels: sizeMinPixels,
     sizeMaxPixels: sizeMaxPixels,
     autoHighlight: true,
-    getPosition: (d) => [d.pos.lon ?? 0, d.pos.lat ?? 0, 0],
+    getPosition: (d) => [d.pos.lon ?? 0, d.pos.lat ?? 0, d.pos.alt ? d.pos.alt * 5 : 0],
     _animations: {
       "*": { speed: 1 },
     },
