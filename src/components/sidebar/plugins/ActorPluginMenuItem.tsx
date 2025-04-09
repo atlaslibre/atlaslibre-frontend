@@ -14,6 +14,8 @@ export function ActorPluginMenuItem({
 }: PluginMenuItemProps<ActorGossipPlugin>) {
   const dispatch = useAppDispatch();
   const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
+  const { tracked } = useAppSelector((state) => state.gossip);
+
   const [status, setStatus] = useState("Connecting");
 
   const locate = () => {
@@ -32,20 +34,21 @@ export function ActorPluginMenuItem({
       plugin.id,
       {
         type: "query",
+        tracks: tracked[plugin.id] ?? [],
         ts: ts.utc().unix(),
         maxDelta: 300000,
         limit: 10000,
         bounds: bounds,
       },
       (response) => {
+
         const parseResult = pluginActorQueryResponseSchema.safeParse(response);
 
         if (!parseResult.success) {
           console.error(
             "Failed to parse query response from plugin",
-            parseResult.error
+            parseResult.error, response
           );
-          console.log(response);
           return;
         }
 
@@ -53,6 +56,7 @@ export function ActorPluginMenuItem({
           updateValidatedGossip({
             plugin: plugin.id,
             actors: parseResult.data.actors,
+            tracks: parseResult.data.tracks
           })
         );
       }

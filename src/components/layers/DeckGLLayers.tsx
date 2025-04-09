@@ -1,4 +1,4 @@
-import { useControl } from "react-map-gl/maplibre";
+import { Source, useControl } from "react-map-gl/maplibre";
 
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 
@@ -9,6 +9,8 @@ import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { useMediaQuery } from "@mui/material";
 import { Actor } from "../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../features/map/tooltipSlice";
+import { toggleTrack } from "../../features/gossip/gossipSlice";
+import { FeatureCollection, LineString, Position } from "geojson";
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
   const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
@@ -17,7 +19,7 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 }
 
 export default function DeckGLLayers() {
-  const actors = useAppSelector((state) => state.gossip.actors);
+  const { actors, tracks } = useAppSelector((state) => state.gossip);
   const { colorMode } = useAppSelector((state) => state.flags);
   const dispatch = useAppDispatch();
 
@@ -33,8 +35,18 @@ export default function DeckGLLayers() {
     else dispatch(clearTooltip("actor"));
   };
 
-  const onClick = (_actor?: Actor) => {
-    // handle active actor
+  const onClick = (actor?: Actor) => {
+    if (!actor) return;
+
+    const plugins = Object.keys(actors);
+    for (let i = 0; i < plugins.length; ) {
+      const found = actors[plugins[i]].find((a) => a.id == actor.id);
+
+      if (found) {
+        dispatch(toggleTrack({ plugin: plugins[i], actor: found }));
+        return;
+      }
+    }
   };
 
   const ambientLight = new AmbientLight({
@@ -58,9 +70,25 @@ export default function DeckGLLayers() {
     onClick,
     1000,
     1.5,
-    3, 
+    3,
     180
   );
+
+  const allTracked = Object.values(tracks).flat();
+
+  const tracksFeatures : FeatureCollection<LineString> = {
+    type: "FeatureCollection",
+    features: allTracked.map((t) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: t.track.map(r => [r.lon, r.lat])
+        },
+        properties: {}
+      }
+    })
+  };
 
   /*
 
@@ -133,6 +161,8 @@ export default function DeckGLLayers() {
   */
 
   return (
+    <>
+    <Source type="geojson" data={tracksFeatures} id="actor-track" />
     <DeckGLOverlay
       layers={[
         aircraft,
@@ -149,5 +179,6 @@ export default function DeckGLLayers() {
       interleaved={false}
       effects={[lightingEffect]}
     />
+    </>
   );
 }

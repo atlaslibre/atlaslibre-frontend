@@ -21,6 +21,11 @@ export const locationRecordSchema = z.object({
     .transform((x) => x ?? undefined),
 });
 
+export const trackSchema = z.object({
+  id: z.string(),
+  track: z.array(locationRecordSchema)
+})
+
 const baseActorSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -63,5 +68,6 @@ export const actorSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+export type Track = z.infer<typeof trackSchema>;
 export type LocationRecord = z.infer<typeof locationRecordSchema>;
 export type Actor = z.infer<typeof actorSchema>;

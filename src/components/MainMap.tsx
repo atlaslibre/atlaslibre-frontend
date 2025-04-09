@@ -31,6 +31,7 @@ import MainMapSources from "./services/Sources";
 import CustomMapLayers from "./layers/CustomMapLayers";
 import MeasureControl from "./controls/MeasureControl";
 import MeasureControlLayers from "./layers/MeasureControlLayers";
+import ActorTrackLayers from "./layers/ActorTrackLayers";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -106,6 +107,7 @@ export default function MainMap() {
         <UrbanLayers />
         <TransportInfrastructure />
         <OtherInfrastructureLayers />
+        <ActorTrackLayers />
         <DeckGLLayers />
         <LabelLayers />
         <CustomMapLayers />
