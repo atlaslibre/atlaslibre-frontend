@@ -53,12 +53,13 @@ export default function DeckGLLayers() {
 
   const aircraft = gossipLayer(
     allActors.filter((s: Actor) => s.type == "aircraft"),
-    "airplane.glb",
+    "jet.glb",
     onHover,
     onClick,
-    25,
-    0.1,
-    3
+    1000,
+    1.5,
+    3, 
+    180
   );
 
   /*

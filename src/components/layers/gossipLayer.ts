@@ -11,6 +11,7 @@ export default function (
   sizeScale: number = 100,
   sizeMinPixels = 1.75,
   sizeMaxPixels = 10,
+  rotation: number = 0
 ) {
   const layer = new ScenegraphLayer<Actor>({
     id: "gossip-layer-" + model,
@@ -27,7 +28,7 @@ export default function (
     },
     _lighting: "pbr",
     getOrientation: (d) => {
-      const yaw = d.pos.heading ?? 0;
+      const yaw = (rotation + (d.pos.heading ?? 0)) % 360;
       return [0, -yaw, 90];
     },
     onHover: (info: PickingInfo<Actor>) => {
