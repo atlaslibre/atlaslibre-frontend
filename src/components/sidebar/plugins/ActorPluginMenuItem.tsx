@@ -17,6 +17,8 @@ export function ActorPluginMenuItem({
   const { tracked } = useAppSelector((state) => state.gossip);
 
   const [status, setStatus] = useState("Connecting");
+  const [updating, setUpdating] = useState(false);
+
 
   const locate = () => {
     chrome.runtime.sendMessage(plugin.id, {
@@ -28,6 +30,11 @@ export function ActorPluginMenuItem({
   };
 
   const update = () => {
+    if(updating)
+      return;
+
+    setUpdating(true)
+
     const ts: dayjs.Dayjs = fixedTime ? dayjs(fixedTime) : dayjs.utc();
 
     chrome.runtime.sendMessage(
@@ -36,19 +43,21 @@ export function ActorPluginMenuItem({
         type: "query",
         tracks: tracked[plugin.id] ?? [],
         ts: ts.utc().unix(),
-        maxDelta: 300000,
-        limit: 10000,
+        maxDelta: 300_000, // 5 min - TODO make configurable (per plugin?)
+        maxDeltaTrack: 60 * 60 * 1000, // 1h - TODO make configurable (per plugin?)
+        limit: 10_000,
         bounds: bounds,
       },
       (response) => {
-
         const parseResult = pluginActorQueryResponseSchema.safeParse(response);
 
         if (!parseResult.success) {
           console.error(
             "Failed to parse query response from plugin",
-            parseResult.error, response
+            parseResult.error,
+            response
           );
+          setUpdating(false)
           return;
         }
 
@@ -56,9 +65,10 @@ export function ActorPluginMenuItem({
           updateValidatedGossip({
             plugin: plugin.id,
             actors: parseResult.data.actors,
-            tracks: parseResult.data.tracks
+            tracks: parseResult.data.tracks,
           })
         );
+        setUpdating(false)
       }
     );
   };
@@ -77,15 +87,14 @@ export function ActorPluginMenuItem({
     const interval = setInterval(() => {
       updateStatus();
 
-      if(!fixedTime)
-        update();
+      if (!fixedTime) update();
     }, 1000);
     return () => clearInterval(interval);
   });
 
   useEffect(() => {
     update();
-  }, [fixedTime]);
+  }, [fixedTime, viewState, tracked]);
 
   return (
     <div>
@@ -97,7 +106,7 @@ export function ActorPluginMenuItem({
                 <LocationSearching />
               </IconButton>
             )}
-            <IconButton edge="end" onClick={update}>
+            <IconButton edge="end" onClick={update} disabled={updating}>
               <Refresh />
             </IconButton>
           </>

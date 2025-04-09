@@ -10,7 +10,9 @@ import { useMediaQuery } from "@mui/material";
 import { Actor } from "../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../features/map/tooltipSlice";
 import { toggleTrack } from "../../features/gossip/gossipSlice";
-import { FeatureCollection, LineString, Position } from "geojson";
+import { FeatureCollection } from "geojson";
+
+// TODO this file is a royal mess, clean up :)
 
 function DeckGLOverlay(props: MapboxOverlayProps) {
   const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
@@ -19,7 +21,7 @@ function DeckGLOverlay(props: MapboxOverlayProps) {
 }
 
 export default function DeckGLLayers() {
-  const { actors, tracks } = useAppSelector((state) => state.gossip);
+  const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
   const { colorMode } = useAppSelector((state) => state.flags);
   const dispatch = useAppDispatch();
 
@@ -74,11 +76,12 @@ export default function DeckGLLayers() {
     180
   );
 
-  const allTracked = Object.values(tracks).flat();
+  const allTracks = Object.values(tracks).flat();
+  const allTracked = Object.values(tracked).flat();
 
-  const tracksFeatures : FeatureCollection<LineString> = {
+  const tracksFeatures : FeatureCollection= {
     type: "FeatureCollection",
-    features: allTracked.map((t) => {
+    features: allTracks.map((t) => {
       return {
         type: "Feature",
         geometry: {
@@ -89,6 +92,22 @@ export default function DeckGLLayers() {
       }
     })
   };
+
+  for(let i = 0; i < allTracked.length; i++){
+    const found = allActors.find(s => s.id == allTracked[i]);
+    if(found){
+      tracksFeatures.features.push({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [found.pos.lon, found.pos.lat]
+        },
+        properties: {
+          type: "current_position"
+        }
+      })
+    }
+  }
 
   /*
 

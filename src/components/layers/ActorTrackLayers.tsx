@@ -15,12 +15,45 @@ export default function ActorTrackLayers() {
     <>
       <Layer
         type="line"
-        id="actor-track"
+        id="actor-track-line"
         source="actor-track"
         paint={{
+            "line-width": 1.5,
             "line-color": c("#000", "#fff"),
-            "line-dasharray": [1,1]
+            "line-opacity": 0.3
         }}
+      />
+
+      <Layer
+        type="circle"
+        id="actor-track-marker"
+        source="actor-track"
+        paint={{
+            "circle-color": c("#000", "#fff"),
+            "circle-radius": 2.5,
+            "circle-opacity": 0.2
+        }}
+        filter={["!=", "type", "current_position"]}
+      />
+
+      <Layer
+        type="circle"
+        id="actor-track-current-marker"
+        source="actor-track"
+        paint={{
+            "circle-stroke-color": c("#f66", "#f33"),
+            "circle-stroke-opacity": 0.8,
+            "circle-stroke-width": 1, 
+            "circle-radius": {
+              "type": "exponential",
+              "stops": [
+                  [2, 2],
+                  [9, 20]
+              ]
+            },
+            "circle-color": "transparent",
+        }}
+        filter={["==", "type", "current_position"]}
       />
     </>
   );
