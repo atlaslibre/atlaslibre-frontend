@@ -5,6 +5,7 @@ import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 
 export default function (
   actors: Actor[],
+  tracked: string[],
   model: string,
   onHover: (actor?: Actor) => void,
   onClick: (actor?: Actor) => void,
@@ -22,7 +23,11 @@ export default function (
     sizeMinPixels: sizeMinPixels,
     sizeMaxPixels: sizeMaxPixels,
     autoHighlight: true,
-    getPosition: (d) => [d.pos.lon ?? 0, d.pos.lat ?? 0, d.pos.alt ? d.pos.alt : 0],
+    getPosition: (d) => [
+      d.pos.lon ?? 0,
+      d.pos.lat ?? 0,
+      d.pos.alt ? d.pos.alt : 0,
+    ],
     _animations: {
       "*": { speed: 1 },
     },
@@ -36,6 +41,10 @@ export default function (
     },
     onClick: (info: PickingInfo<Actor>) => {
       onClick(info.object);
+    },
+    getColor: (d) => {
+      if (tracked.find((a) => a == d.id)) return [255, 100, 100];
+      return [255, 255, 255];
     },
   });
 

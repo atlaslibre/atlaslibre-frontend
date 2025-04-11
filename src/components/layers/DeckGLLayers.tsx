@@ -64,9 +64,12 @@ export default function DeckGLLayers() {
   const lightingEffect = new LightingEffect({ ambientLight, cameraLight });
 
   const allActors = Object.values(actors).flat();
+  const allTracks = Object.values(tracks).flat();
+  const allTracked = Object.values(tracked).flat();
 
   const aircraft = gossipLayer(
     allActors.filter((s: Actor) => s.type == "aircraft"),
+    allTracked,
     "jet.glb",
     onHover,
     onClick,
@@ -75,9 +78,6 @@ export default function DeckGLLayers() {
     3,
     180
   );
-
-  const allTracks = Object.values(tracks).flat();
-  const allTracked = Object.values(tracked).flat();
 
   type FlightPath = {
     start: [longitude: number, latitude: number, altitude: number];
@@ -131,11 +131,11 @@ export default function DeckGLLayers() {
   const actorPaths = new LineLayer<FlightPath>({
     id: "actor-paths",
     data: lineLayerData,
-    opacity: 0.7,
+    opacity: 0.4,
     getSourcePosition: (d) => d.start,
     getTargetPosition: (d) => d.end,
     getColor: (_d) => {
-      return [75, 50, 255];
+      return [200, 0, 200];
     },
     getWidth: 2,
   });

@@ -1,4 +1,6 @@
+import { useGetPhotosByHexQuery } from "../../../features/gossip/planespotterSlice";
 import { Actor } from "../../../interfaces/actor";
+import TooltipFact from "./TooltipFact";
 
 interface AircraftTooltipProps {
   aircraft: Actor & { type: "aircraft" };
@@ -6,18 +8,21 @@ interface AircraftTooltipProps {
 
 export default function AircraftTooltip(props: AircraftTooltipProps) {
   const ac = props.aircraft;
+  const photos = useGetPhotosByHexQuery(ac.hex);
+
   return (
     <>
+
+      {photos.isSuccess && photos.data.photos.length > 0 &&  <img src={photos.data.photos[0].thumbnail.src} />}
+     
+
       <p className="font-medium">{ac.name}</p>
-
-      <p>Hex: {ac.hex.toUpperCase()}</p>
-
-      {ac.reg && <p>Registration: {ac.reg}</p>}
-      {ac.squawk && <p>Squawk: {ac.squawk}</p>}
-      {ac.flight && <p>Flight: {ac.flight}</p>}
-
-      {ac.pos.speed && ac.pos.speed > 0 && <p>Speed: {ac.pos.speed}</p>}
-      {ac.pos.alt  && ac.pos.alt > 0 && <p>Altitude: {ac.pos.alt}</p>}
+      
+      <TooltipFact label="Hex">{ac.hex.toUpperCase()}</TooltipFact>
+      <TooltipFact label="Registration">{ac.reg}</TooltipFact>
+      <TooltipFact label="Squawk">{ac.squawk}</TooltipFact>
+      <TooltipFact label="Speed">{ac.pos.speed}</TooltipFact>
+      <TooltipFact label="Altitude">{ac.pos.alt}</TooltipFact>
     </>
   );
 }

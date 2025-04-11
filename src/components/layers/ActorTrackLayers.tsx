@@ -32,7 +32,7 @@ export default function ActorTrackLayers() {
         paint={{
           "circle-color": c("#666", "#000"),
           "circle-blur": 0.3,
-          "circle-opacity": 0.5,
+          "circle-opacity": 0.4,
           "circle-radius": {
             type: "exponential",
             stops: [
