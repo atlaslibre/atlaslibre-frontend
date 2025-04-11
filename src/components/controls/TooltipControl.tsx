@@ -2,8 +2,8 @@ import { IControl, ControlPosition } from "maplibre-gl";
 import { useEffect, createRef } from "react";
 import { useControl } from "react-map-gl/maplibre";
 import { useAppSelector } from "../../app/hooks";
-
-import ReactCountryFlag from "react-country-flag";
+import ShipTooltip from "./tooltips/ShipTooltip";
+import AircraftTooltip from "./tooltips/AircraftTooltip";
 
 class Tooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -40,16 +40,8 @@ export default function TooltipControl(props: { position: ControlPosition }) {
     <div ref={ref} className="bg-gray-200 p-2 cursor-default">
       {actor && (
         <>
-          <p>{actor.type}</p>
-          <p>
-            {actor.type == "ship" && (
-              <>
-                <ReactCountryFlag countryCode={actor.flag} svg />
-                {actor.class}
-              </>
-            )}
-          </p>
-          <p className="font-medium">{actor.name}</p>
+          {actor.type == "ship" && <ShipTooltip ship={actor} />}
+          {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}
         </>
       )}
 

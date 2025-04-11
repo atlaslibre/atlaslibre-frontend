@@ -18,24 +18,11 @@ export default function ActorTrackLayers() {
         id="actor-track-line"
         source="actor-track"
         paint={{
-          "line-width": 1.5,
-          "line-color": c("#000", "#fff"),
-          "line-opacity": 0.3,
+          "line-width": 5,
+          "line-color": c("#666", "#000"),
+          "line-opacity": 0.5,
+          "line-blur": 4
         }}
-      />
-
-      <Layer
-        type="circle"
-        id="actor-track-marker"
-        source="actor-track"
-        paint={{
-          "circle-color": c("#000", "#fff"),
-          "circle-radius": 2.5,
-          "circle-opacity": 0.2,
-          "circle-pitch-scale": "map",
-          "circle-pitch-alignment": "map",
-        }}
-        filter={["!=", "type", "current_position"]}
       />
 
       <Layer
@@ -43,14 +30,14 @@ export default function ActorTrackLayers() {
         id="actor-track-current-marker"
         source="actor-track"
         paint={{
-          "circle-color": c("#000", "#fff"),
-          "circle-blur": 0.5,
+          "circle-color": c("#666", "#000"),
+          "circle-blur": 0.3,
           "circle-opacity": 0.5,
           "circle-radius": {
             type: "exponential",
             stops: [
               [2, 2],
-              [9, 20],
+              [9, 15],
             ],
           },
           "circle-pitch-scale": "map",

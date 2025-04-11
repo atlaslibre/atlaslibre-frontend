@@ -4,7 +4,7 @@ import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 
 import gossipLayer from "./gossipLayer";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { LightingEffect } from "deck.gl";
+import { LightingEffect, LineLayer } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { useMediaQuery } from "@mui/material";
 import { Actor } from "../../interfaces/actor";
@@ -79,35 +79,66 @@ export default function DeckGLLayers() {
   const allTracks = Object.values(tracks).flat();
   const allTracked = Object.values(tracked).flat();
 
-  const tracksFeatures : FeatureCollection= {
+  type FlightPath = {
+    start: [longitude: number, latitude: number, altitude: number];
+    end: [longitude: number, latitude: number, altitude: number];
+    id: string
+  };
+
+  const tracksFeatures: FeatureCollection = {
     type: "FeatureCollection",
     features: allTracks.map((t) => {
       return {
         type: "Feature",
         geometry: {
           type: "LineString",
-          coordinates: t.track.map(r => [r.lon, r.lat])
+          coordinates: t.track.map((r) => [r.lon, r.lat]),
         },
-        properties: {}
-      }
-    })
+        properties: {},
+      };
+    }),
   };
 
-  for(let i = 0; i < allTracked.length; i++){
-    const found = allActors.find(s => s.id == allTracked[i]);
-    if(found){
+  for (let i = 0; i < allTracked.length; i++) {
+    const found = allActors.find((s) => s.id == allTracked[i]);
+    if (found) {
       tracksFeatures.features.push({
         type: "Feature",
         geometry: {
           type: "Point",
-          coordinates: [found.pos.lon, found.pos.lat]
+          coordinates: [found.pos.lon, found.pos.lat],
         },
         properties: {
-          type: "current_position"
-        }
-      })
+          type: "current_position",
+        },
+      });
     }
   }
+
+  const lineLayerData : FlightPath[] = [];
+  for (let j = 0; j < allTracks.length; j++) {
+    for (let i = 1; i < allTracks[j].track.length; i++) {
+      const p = allTracks[j].track[i - 1];
+      const c = allTracks[j].track[i];
+      lineLayerData.push({
+        start: [p.lon, p.lat, p.alt ?? 10],
+        end: [c.lon, c.lat, c.alt ?? 10],
+        id: allTracks[j].id
+      } as FlightPath)
+    }
+  }
+
+  const actorPaths = new LineLayer<FlightPath>({
+    id: "actor-paths",
+    data: lineLayerData,
+    opacity: 0.7,
+    getSourcePosition: (d) => d.start,
+    getTargetPosition: (d) => d.end,
+    getColor: (_d) => {
+      return [75, 50, 255];
+    },
+    getWidth: 2,
+  });
 
   /*
 
@@ -181,23 +212,24 @@ export default function DeckGLLayers() {
 
   return (
     <>
-    <Source type="geojson" data={tracksFeatures} id="actor-track" />
-    <DeckGLOverlay
-      layers={[
-        aircraft,
+      <Source type="geojson" data={tracksFeatures} id="actor-track" />
+      <DeckGLOverlay
+        layers={[
+          actorPaths,
+          aircraft,
 
-        /*
+          /*
         navigation,
         tankers,
         cargo,
         container,
         military,
         ships, */
-      ]}
-      pickingRadius={10}
-      interleaved={false}
-      effects={[lightingEffect]}
-    />
+        ]}
+        pickingRadius={10}
+        interleaved={false}
+        effects={[lightingEffect]}
+      />
     </>
   );
 }
