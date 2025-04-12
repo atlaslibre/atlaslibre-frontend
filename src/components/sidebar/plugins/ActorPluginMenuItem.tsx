@@ -43,8 +43,8 @@ export function ActorPluginMenuItem({
         type: "query",
         tracks: tracked[plugin.id] ?? [],
         ts: ts.utc().unix(),
-        maxDelta: 300_000, // 5 min - TODO make configurable (per plugin?)
-        maxDeltaTrack: 60 * 60 * 1000 * 10, // 1h - TODO make configurable (per plugin?)
+        maxDelta: 300, // 5 min - TODO make configurable (per plugin?)
+        maxDeltaTrack: 60 * 60 * 10, // 1h - TODO make configurable (per plugin?)
         limit: 10_000,
         bounds: bounds,
       },

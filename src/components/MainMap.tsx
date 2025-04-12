@@ -22,7 +22,7 @@ import InspectControl from "./controls/InspectControl";
 import TooltipControl from "./controls/TooltipControl";
 import BaseLayers from "./layers/BaseLayers";
 import BoundariesLayers from "./layers/BoundariesLayers";
-import DeckGLLayers from "./layers/DeckGLLayers";
+import DeckGLLayers from "./layers/actors/DeckGLLayers";
 import LabelLayers from "./layers/LabelLayers";
 import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import TransportInfrastructure from "./layers/TransportInfrastructure";

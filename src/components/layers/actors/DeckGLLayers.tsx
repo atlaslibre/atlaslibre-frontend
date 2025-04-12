@@ -3,13 +3,13 @@ import { Source, useControl } from "react-map-gl/maplibre";
 import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
 
 import gossipLayer from "./gossipLayer";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { LightingEffect, LineLayer } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { useMediaQuery } from "@mui/material";
-import { Actor } from "../../interfaces/actor";
-import { setTooltip, clearTooltip } from "../../features/map/tooltipSlice";
-import { toggleTrack } from "../../features/gossip/gossipSlice";
+import { Actor } from "../../../interfaces/actor";
+import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
+import { toggleTrack } from "../../../features/gossip/gossipSlice";
 import { FeatureCollection } from "geojson";
 
 // TODO this file is a royal mess, clean up :)
@@ -82,12 +82,12 @@ export default function DeckGLLayers() {
   type FlightPath = {
     start: [longitude: number, latitude: number, altitude: number];
     end: [longitude: number, latitude: number, altitude: number];
-    id: string
+    id: string;
   };
 
   const tracksFeatures: FeatureCollection = {
     type: "FeatureCollection",
-    features: allTracks.map((t) => {
+    features: allTracks.filter(t => allActors.find(a => a.id == t.id)?.type === "aircraft" ).map((t) => {
       return {
         type: "Feature",
         geometry: {
@@ -101,7 +101,7 @@ export default function DeckGLLayers() {
 
   for (let i = 0; i < allTracked.length; i++) {
     const found = allActors.find((s) => s.id == allTracked[i]);
-    if (found) {
+    if (found && found.type === "aircraft") {
       tracksFeatures.features.push({
         type: "Feature",
         geometry: {
@@ -115,7 +115,7 @@ export default function DeckGLLayers() {
     }
   }
 
-  const lineLayerData : FlightPath[] = [];
+  const lineLayerData: FlightPath[] = [];
   for (let j = 0; j < allTracks.length; j++) {
     for (let i = 1; i < allTracks[j].track.length; i++) {
       const p = allTracks[j].track[i - 1];
@@ -123,8 +123,8 @@ export default function DeckGLLayers() {
       lineLayerData.push({
         start: [p.lon, p.lat, p.alt ?? 10],
         end: [c.lon, c.lat, c.alt ?? 10],
-        id: allTracks[j].id
-      } as FlightPath)
+        id: allTracks[j].id,
+      } as FlightPath);
     }
   }
 
@@ -140,75 +140,128 @@ export default function DeckGLLayers() {
     getWidth: 2,
   });
 
-  /*
-
   const navigation = gossipLayer(
-    actors.filter((s: Actor) => s.type == "ship" && s.class == "navigation"),
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "navigation"),
+    allTracked,
     "buoy.glb",
     onHover,
-    onClick
+    onClick,
+    100,
+    1.75,
+    10,
+    180
   );
+
   const tankers = gossipLayer(
-    actors.filter((s: Actor) => s.type == "ship" && s.class == "tanker"),
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "tanker"),
+    allTracked,
     "tanker.glb",
     onHover,
     onClick,
     15,
     0.1,
-    1
+    1,
+    180
   );
   const cargo = gossipLayer(
-    actors.filter((s: Actor) => s.type == "ship" && s.class == "cargo"),
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "cargo"),
+    allTracked,
     "cargo.glb",
     onHover,
     onClick,
     15,
     0.1,
-    1
+    1,
+    180
   );
   const container = gossipLayer(
-    actors.filter((s: Actor) => s.type == "ship" && s.class == "container"),
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "container"),
+    allTracked,
     "container.glb",
     onHover,
     onClick,
     15,
     0.1,
-    1
+    1,
+    180
   );
   const military = gossipLayer(
-    actors.filter((s: Actor) => s.type == "ship" && s.class == "military"),
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "military"),
+    allTracked,
     "military.glb",
     onHover,
     onClick,
     15,
     0.1,
-    1
+    1,
+    180
+  );
+
+  const recreational = gossipLayer(
+    allActors.filter(
+      (s: Actor) => s.type == "ship" && s.class == "recreational"
+    ),
+    allTracked,
+    "sailboat.glb",
+    onHover,
+    onClick,
+    30,
+    0.1,
+    1,
+    180
+  );
+
+  const ferry = gossipLayer(
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "ferry"),
+    allTracked,
+    "ferry.glb",
+    onHover,
+    onClick,
+    15,
+    0.1,
+    1,
+    180
+  );
+
+  const highspeed = gossipLayer(
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "highspeed"),
+    allTracked,
+    "highspeed.glb",
+    onHover,
+    onClick,
+    30,
+    0.1,
+    1,
+    180
+  );
+
+  const special = gossipLayer(
+    allActors.filter((s: Actor) => s.type == "ship" && s.class == "special"),
+    allTracked,
+    "special.glb",
+    onHover,
+    onClick,
+    20,
+    0.1,
+    1,
+    180
   );
 
   /*
   other
   fishing
-  special
-  highspeed
-  ferry
-  recreational
-  
+    */
 
   const ships = gossipLayer(
-    actors.filter(
+    allActors.filter(
       (s: Actor) =>
-        s.type == "ship" &&
-        s.class != "navigation" &&
-        s.class != "tanker" &&
-        s.class != "cargo" &&
-        s.class != "container" &&
-        s.class != "military"
+        s.type == "ship" && (s.class == "fishing" || s.class == "other")
     ),
+    allTracked,
     "duck.glb",
     onHover,
     onClick
   );
-  */
 
   return (
     <>
@@ -217,14 +270,16 @@ export default function DeckGLLayers() {
         layers={[
           actorPaths,
           aircraft,
-
-          /*
-        navigation,
-        tankers,
-        cargo,
-        container,
-        military,
-        ships, */
+          navigation,
+          tankers,
+          cargo,
+          container,
+          military,
+          special, 
+          highspeed,
+          ferry,
+          recreational,
+          ships,
         ]}
         pickingRadius={10}
         interleaved={false}

@@ -1,5 +1,5 @@
 import { PickingInfo } from "deck.gl";
-import { Actor } from "../../interfaces/actor";
+import { Actor } from "../../../interfaces/actor";
 
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 

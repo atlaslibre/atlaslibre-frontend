@@ -23,8 +23,8 @@ export const locationRecordSchema = z.object({
 
 export const trackSchema = z.object({
   id: z.string(),
-  track: z.array(locationRecordSchema)
-})
+  track: z.array(locationRecordSchema),
+});
 
 const baseActorSchema = z.object({
   id: z.string(),
@@ -35,7 +35,11 @@ const baseActorSchema = z.object({
 export const actorSchema = z.discriminatedUnion("type", [
   baseActorSchema.extend({
     type: z.literal("ship"),
-    flag: z.string().length(2),
+    flag: z
+      .string()
+      .length(2)
+      .nullish()
+      .transform((x) => x ?? undefined),
     class: z.enum([
       "cargo",
       "container",
@@ -49,6 +53,10 @@ export const actorSchema = z.discriminatedUnion("type", [
       "special",
       "tanker",
     ]),
+    mmsi: z
+      .string()
+      .nullish()
+      .transform((x) => x ?? undefined),
   }),
   baseActorSchema.extend({
     type: z.literal("aircraft"),
