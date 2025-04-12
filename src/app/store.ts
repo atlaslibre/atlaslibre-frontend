@@ -40,8 +40,8 @@ export const store = configureStore({
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
     })
-      .prepend(listenerMiddleware.middleware)
-      .concat(plancespotterSlice.middleware),
+    .prepend(listenerMiddleware.middleware)
+    .concat(plancespotterSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
