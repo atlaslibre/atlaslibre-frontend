@@ -1,36 +1,20 @@
-import { Source, useControl } from "react-map-gl/maplibre";
-
-import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox";
-
+import { Source } from "react-map-gl/maplibre";
 import gossipLayer from "./gossipLayer";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector, useColorMode } from "../../../app/hooks";
 import { LightingEffect, LineLayer } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
-import { useMediaQuery } from "@mui/material";
 import { Actor } from "../../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
 import { toggleTrack } from "../../../features/gossip/gossipSlice";
 import { FeatureCollection } from "geojson";
+import DeckGLOverlay from "./DeckGLOverlay";
 
 // TODO this file is a royal mess, clean up :)
 
-function DeckGLOverlay(props: MapboxOverlayProps) {
-  const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
-  overlay.setProps(props);
-  return null;
-}
-
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
-  const { colorMode } = useAppSelector((state) => state.flags);
   const dispatch = useAppDispatch();
-
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  function c<T>(light: T, dark: T): T {
-    if (colorMode == "system") return prefersDarkMode ? dark : light;
-    return colorMode == "light" ? light : dark;
-  }
+  const c = useColorMode();
 
   const onHover = (actor?: Actor) => {
     if (actor) dispatch(setTooltip({ type: "actor", actor: actor }));

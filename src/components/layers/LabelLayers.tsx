@@ -1,5 +1,4 @@
-import { useMediaQuery } from "@mui/material";
-import { useAppSelector } from "../../app/hooks";
+import { useColorMode } from "../../app/hooks";
 import {
   italicMediumFonts,
   italicRegularFonts,
@@ -9,15 +8,8 @@ import {
 import ToggleableLayer from "./shared/ToggleableLayer";
 
 export default function LabelLayers() {
+  const c = useColorMode();
   const name = "{name_en}";
-
-  const { colorMode } = useAppSelector((state) => state.flags);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  function c<T>(light: T, dark: T) : T {
-    if (colorMode == "system") return prefersDarkMode ? dark : light;
-    return colorMode == "light" ? light : dark;
-  };
 
   return (
     <>

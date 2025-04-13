@@ -11,7 +11,6 @@ import {
   ScaleControl,
   ViewStateChangeEvent,
 } from "react-map-gl/maplibre";
-
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { saveActiveCustomMap } from "../features/map/customMapSlice";
 import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
@@ -19,19 +18,19 @@ import { setBounds, setViewState } from "../features/map/mapSlice";
 import { emptyMapStyle } from "../features/map/mapStyle";
 import { setLatLon } from "../features/map/tooltipSlice";
 import InspectControl from "./controls/InspectControl";
+import MeasureControl from "./controls/MeasureControl";
 import TooltipControl from "./controls/TooltipControl";
 import BaseLayers from "./layers/BaseLayers";
 import BoundariesLayers from "./layers/BoundariesLayers";
-import DeckGLLayers from "./layers/actors/DeckGLLayers";
+import CustomMapLayers from "./layers/CustomMapLayers";
 import LabelLayers from "./layers/LabelLayers";
+import MeasureControlLayers from "./layers/MeasureControlLayers";
 import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import TransportInfrastructure from "./layers/TransportInfrastructure";
 import UrbanLayers from "./layers/UrbanLayers";
-import MainMapSources from "./services/Sources";
-import CustomMapLayers from "./layers/CustomMapLayers";
-import MeasureControl from "./controls/MeasureControl";
-import MeasureControlLayers from "./layers/MeasureControlLayers";
 import ActorTrackLayers from "./layers/actors/ActorTrackLayers";
+import DeckGLLayers from "./layers/actors/DeckGLLayers";
+import MainMapSources from "./services/Sources";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -42,11 +41,6 @@ export default function MainMap() {
 
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
-
-  const onMove = (evt: ViewStateChangeEvent) => {
-    dispatch(setViewState(evt.viewState));
-    dispatch(setBounds(evt.target.getBounds().toArray()));
-  };
 
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
@@ -70,6 +64,11 @@ export default function MainMap() {
       }
     );
   }
+
+  const onMove = (evt: ViewStateChangeEvent) => {
+    dispatch(setViewState(evt.viewState));
+    dispatch(setBounds(evt.target.getBounds().toArray()));
+  };
 
   function onMouseMove(evt: MapLayerMouseEvent) {
     dispatch(setLatLon({ lat: evt.lngLat.lat, lon: evt.lngLat.lng }));

@@ -1,17 +1,10 @@
 import { Layer } from "react-map-gl/maplibre";
 
 import ToggleableLayer from "./shared/ToggleableLayer";
-import { useAppSelector } from "../../app/hooks";
-import { useMediaQuery } from "@mui/material";
+import { useColorMode } from "../../app/hooks";
 
 export default function BaseLayers() {
-  const { colorMode } = useAppSelector((state) => state.flags);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  function c<T>(light: T, dark: T) : T {
-    if (colorMode == "system") return prefersDarkMode ? dark : light;
-    return colorMode == "light" ? light : dark;
-  };
+  const c = useColorMode();
 
   return (
     <>

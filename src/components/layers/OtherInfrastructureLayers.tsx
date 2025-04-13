@@ -1,10 +1,11 @@
 import { ExpressionSpecification } from "maplibre-gl";
 import { italicRegularFonts, mediumFonts } from "../../features/map/fonts";
 import ToggleableLayer from "./shared/ToggleableLayer";
-import { useAppSelector } from "../../app/hooks";
-import { useMediaQuery } from "@mui/material";
+import { useColorMode } from "../../app/hooks";
 
 export default function OtherInfrastructureLayers() {
+  const c = useColorMode();
+
   const underwaterDashes = [1, 1, 5, 1];
   const terrestrialDashes = [5, 1, 5, 1];
   const name: ExpressionSpecification = [
@@ -13,14 +14,6 @@ export default function OtherInfrastructureLayers() {
     ["get", "name"],
     ["get", "operator"],
   ];
-
-  const { colorMode } = useAppSelector((state) => state.flags);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  function c<T>(light: T, dark: T) : T {
-    if (colorMode == "system") return prefersDarkMode ? dark : light;
-    return colorMode == "light" ? light : dark;
-  };
 
   const textColor = c("#181818","#eee");
   const haloColor = c("#fff","#181818");

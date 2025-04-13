@@ -1,19 +1,11 @@
-import { useMediaQuery } from "@mui/material";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector, useColorMode } from "../../app/hooks";
 import ToggleableLayer from "./shared/ToggleableLayer";
 import { Layer } from "react-map-gl/maplibre";
 
 export default function BoundariesLayers() {
-  const { colorMode } = useAppSelector((state) => state.flags);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
+  const c = useColorMode();
   const { mapTimezoneObjectId } = useAppSelector((state) => state.map);
-
-  function c<T>(light: T, dark: T): T {
-    if (colorMode == "system") return prefersDarkMode ? dark : light;
-    return colorMode == "light" ? light : dark;
-  }
-
+  
   return (
     <>
       <ToggleableLayer
