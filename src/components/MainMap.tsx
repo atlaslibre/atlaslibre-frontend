@@ -28,7 +28,7 @@ import MeasureControlLayers from "./layers/MeasureControlLayers";
 import OtherInfrastructureLayers from "./layers/OtherInfrastructureLayers";
 import TransportInfrastructure from "./layers/TransportInfrastructure";
 import UrbanLayers from "./layers/UrbanLayers";
-import ActorTrackLayers from "./layers/actors/ActorTrackLayers";
+import AirplaneShadowsLayers from "./layers/actors/AirplaneShadowsLayers";
 import DeckGLLayers from "./layers/actors/DeckGLLayers";
 import MainMapSources from "./services/Sources";
 
@@ -106,7 +106,7 @@ export default function MainMap() {
         <UrbanLayers />
         <TransportInfrastructure />
         <OtherInfrastructureLayers />
-        <ActorTrackLayers />
+        <AirplaneShadowsLayers />
         <DeckGLLayers />
         <LabelLayers />
         <CustomMapLayers />
