@@ -31,7 +31,7 @@ import MainMapSources from "./services/Sources";
 import CustomMapLayers from "./layers/CustomMapLayers";
 import MeasureControl from "./controls/MeasureControl";
 import MeasureControlLayers from "./layers/MeasureControlLayers";
-import ActorTrackLayers from "./layers/ActorTrackLayers";
+import ActorTrackLayers from "./layers/actors/ActorTrackLayers";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
