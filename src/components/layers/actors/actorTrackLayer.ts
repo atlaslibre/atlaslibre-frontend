@@ -1,6 +1,7 @@
 import { LineLayer } from "deck.gl";
 import { Actor, Track } from "../../../interfaces/actor";
 import colormap from "colormap";
+import { TrackColorRange } from "../../../features/gossip/pluginSettingsSlice";
 
 const rainbow = colormap<"rgba">({
   colormap: "rainbow",
@@ -10,13 +11,28 @@ const rainbow = colormap<"rgba">({
 
 const getColor = (
   actor: Actor,
-  speedRange: { [actorType: string]: [number, number] },
-  speed?: number
+  trackColorRange: {
+    [actorType: string]: TrackColorRange;
+  },
+  speed?: number,
+  altitude?: number
 ): [number, number, number] => {
-  if (!speed) return [128, 128, 128];
-  const min = speedRange[actor.type][0];
-  const max = speedRange[actor.type][1];
-  const index = Math.trunc((100 * Math.max(speed - min, 0)) / (max - min));
+  const type = trackColorRange[actor.type].type;
+
+  let value;
+  if (type == "speed") value = speed;
+  else if (trackColorRange[actor.type].type == "altitude") value = altitude;
+
+  if (!value) return [128, 128, 128];
+
+  const min = trackColorRange[actor.type].min;
+  const max = trackColorRange[actor.type].max;
+
+  const index = Math.min(
+    Math.trunc((100 * Math.max(value - min, 0)) / (max - min)),
+    99
+  );
+
   const color = rainbow[Math.min(index, 100)];
   return [color[0], color[1], color[2]];
 };
@@ -24,12 +40,15 @@ const getColor = (
 export default function actorTrackLayer(
   allTracks: Track[],
   allActors: Actor[],
-  speedRange: { [actorType: string]: [number, number] }
+  trackColorRange: {
+    [actorType: string]: TrackColorRange;
+  }
 ) {
   type TrackSegment = {
     start: [longitude: number, latitude: number, altitude: number];
     end: [longitude: number, latitude: number, altitude: number];
-    speed: number;
+    speed?: number;
+    altitude?: number;
     actor: Actor;
     id: string;
   };
@@ -44,6 +63,7 @@ export default function actorTrackLayer(
         start: [p.lon, p.lat, p.alt ?? 10],
         end: [c.lon, c.lat, c.alt ?? 10],
         speed: c.speed,
+        altitude: c.alt,
         actor: allActors.find((a) => a.id == allActors[j].id),
         id: allTracks[j].id,
       } as TrackSegment);
@@ -56,7 +76,8 @@ export default function actorTrackLayer(
     opacity: 0.4,
     getSourcePosition: (d) => d.start,
     getTargetPosition: (d) => d.end,
-    getColor: (_d) => getColor(_d.actor, speedRange, _d.speed),
+    getColor: (_d) =>
+      getColor(_d.actor, trackColorRange, _d.speed, _d.altitude),
     getWidth: 2,
   });
 

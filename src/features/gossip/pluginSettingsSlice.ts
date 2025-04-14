@@ -16,22 +16,31 @@ export type GossipPluginSettings =
   | ActorGossipPluginSettings
   | TileGossipPluginSettings;
 
-interface PluginSettingsState {
-  settings: GossipPluginSettings[];
-  speedColorRange: { [actorType: string]: [number, number] };
+export type TrackColorRangeType = "speed" | "altitude";
+
+export interface TrackColorRange {
+  type: TrackColorRangeType;
+  min: number;
+  max: number;
 }
 
-interface UpdateSpeedColorRangePayload {
-  type: string;
+interface PluginSettingsState {
+  settings: GossipPluginSettings[];
+  trackColorRange: { [actorType: string]: TrackColorRange };
+}
+
+interface UpdateTrackColorRangePayload {
+  actorType: string;
+  parameterType: TrackColorRangeType;
   min: number;
   max: number;
 }
 
 const initialState: PluginSettingsState = {
   settings: [],
-  speedColorRange: {
-    ship: [5, 20],
-    aircraft: [0, 300],
+  trackColorRange: {
+    ship: { min: 5, max: 20, type: "speed" },
+    aircraft: { min: 0, max: 30000, type: "altitude" },
   },
 };
 
@@ -41,12 +50,13 @@ export const pluginSettingsSlice = createSlice({
   reducers: {
     updateSpeedColorRange: (
       state,
-      action: PayloadAction<UpdateSpeedColorRangePayload>
+      action: PayloadAction<UpdateTrackColorRangePayload>
     ) => {
-      state.speedColorRange[action.payload.type] = [
-        action.payload.min,
-        action.payload.max,
-      ];
+      state.trackColorRange[action.payload.actorType] = {
+        min: action.payload.min,
+        max: action.payload.max,
+        type: action.payload.parameterType,
+      };
     },
   },
 });

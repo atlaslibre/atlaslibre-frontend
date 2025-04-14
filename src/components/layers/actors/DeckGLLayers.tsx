@@ -30,7 +30,7 @@ import { Layer, Source } from "react-map-gl/maplibre";
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
   const { plugins } = useAppSelector((state) => state.plugin);
-  const { speedColorRange } = useAppSelector((state) => state.pluginSettings);
+  const { trackColorRange } = useAppSelector((state) => state.pluginSettings);
 
 
   const dispatch = useAppDispatch();
@@ -97,7 +97,7 @@ export default function DeckGLLayers() {
     )
   );
 
-  const trackLayer = actorTrackLayer(allTracks, allActors, speedColorRange);
+  const trackLayer = actorTrackLayer(allTracks, allActors, trackColorRange);
 
   const attributions = [];
   for (let i = 0; i < plugins.length; i++) {
