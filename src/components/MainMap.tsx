@@ -92,7 +92,9 @@ export default function MainMap() {
         mapStyle={emptyMapStyle}
         onLoad={onLoad}
         onMouseMove={onMouseMove}
-        attributionControl={{ compact: false }}
+        attributionControl={{
+          compact: false,
+        }}
       >
         <NavigationControl position="top-left" />
         <MeasureControl />

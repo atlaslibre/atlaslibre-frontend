@@ -3,17 +3,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface BaseGossipPlugin {
   id: string;
   name: string;
+  attribution?: string;
 }
 
 export interface ActorGossipPlugin extends BaseGossipPlugin {
-  type: "actor"
-  replay: boolean
-  locate: boolean,
-  status: boolean,
+  type: "actor";
+  replay: boolean;
+  locate: boolean;
+  status: boolean;
 }
 
 export interface TileGossipPlugin extends BaseGossipPlugin {
-  type: "tile"
+  type: "tile";
 }
 
 export type GossipPlugin = ActorGossipPlugin | TileGossipPlugin;

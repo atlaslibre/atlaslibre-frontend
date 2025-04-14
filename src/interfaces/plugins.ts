@@ -8,6 +8,10 @@ const basePluginDefinitionSchema = z.object({
 export const pluginDefinitionSchema = z.discriminatedUnion("type", [
   basePluginDefinitionSchema.extend({
     type: z.literal("actor"),
+    attribution: z
+      .string()
+      .optional()
+      .transform((x) => x ?? undefined),
     replay: z
       .boolean()
       .optional()
@@ -27,9 +31,9 @@ export const pluginDefinitionSchema = z.discriminatedUnion("type", [
 ]);
 
 export const pluginActorQueryResponseSchema = z.object({
-    version: z.literal(1),
-    actors: z.array(actorSchema),
-    tracks: z.array(trackSchema)
-})
+  version: z.literal(1),
+  actors: z.array(actorSchema),
+  tracks: z.array(trackSchema),
+});
 
 export type PluginDefinition = z.infer<typeof pluginDefinitionSchema>;
