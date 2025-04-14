@@ -25,9 +25,12 @@ import {
 } from "../../../features/gossip/models";
 import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
+import { Layer, Source } from "react-map-gl/maplibre";
 
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
+  const { plugins } = useAppSelector((state) => state.plugin);
+
   const dispatch = useAppDispatch();
   const c = useColorMode();
 
@@ -94,8 +97,28 @@ export default function DeckGLLayers() {
 
   const trackLayer = actorTrackLayer(allTracks);
 
+  const attributions = [];
+  for (let i = 0; i < plugins.length; i++) {
+    const attribution = plugins[i].attribution;
+
+    if (attribution == undefined) continue;
+
+    // show only active plugins as attributions
+    if (actors[plugins[i].id] && actors[plugins[i].id].length > 0) {
+      attributions.push(attribution);
+    }
+  }
+
   return (
     <>
+      <Source
+        id="attribution-source"
+        type="geojson"
+        data={{ type: "FeatureCollection", features: [] }}
+        attribution={attributions.join(", ")}
+      >
+        <Layer type="line" />
+      </Source>
       <DeckGLOverlay
         layers={[trackLayer, ...scenegraphLayers]}
         pickingRadius={10}
