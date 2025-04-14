@@ -17,8 +17,6 @@ export default function ShipTooltip(props: ShipTooltipProps) {
       )}
 
       <p className="font-medium">{ship.name}</p>
-
-      <TooltipFact label="Class">{ship.class}</TooltipFact>
       <TooltipFact label="MMSI">{ship.mmsi}</TooltipFact>
       <TooltipFact label="Speed">{ship.pos.speed?.toFixed(1)}</TooltipFact>
 

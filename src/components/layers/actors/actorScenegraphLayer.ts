@@ -12,7 +12,7 @@ export default function actorScenegraphLayer(
   onClick: (actor?: Actor) => void
 ): ScenegraphLayer<Actor> {
   return new ScenegraphLayer<Actor>({
-    id: "gossip-layer-" + model,
+    id: "gossip-layer-" + model.filename,
     data: actors,
     pickable: true,
     sizeScale: model.scale,
@@ -23,7 +23,7 @@ export default function actorScenegraphLayer(
     getPosition: (d) => [
       d.pos.lon ?? 0,
       d.pos.lat ?? 0,
-      (d.pos.alt ? d.pos.alt : 0) + 10,
+      d.pos.alt ? d.pos.alt : 0,
     ],
     _animations: {
       "*": { speed: 1 },
@@ -40,7 +40,7 @@ export default function actorScenegraphLayer(
       onClick(info.object);
     },
     getColor: (d) => {
-      if (tracked.find((a) => a == d.id)) return [255, 100, 100];
+      if (tracked.find((a) => a == d.id)) return [200, 200, 200];
       return [255, 255, 255];
     },
   });

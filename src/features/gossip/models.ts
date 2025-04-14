@@ -55,7 +55,7 @@ export const containerModel: ModelParams = {
   };
   
   export const recreationalModel: ModelParams = {
-    filename: "recreational.glb",
+    filename: "sailboat.glb",
     scale: 30,
     minSize: 0.1,
     maxSize: 1,
