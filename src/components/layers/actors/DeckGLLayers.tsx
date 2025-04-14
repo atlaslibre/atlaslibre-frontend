@@ -30,6 +30,8 @@ import { Layer, Source } from "react-map-gl/maplibre";
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
   const { plugins } = useAppSelector((state) => state.plugin);
+  const { speedColorRange } = useAppSelector((state) => state.pluginSettings);
+
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
@@ -95,7 +97,7 @@ export default function DeckGLLayers() {
     )
   );
 
-  const trackLayer = actorTrackLayer(allTracks);
+  const trackLayer = actorTrackLayer(allTracks, allActors, speedColorRange);
 
   const attributions = [];
   for (let i = 0; i < plugins.length; i++) {
@@ -117,7 +119,7 @@ export default function DeckGLLayers() {
         data={{ type: "FeatureCollection", features: [] }}
         attribution={attributions.join(", ")}
       >
-        <Layer type="line" />
+        <Layer type="line" id="attribution-source-force-show"/>
       </Source>
       <DeckGLOverlay
         layers={[trackLayer, ...scenegraphLayers]}

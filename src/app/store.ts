@@ -8,6 +8,7 @@ import { pluginSlice } from "../features/gossip/pluginSlice";
 import { rememberReducer, rememberEnhancer } from "redux-remember";
 import { plancespotterSlice } from "../features/gossip/planespotterSlice";
 import { listenerMiddleware } from "./listenerMiddleware";
+import { pluginSettingsSlice } from "../features/gossip/pluginSettingsSlice";
 
 const rootReducer = combineSlices(
   gossipSlice,
@@ -16,10 +17,11 @@ const rootReducer = combineSlices(
   customMapSlice,
   tooltipSlice,
   pluginSlice,
+  pluginSettingsSlice,
   plancespotterSlice
 );
 
-const rememberedSlices = ["map", "customMap", "flags"];
+const rememberedSlices = ["map", "customMap", "pluginSettings", "flags"];
 
 const reducer = rememberReducer(rootReducer);
 
@@ -40,8 +42,8 @@ export const store = configureStore({
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
     })
-    .prepend(listenerMiddleware.middleware)
-    .concat(plancespotterSlice.middleware),
+      .prepend(listenerMiddleware.middleware)
+      .concat(plancespotterSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

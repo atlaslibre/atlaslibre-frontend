@@ -28,6 +28,7 @@ class Tooltip implements IControl {
 export default function TooltipControl(props: { position: ControlPosition }) {
   const control = useControl(() => new Tooltip(), props);
   const ref = createRef<HTMLDivElement>();
+
   const { actor, distance, lat, lon } = useAppSelector(
     (state) => state.tooltip
   );
