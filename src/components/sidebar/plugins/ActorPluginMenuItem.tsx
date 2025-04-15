@@ -19,7 +19,6 @@ export function ActorPluginMenuItem({
   const [status, setStatus] = useState("Connecting");
   const [updating, setUpdating] = useState(false);
 
-
   const locate = () => {
     chrome.runtime.sendMessage(plugin.id, {
       type: "locate",
@@ -30,10 +29,9 @@ export function ActorPluginMenuItem({
   };
 
   const update = () => {
-    if(updating)
-      return;
+    if (updating) return;
 
-    setUpdating(true)
+    setUpdating(true);
 
     const ts: dayjs.Dayjs = fixedTime ? dayjs(fixedTime) : dayjs.utc();
 
@@ -57,7 +55,7 @@ export function ActorPluginMenuItem({
             parseResult.error,
             response
           );
-          setUpdating(false)
+          setUpdating(false);
           return;
         }
 
@@ -68,7 +66,7 @@ export function ActorPluginMenuItem({
             tracks: parseResult.data.tracks,
           })
         );
-        setUpdating(false)
+        setUpdating(false);
       }
     );
   };
@@ -94,7 +92,7 @@ export function ActorPluginMenuItem({
 
   useEffect(() => {
     update();
-  }, [fixedTime, viewState, tracked]);
+  }, [fixedTime, viewState, tracked]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

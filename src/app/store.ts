@@ -29,13 +29,10 @@ export const store = configureStore({
   reducer,
   enhancers: (getDefaultEnhancers) =>
     getDefaultEnhancers().concat(
-      rememberEnhancer(
-        window.localStorage, // or window.sessionStorage, or your own custom storage driver
-        rememberedSlices
-      )
+      rememberEnhancer(window.localStorage, rememberedSlices)
     ),
   devTools: process.env.NODE_ENV !== "production",
-  //@ts-expect-error
+  // @ts-expect-error typescript gets angry, but it is ok
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
