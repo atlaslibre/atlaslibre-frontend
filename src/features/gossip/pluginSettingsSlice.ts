@@ -27,6 +27,7 @@ export interface TrackColorRange {
 interface PluginSettingsState {
   settings: GossipPluginSettings[];
   trackColorRange: { [actorType: string]: TrackColorRange };
+  scale: { [actorType: string]: number };
 }
 
 interface UpdateTrackColorRangeTypePayload {
@@ -40,11 +41,20 @@ interface UpdateTrackColorRangePayload {
   max: number;
 }
 
+interface UpdateScalePayload {
+  actorType: string;
+  scale: number;
+}
+
 const initialState: PluginSettingsState = {
   settings: [],
   trackColorRange: {
     ship: { min: 5, max: 20, type: "speed" },
     aircraft: { min: 0, max: 30000, type: "altitude" },
+  },
+  scale: {
+    ship: 1,
+    aircraft: 1,
   },
 };
 
@@ -66,10 +76,13 @@ export const pluginSettingsSlice = createSlice({
       state.trackColorRange[action.payload.actorType].min = action.payload.min;
       state.trackColorRange[action.payload.actorType].max = action.payload.max;
     },
+    updateScale: (state, action: PayloadAction<UpdateScalePayload>) => {
+      state.scale[action.payload.actorType] = action.payload.scale;
+    },
   },
 });
 
-export const { updateTrackColorRangeType, updateTrackColorRange } =
+export const { updateTrackColorRangeType, updateTrackColorRange, updateScale } =
   pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;

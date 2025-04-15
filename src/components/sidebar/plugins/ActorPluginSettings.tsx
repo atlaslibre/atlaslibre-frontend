@@ -6,10 +6,12 @@ import {
   capitalize,
   TextField,
   ListItem,
+  Slider,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   TrackColorRangeType,
+  updateScale,
   updateTrackColorRange,
   updateTrackColorRangeType,
 } from "../../../features/gossip/pluginSettingsSlice";
@@ -21,7 +23,9 @@ interface ActorPluginSettingsProps {
 }
 
 export default function ActorPluginSettings(props: ActorPluginSettingsProps) {
-  const { trackColorRange } = useAppSelector((state) => state.pluginSettings);
+  const { trackColorRange, scale } = useAppSelector(
+    (state) => state.pluginSettings
+  );
   const dispatch = useAppDispatch();
 
   const tcr = trackColorRange[props.type];
@@ -87,6 +91,28 @@ export default function ActorPluginSettings(props: ActorPluginSettingsProps) {
           value={tcr.max}
           size="small"
           onChange={handleValueChange("max")}
+        />
+      </ListItem>
+
+      <ListItem>
+        <ListItemText>Scale</ListItemText>
+
+        <Slider
+          min={0.1}
+          max={5}
+          step={0.1}
+          sx={{width: "50%"}}
+          size="small"
+          value={scale[props.type]}
+          marks={[{value: 1}]}
+          onChange={(_evt, value) => {
+            dispatch(
+              updateScale({
+                scale: value,
+                actorType: props.type,
+              })
+            );
+          }}
         />
       </ListItem>
     </List>

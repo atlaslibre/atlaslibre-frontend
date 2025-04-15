@@ -7,8 +7,8 @@ export interface ModelParams {
 }
 export const jetModel: ModelParams = {
   filename: "jet.glb",
-  scale: 1000,
-  minSize: 1.5,
+  scale: 300,
+  minSize: 1,
   maxSize: 3,
   rotation: 180,
 };
@@ -24,7 +24,7 @@ export const buoyModel: ModelParams = {
 export const tankerModel: ModelParams = {
   filename: "tanker.glb",
   scale: 15,
-  minSize: 0.1,
+  minSize: 0.125,
   maxSize: 1,
   rotation: 180,
 };
@@ -32,7 +32,7 @@ export const tankerModel: ModelParams = {
 export const cargoModel: ModelParams = {
     filename: "cargo.glb",
     scale: 15,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
@@ -41,7 +41,7 @@ export const cargoModel: ModelParams = {
 export const containerModel: ModelParams = {
     filename: "container.glb",
     scale: 15,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
@@ -49,7 +49,7 @@ export const containerModel: ModelParams = {
   export const militaryModel: ModelParams = {
     filename: "military.glb",
     scale: 15,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
@@ -57,7 +57,7 @@ export const containerModel: ModelParams = {
   export const recreationalModel: ModelParams = {
     filename: "sailboat.glb",
     scale: 30,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
@@ -65,7 +65,7 @@ export const containerModel: ModelParams = {
   export const ferryModel: ModelParams = {
     filename: "ferry.glb",
     scale: 15,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
@@ -73,14 +73,14 @@ export const containerModel: ModelParams = {
   export const specialModel: ModelParams = {
     filename: "special.glb",
     scale: 15,
-    minSize: 0.1,
+    minSize: 0.125,
     maxSize: 1,
     rotation: 180,
   };
   export const highspeedModel: ModelParams = {
     filename: "highspeed.glb",
     scale: 30,
-    minSize: 0.1,
+    minSize: 0.125  ,
     maxSize: 1,
     rotation: 180,
   };

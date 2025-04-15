@@ -30,8 +30,9 @@ import { Layer, Source } from "react-map-gl/maplibre";
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
   const { plugins } = useAppSelector((state) => state.plugin);
-  const { trackColorRange } = useAppSelector((state) => state.pluginSettings);
-
+  const { trackColorRange, scale } = useAppSelector(
+    (state) => state.pluginSettings
+  );
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
@@ -70,26 +71,55 @@ export default function DeckGLLayers() {
     }),
   });
 
-  const layerConfig: [(a: Actor) => boolean, ModelParams][] = [
-    [(a) => a.type == "aircraft", jetModel],
-    [(a) => a.type == "ship" && a.class == "navigation", buoyModel],
-    [(a) => a.type == "ship" && a.class == "tanker", tankerModel],
-    [(a) => a.type == "ship" && a.class == "cargo", cargoModel],
-    [(a) => a.type == "ship" && a.class == "container", containerModel],
-    [(a) => a.type == "ship" && a.class == "recreational", recreationalModel],
-    [(a) => a.type == "ship" && a.class == "ferry", ferryModel],
-    [(a) => a.type == "ship" && a.class == "highspeed", highspeedModel],
-    [(a) => a.type == "ship" && a.class == "military", militaryModel],
-    [(a) => a.type == "ship" && a.class == "special", specialModel],
+  const layerConfig: [(a: Actor) => boolean, ModelParams, number][] = [
+    [(a) => a.type == "aircraft", jetModel, scale["aircraft"]],
+    [
+      (a) => a.type == "ship" && a.class == "navigation",
+      buoyModel,
+      scale["ship"],
+    ],
+    [
+      (a) => a.type == "ship" && a.class == "tanker",
+      tankerModel,
+      scale["ship"],
+    ],
+    [(a) => a.type == "ship" && a.class == "cargo", cargoModel, scale["ship"]],
+    [
+      (a) => a.type == "ship" && a.class == "container",
+      containerModel,
+      scale["ship"],
+    ],
+    [
+      (a) => a.type == "ship" && a.class == "recreational",
+      recreationalModel,
+      scale["ship"],
+    ],
+    [(a) => a.type == "ship" && a.class == "ferry", ferryModel, scale["ship"]],
+    [
+      (a) => a.type == "ship" && a.class == "highspeed",
+      highspeedModel,
+      scale["ship"],
+    ],
+    [
+      (a) => a.type == "ship" && a.class == "military",
+      militaryModel,
+      scale["ship"],
+    ],
+    [
+      (a) => a.type == "ship" && a.class == "special",
+      specialModel,
+      scale["ship"],
+    ],
     [
       (a) => a.type == "ship" && (a.class == "fishing" || a.class == "other"),
       duckModel,
+      scale["ship"],
     ],
   ];
 
-  const scenegraphLayers = layerConfig.map(([filter, model]) =>
+  const scenegraphLayers = layerConfig.map(([filter, model, scale]) =>
     actorScenegraphLayer(
-      model,
+      {...model, scale: model.scale * scale},
       allActors.filter(filter),
       allTracked,
       onHover,
@@ -119,7 +149,7 @@ export default function DeckGLLayers() {
         data={{ type: "FeatureCollection", features: [] }}
         attribution={attributions.join(", ")}
       >
-        <Layer type="line" id="attribution-source-force-show"/>
+        <Layer type="line" id="attribution-source-force-show" />
       </Source>
       <DeckGLOverlay
         layers={[trackLayer, ...scenegraphLayers]}
