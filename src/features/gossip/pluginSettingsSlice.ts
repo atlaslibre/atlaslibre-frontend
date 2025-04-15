@@ -29,9 +29,13 @@ interface PluginSettingsState {
   trackColorRange: { [actorType: string]: TrackColorRange };
 }
 
-interface UpdateTrackColorRangePayload {
+interface UpdateTrackColorRangeTypePayload {
   actorType: string;
   parameterType: TrackColorRangeType;
+}
+
+interface UpdateTrackColorRangePayload {
+  actorType: string;
   min: number;
   max: number;
 }
@@ -48,19 +52,24 @@ export const pluginSettingsSlice = createSlice({
   name: "pluginSettings",
   initialState,
   reducers: {
-    updateSpeedColorRange: (
+    updateTrackColorRangeType: (
+      state,
+      action: PayloadAction<UpdateTrackColorRangeTypePayload>
+    ) => {
+      state.trackColorRange[action.payload.actorType].type =
+        action.payload.parameterType;
+    },
+    updateTrackColorRange: (
       state,
       action: PayloadAction<UpdateTrackColorRangePayload>
     ) => {
-      state.trackColorRange[action.payload.actorType] = {
-        min: action.payload.min,
-        max: action.payload.max,
-        type: action.payload.parameterType,
-      };
+      state.trackColorRange[action.payload.actorType].min = action.payload.min;
+      state.trackColorRange[action.payload.actorType].max = action.payload.max;
     },
   },
 });
 
-export const { updateSpeedColorRange } = pluginSettingsSlice.actions;
+export const { updateTrackColorRangeType, updateTrackColorRange } =
+  pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;

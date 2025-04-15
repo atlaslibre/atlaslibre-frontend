@@ -31,6 +31,7 @@ import UrbanLayers from "./layers/UrbanLayers";
 import AirplaneShadowsLayers from "./layers/actors/AirplaneShadowsLayers";
 import DeckGLLayers from "./layers/actors/DeckGLLayers";
 import MainMapSources from "./services/Sources";
+import TrackColorScaleControl from "./controls/TrackColorScaleControl";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -100,7 +101,10 @@ export default function MainMap() {
         <MeasureControl />
         {debuggingEnabled && <InspectControl position="top-left" />}
         <TooltipControl position="bottom-right" />
+        <TrackColorScaleControl position="bottom-left" />
+
         <ScaleControl unit={unitSystem} />
+
         <MainMapSources />
 
         <BaseLayers />

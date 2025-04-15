@@ -3,7 +3,7 @@ import { Actor, Track } from "../../../interfaces/actor";
 import colormap from "colormap";
 import { TrackColorRange } from "../../../features/gossip/pluginSettingsSlice";
 
-const rainbow = colormap<"rgba">({
+export const rainbow = colormap<"rgba">({
   colormap: "rainbow",
   nshades: 100,
   format: "rgba",
@@ -21,7 +21,7 @@ const getColor = (
 
   let value;
   if (type == "speed") value = speed;
-  else if (trackColorRange[actor.type].type == "altitude") value = altitude;
+  else if (type == "altitude") value = altitude;
 
   if (!value) return [128, 128, 128];
 
@@ -38,8 +38,8 @@ const getColor = (
 };
 
 export default function actorTrackLayer(
-  allTracks: Track[],
-  allActors: Actor[],
+  tracks: Track[],
+  actors: Actor[],
   trackColorRange: {
     [actorType: string]: TrackColorRange;
   }
@@ -55,17 +55,18 @@ export default function actorTrackLayer(
 
   const trackData: TrackSegment[] = [];
 
-  for (let j = 0; j < allTracks.length; j++) {
-    for (let i = 1; i < allTracks[j].track.length; i++) {
-      const p = allTracks[j].track[i - 1];
-      const c = allTracks[j].track[i];
+  for (let j = 0; j < tracks.length; j++) {
+    const id = tracks[j].id;
+    for (let i = 1; i < tracks[j].track.length; i++) {
+      const p = tracks[j].track[i - 1];
+      const c = tracks[j].track[i];
       trackData.push({
         start: [p.lon, p.lat, p.alt ?? 10],
         end: [c.lon, c.lat, c.alt ?? 10],
         speed: c.speed,
         altitude: c.alt,
-        actor: allActors.find((a) => a.id == allActors[j].id),
-        id: allTracks[j].id,
+        actor: actors.find((a) => a.id == id),
+        id: id,
       } as TrackSegment);
     }
   }

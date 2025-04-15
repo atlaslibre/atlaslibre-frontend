@@ -16,7 +16,7 @@ class Tooltip implements IControl {
 
   onAdd() {
     this._container = document.createElement("div");
-    this._container.className = "maplibregl-ctrl p-2";
+    this._container.className = "maplibregl-ctrl p-1";
     return this._container;
   }
 

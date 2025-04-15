@@ -2,7 +2,7 @@ import { Geoman } from "@geoman-io/maplibre-geoman-free";
 
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import SaveIcon from "@mui/icons-material/Save";
-import { IconButton, ListItem, ListItemText } from "@mui/material";
+import { IconButton, ListItem, ListItemText, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -108,7 +108,14 @@ export default function CustomMapMenu() {
         disablePadding
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
-            My layers
+            <Stack direction="row" justifyContent="space-between">
+              <div>My layers</div>
+              <div>
+                <IconButton onClick={() => openFilePicker()} edge="end">
+                  <FileUploadIcon />
+                </IconButton>
+              </div>
+            </Stack>
           </ListSubheader>
         }
       >
@@ -116,9 +123,6 @@ export default function CustomMapMenu() {
           dense
           secondaryAction={
             <>
-              <IconButton onClick={() => openFilePicker()}>
-                <FileUploadIcon />
-              </IconButton>
               <IconButton
                 onClick={() => setDialogOpen(true)}
                 edge="end"

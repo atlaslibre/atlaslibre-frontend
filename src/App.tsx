@@ -17,7 +17,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MapProvider } from "react-map-gl/maplibre";
 
-const drawerWidth = 360;
+export const drawerWidth = 360;
 
 function App() {
   const { colorMode } = useAppSelector((state) => state.flags);
@@ -79,7 +79,7 @@ function App() {
                   position: "absolute",
                   top: "10px",
                   right: "-3px",
-                  zIndex: 9999,
+                  zIndex: {xs: 9999, sm: 1},
                 }}
               >
                 <MenuIcon />
