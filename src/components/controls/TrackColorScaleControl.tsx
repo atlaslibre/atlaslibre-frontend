@@ -40,7 +40,6 @@ function TrackColorScaleByActor(props: { type: string }) {
     for (let i = 0; i < 99; i++) {
       const width = context.canvas.width / 100;
       const color = rainbow[i];
-      console.log(color);
       context.fillStyle = `rgb(${color[0]} ${color[1]} ${color[2]})`;
       context.fillRect(i * width, 0, (i + 1) * width, context.canvas.height);
     }

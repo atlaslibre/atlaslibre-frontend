@@ -10,6 +10,7 @@ import ThemeSwitch from "./sidebar/ThemeSwitch";
 import PluginsMenu from "./sidebar/PluginsMenu";
 import TimeControl from "./sidebar/TimeControl";
 import CustomMapMenu from "./sidebar/CustomMapMenu";
+import ScreenshotSwitch from "./sidebar/ScreenshotSwitch";
 
 export default function Sidebar() {
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
@@ -51,6 +52,7 @@ export default function Sidebar() {
           <DebuggingSwitch />
           <ThemeSwitch />
           <UnitsSwitch />
+          <ScreenshotSwitch />
           <ProjectionSwitch />
         </Stack>
       </div>

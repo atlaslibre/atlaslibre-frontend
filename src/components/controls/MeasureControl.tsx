@@ -63,6 +63,14 @@ class MeasureControlImpl implements IControl {
     this._map = undefined;
   }
 
+  showControls(): void {
+    if (this._container !== undefined) this._container.style.display = "block";
+  }
+
+  hideControls(): void {
+    if (this._container !== undefined) this._container.style.display = "none";
+  }
+
   private _onToggle = () => {
     this._active = !this._active;
 
@@ -172,6 +180,7 @@ class MeasureControlImpl implements IControl {
 export default function MeasureControl() {
   const dispatch = useAppDispatch();
   const { unitSystem } = useAppSelector((state) => state.map);
+  const { screenshotMode } = useAppSelector((state) => state.flags);
 
   const [geoJson, setGeoJson] = useState<FeatureCollection>({
     type: "FeatureCollection",
@@ -193,6 +202,11 @@ export default function MeasureControl() {
   useEffect(() => {
     impl.setUnitSystem(unitSystem);
   }, [unitSystem]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (screenshotMode) impl.hideControls();
+    else impl.showControls();
+  }, [screenshotMode]);
 
   return (
     <>

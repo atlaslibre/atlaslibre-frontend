@@ -1,5 +1,5 @@
 import { IControl, ControlPosition } from "maplibre-gl";
-import { useEffect, createRef } from "react";
+import { useEffect, createRef, CSSProperties } from "react";
 import { useControl } from "react-map-gl/maplibre";
 import { useAppSelector } from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
@@ -25,7 +25,7 @@ class Tooltip implements IControl {
   }
 }
 
-export default function TooltipControl(props: { position: ControlPosition }) {
+export default function TooltipControl(props: { position: ControlPosition, style?: CSSProperties }) {
   const control = useControl(() => new Tooltip(), props);
   const ref = createRef<HTMLDivElement>();
 
@@ -38,7 +38,7 @@ export default function TooltipControl(props: { position: ControlPosition }) {
   }, [ref, control]);
 
   return (
-    <div ref={ref} className="bg-gray-200 p-2 cursor-default">
+    <div ref={ref} className="bg-gray-200 p-2 cursor-default" style={props.style}>
       {actor && (
         <>
           {actor.type == "ship" && <ShipTooltip ship={actor} />}

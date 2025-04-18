@@ -20,7 +20,7 @@ import { MapProvider } from "react-map-gl/maplibre";
 export const drawerWidth = 360;
 
 function App() {
-  const { colorMode } = useAppSelector((state) => state.flags);
+  const { colorMode, screenshotMode } = useAppSelector((state) => state.flags);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -74,12 +74,15 @@ function App() {
                 size="small"
                 sx={{
                   mr: 2,
-                  display: { lg: "none" },
+                  display: {
+                    xs: screenshotMode ? "none" : "block",
+                    lg: "none",
+                  },
                   float: "right",
                   position: "absolute",
                   top: "10px",
                   right: "-3px",
-                  zIndex: {xs: 9999, sm: 1},
+                  zIndex: { xs: 9999, sm: 1 },
                 }}
               >
                 <MenuIcon />
@@ -116,7 +119,10 @@ function App() {
                 anchor="right"
                 sx={{
                   minWidth: drawerWidth,
-                  display: { xs: "none", lg: "block" },
+                  display: {
+                    xs: "none",
+                    lg: screenshotMode ? "none" : "block",
+                  },
                   "& .MuiDrawer-paper": {
                     boxSizing: "border-box",
                     minWidth: drawerWidth,

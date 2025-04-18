@@ -4,7 +4,7 @@ import {
 } from "@geoman-io/maplibre-geoman-free";
 import maplibregl, { MapLayerMouseEvent, MapLibreEvent } from "maplibre-gl";
 import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Map,
   NavigationControl,
@@ -32,21 +32,27 @@ import AirplaneShadowsLayers from "./layers/actors/AirplaneShadowsLayers";
 import DeckGLLayers from "./layers/actors/DeckGLLayers";
 import MainMapSources from "./services/Sources";
 import TrackColorScaleControl from "./controls/TrackColorScaleControl";
+import { toggleScreenshotMode } from "../features/flags/flagsSlice";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
+  const [geoman, setGeoman] = useState<Geoman | undefined>(undefined);
 
   const { projection, viewState, unitSystem } = useAppSelector(
     (state) => state.map
   );
 
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
-  const { debuggingEnabled } = useAppSelector((state) => state.flags);
+  const { debuggingEnabled, screenshotMode } = useAppSelector(
+    (state) => state.flags
+  );
 
   function onLoad(evt: MapLibreEvent) {
     const geoman = new Geoman(evt.target, geomanOptions);
+    setGeoman(geoman);
     geoman.setGlobalEventsListener(
       ({ type, name }: GlobalEventsListenerParameters) => {
+        if (!geoman) return;
         if (type == "converted") {
           // import and export based on events fired
           if (geomanSaveTriggers.find((t) => t == name)) {
@@ -75,10 +81,27 @@ export default function MainMap() {
     dispatch(setLatLon({ lat: evt.lngLat.lat, lon: evt.lngLat.lng }));
   }
 
+  const onClick = () => {
+    if(screenshotMode)
+      dispatch(toggleScreenshotMode());
+  }
+
   // add support for TopoJSON etc
   useEffect(() => {
     addVectorTextProtocols(maplibregl);
   });
+
+  useEffect(() => {
+    if (geoman?.control.container) {
+      geoman.control.container.style.display = screenshotMode
+        ? "none"
+        : "block";
+    }
+  }, [screenshotMode, geoman]);
+
+  const screenshotHiddenStyle = screenshotMode
+    ? { display: "none" }
+    : { display: "block" };
 
   return (
     <div className="w-full h-screen">
@@ -93,14 +116,17 @@ export default function MainMap() {
         mapStyle={emptyMapStyle}
         onLoad={onLoad}
         onMouseMove={onMouseMove}
+        onClick={onClick}
         attributionControl={{
           compact: false,
         }}
       >
-        <NavigationControl position="top-left" />
+        <NavigationControl position="top-left" style={screenshotHiddenStyle} />
         <MeasureControl />
-        {debuggingEnabled && <InspectControl position="top-left" />}
-        <TooltipControl position="bottom-right" />
+        {debuggingEnabled && !screenshotMode && (
+          <InspectControl position="top-left" />
+        )}
+        <TooltipControl position="bottom-right" style={screenshotHiddenStyle} />
         <TrackColorScaleControl position="bottom-left" />
 
         <ScaleControl unit={unitSystem} />
