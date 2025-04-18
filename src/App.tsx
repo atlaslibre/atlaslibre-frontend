@@ -66,7 +66,7 @@ function App() {
           <MapProvider>
             <PluginDiscovery />
 
-            <div className="flex">
+            <div className="flex h-screen" style={{ padding: screenshotMode ? "20px": "0"}}>
               <Fab
                 color="default"
                 aria-label="Open menu"

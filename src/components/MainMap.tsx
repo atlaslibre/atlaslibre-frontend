@@ -104,7 +104,7 @@ export default function MainMap() {
     : { display: "block" };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-full">
       <Map
         {...viewState}
         onMove={onMove}
