@@ -33,6 +33,7 @@ import DeckGLLayers from "./layers/actors/DeckGLLayers";
 import MainMapSources from "./services/Sources";
 import TrackColorScaleControl from "./controls/TrackColorScaleControl";
 import { toggleScreenshotMode } from "../features/flags/flagsSlice";
+import TrackedTooltipControl from "./controls/TrackedTooltipControl";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -128,7 +129,7 @@ export default function MainMap() {
         )}
         <TooltipControl position="bottom-right" style={screenshotHiddenStyle} />
         <TrackColorScaleControl position="bottom-left" />
-
+        <TrackedTooltipControl />
         <ScaleControl unit={unitSystem} />
 
         <MainMapSources />

@@ -66,7 +66,12 @@ function App() {
           <MapProvider>
             <PluginDiscovery />
 
-            <div className="flex h-screen" style={{ padding: screenshotMode ? "20px": "0"}}>
+            <div
+              className="flex h-screen"
+              style={{
+                background: selectedTheme.palette.background.paper,
+              }}
+            >
               <Fab
                 color="default"
                 aria-label="Open menu"
@@ -121,7 +126,7 @@ function App() {
                   minWidth: drawerWidth,
                   display: {
                     xs: "none",
-                    lg: screenshotMode ? "none" : "block",
+                    lg: "block",
                   },
                   "& .MuiDrawer-paper": {
                     boxSizing: "border-box",
