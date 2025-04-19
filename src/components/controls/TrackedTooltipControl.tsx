@@ -4,7 +4,7 @@ import { useControl, useMap } from "react-map-gl/maplibre";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
 import AircraftTooltip from "./tooltips/AircraftTooltip";
-import Draggable from "react-draggable";
+import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { Actor } from "../../interfaces/actor";
 import CloseIcon from "@mui/icons-material/Close";
 import { toggleTrack } from "../../features/gossip/gossipSlice";
@@ -34,9 +34,18 @@ function DraggableTooltip(props: { actor: Actor }) {
   const actor = props.actor;
 
   const map = useMap();
+  const dispatch = useAppDispatch();
+  const dragRef = useRef<HTMLDivElement>(null);
+
   const [visible, setVisible] = useState(true);
   const { screenshotMode } = useAppSelector((state) => state.flags);
   const { actors } = useAppSelector((state) => state.gossip);
+
+  const rootPosition = map.default!.project([actor.pos.lon, actor.pos.lat]);
+
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [startDragOffset, setStartDragOffset] = useState({ x: 0, y: 0 });
+
   const plugins = Object.keys(actors);
 
   let plugin: string;
@@ -45,17 +54,30 @@ function DraggableTooltip(props: { actor: Actor }) {
     if (actors[plugins[i]].find((a) => a.id == actor.id)) break;
   }
 
-  const dispatch = useAppDispatch();
-  const dragRef = useRef<HTMLDivElement>(null);
+  function onStartHandler(_e: DraggableEvent, data: DraggableData) {
+    setStartDragOffset(data);
+  }
 
-  const defaultPosition = map.default?.project([actor.pos.lon, actor.pos.lat]);
+  function onStopHandler(_e: DraggableEvent, data: DraggableData) {
+    if (visible)
+      setOffset({
+        x: data.x - startDragOffset.x + offset.x,
+        y: data.y - startDragOffset.y + offset.y,
+      });
+  }
 
   return (
-    <div className="absolute">
+    <div className="absolute top-0 left-0">
       <Draggable
         nodeRef={dragRef as RefObject<HTMLElement>}
         handle=".handle"
-        defaultPosition={defaultPosition}
+        position={{
+          x: visible ? rootPosition.x + offset.x : 20,
+          y: visible ? rootPosition.y + offset.y : 55,
+        }}
+        positionOffset={{ x: 20, y: -50 }}
+        onStop={onStopHandler}
+        onStart={onStartHandler}
       >
         <div className="bg-gray-200 m-2 mt-6 w-40" ref={dragRef}>
           <div
@@ -63,6 +85,16 @@ function DraggableTooltip(props: { actor: Actor }) {
             style={{ display: screenshotMode ? "none" : "block" }}
           >
             <Stack direction="row" justifyContent="right">
+              <div
+                className="left flex-auto pl-1 relative -top-0.5"
+                style={{
+                  color: "white",
+                  fontSize: "10px",
+                  display: visible ? "none" : "block",
+                }}
+              >
+                {actor.name}
+              </div>
               <button
                 className="cursor-pointer flex"
                 onClick={() => setVisible(!visible)}
@@ -116,7 +148,9 @@ function DraggableTooltip(props: { actor: Actor }) {
 }
 
 export default function TrackedTooltipControl() {
-  const control = useControl(() => new TrackedTooltip(), {position: "top-left"});
+  const control = useControl(() => new TrackedTooltip(), {
+    position: "top-left",
+  });
   const ref = createRef<HTMLDivElement>();
 
   const { tracked, actors } = useAppSelector((state) => state.gossip);
@@ -134,5 +168,9 @@ export default function TrackedTooltipControl() {
     return <DraggableTooltip actor={actor} key={id} />;
   };
 
-  return <div ref={ref} className="absolute">{allTracked.map(renderTooltip)}</div>;
+  return (
+    <div ref={ref} className="absolute top-0 left-0">
+      {allTracked.map(renderTooltip)}
+    </div>
+  );
 }
