@@ -83,9 +83,8 @@ export default function MainMap() {
   }
 
   const onClick = () => {
-    if(screenshotMode)
-      dispatch(toggleScreenshotMode());
-  }
+    if (screenshotMode) dispatch(toggleScreenshotMode());
+  };
 
   // add support for TopoJSON etc
   useEffect(() => {
@@ -129,8 +128,8 @@ export default function MainMap() {
         )}
         <TooltipControl position="bottom-right" style={screenshotHiddenStyle} />
         <TrackColorScaleControl position="bottom-left" />
-        <TrackedTooltipControl />
         <ScaleControl unit={unitSystem} />
+        <TrackedTooltipControl />
 
         <MainMapSources />
 

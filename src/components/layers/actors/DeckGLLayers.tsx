@@ -154,7 +154,7 @@ export default function DeckGLLayers() {
       <DeckGLOverlay
         layers={[trackLayer, ...scenegraphLayers]}
         pickingRadius={10}
-        interleaved={false}
+        interleaved={true}
         effects={[lightingEffect]}
       />
     </>

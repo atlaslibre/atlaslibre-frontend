@@ -1,6 +1,6 @@
 import { IControl } from "maplibre-gl";
 import { useEffect, createRef, useRef, RefObject, useState } from "react";
-import { useControl } from "react-map-gl/maplibre";
+import { useControl, useMap } from "react-map-gl/maplibre";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
 import AircraftTooltip from "./tooltips/AircraftTooltip";
@@ -22,7 +22,6 @@ class TrackedTooltip implements IControl {
 
   onAdd() {
     this._container = document.createElement("div");
-    this._container.className = "maplibregl-ctrl p-1";
     return this._container;
   }
 
@@ -32,11 +31,13 @@ class TrackedTooltip implements IControl {
 }
 
 function DraggableTooltip(props: { actor: Actor }) {
+  const actor = props.actor;
+
+  const map = useMap();
   const [visible, setVisible] = useState(true);
   const { screenshotMode } = useAppSelector((state) => state.flags);
   const { actors } = useAppSelector((state) => state.gossip);
   const plugins = Object.keys(actors);
-  const actor = props.actor;
 
   let plugin: string;
   for (let i = 0; i < plugins.length; i++) {
@@ -47,67 +48,75 @@ function DraggableTooltip(props: { actor: Actor }) {
   const dispatch = useAppDispatch();
   const dragRef = useRef<HTMLDivElement>(null);
 
+  const defaultPosition = map.default?.project([actor.pos.lon, actor.pos.lat]);
+
   return (
-    <Draggable nodeRef={dragRef as RefObject<HTMLElement>} handle=".handle">
-      <div className="bg-gray-200 m-2 mt-6 w-50" ref={dragRef}>
-        <div
-          className="handle bg-gray-500 cursor-grab select-none h-4 absolute w-full -top-4"
-          style={{ display: screenshotMode ? "none" : "block" }}
-        >
-          <Stack
-            direction="row"
-            justifyContent="right"
+    <div className="absolute">
+      <Draggable
+        nodeRef={dragRef as RefObject<HTMLElement>}
+        handle=".handle"
+        defaultPosition={defaultPosition}
+      >
+        <div className="bg-gray-200 m-2 mt-6 w-40" ref={dragRef}>
+          <div
+            className="handle bg-gray-500 cursor-grab select-none h-4 absolute w-full -top-4 pointer-events-auto"
+            style={{ display: screenshotMode ? "none" : "block" }}
           >
-            <button
-              className="cursor-pointer flex"
-              onClick={() => setVisible(!visible)}
-            >
-              <VisibilityOffIcon
-                sx={{
-                  width: "14px",
-                  height: "14px",
-                  position: "relative",
-                  top: "1px",
-                  fill: "white",
-                }}
-              />
-            </button>
+            <Stack direction="row" justifyContent="right">
+              <button
+                className="cursor-pointer flex"
+                onClick={() => setVisible(!visible)}
+              >
+                <VisibilityOffIcon
+                  sx={{
+                    width: "14px",
+                    height: "14px",
+                    position: "relative",
+                    top: "1px",
+                    fill: "white",
+                  }}
+                />
+              </button>
 
-            <button
-              className="cursor-pointer flex"
-              onClick={() =>
-                dispatch(
-                  toggleTrack({
-                    plugin: plugin,
-                    actor: actor,
-                  })
-                )
-              }
-            >
-              <CloseIcon
-                sx={{
-                  width: "14px",
-                  height: "14px",
-                  position: "relative",
-                  top: "1px",
-                  fill: "white",
-                }}
-              />
-            </button>
-          </Stack>
-        </div>
+              <button
+                className="cursor-pointer flex"
+                onClick={() =>
+                  dispatch(
+                    toggleTrack({
+                      plugin: plugin,
+                      actor: actor,
+                    })
+                  )
+                }
+              >
+                <CloseIcon
+                  sx={{
+                    width: "14px",
+                    height: "14px",
+                    position: "relative",
+                    top: "1px",
+                    fill: "white",
+                  }}
+                />
+              </button>
+            </Stack>
+          </div>
 
-        <div className="p-2 cursor-default" style={{display: visible ? "block" : "none"}}>
-          {actor.type == "ship" && <ShipTooltip ship={actor} />}
-          {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}
+          <div
+            className="p-2 cursor-default"
+            style={{ display: visible ? "block" : "none" }}
+          >
+            {actor.type == "ship" && <ShipTooltip ship={actor} />}
+            {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}
+          </div>
         </div>
-      </div>
-    </Draggable>
+      </Draggable>
+    </div>
   );
 }
 
 export default function TrackedTooltipControl() {
-  const control = useControl(() => new TrackedTooltip());
+  const control = useControl(() => new TrackedTooltip(), {position: "top-left"});
   const ref = createRef<HTMLDivElement>();
 
   const { tracked, actors } = useAppSelector((state) => state.gossip);
@@ -125,5 +134,5 @@ export default function TrackedTooltipControl() {
     return <DraggableTooltip actor={actor} key={id} />;
   };
 
-  return <div ref={ref}>{allTracked.map(renderTooltip)}</div>;
+  return <div ref={ref} className="absolute">{allTracked.map(renderTooltip)}</div>;
 }
