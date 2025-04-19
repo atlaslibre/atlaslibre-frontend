@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toggleTrack } from "../../features/gossip/gossipSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Stack } from "@mui/material";
+import dayjs from "dayjs";
 
 class TrackedTooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -37,6 +38,8 @@ function DraggableTooltip(props: { actor: Actor }) {
   const dispatch = useAppDispatch();
   const dragRef = useRef<HTMLDivElement>(null);
 
+  const [zindex, setZindex] = useState(0);
+
   const [visible, setVisible] = useState(true);
   const { screenshotMode } = useAppSelector((state) => state.flags);
   const { actors } = useAppSelector((state) => state.gossip);
@@ -55,6 +58,8 @@ function DraggableTooltip(props: { actor: Actor }) {
   }
 
   function onStartHandler(_e: DraggableEvent, data: DraggableData) {
+    const today = dayjs().startOf('day').unix();
+    setZindex(dayjs().unix() - today);
     setStartDragOffset(data);
   }
 
@@ -67,7 +72,7 @@ function DraggableTooltip(props: { actor: Actor }) {
   }
 
   return (
-    <div className="absolute top-0 left-0">
+    <div className="absolute top-0 left-0" style={{zIndex: zindex}}>
       <Draggable
         nodeRef={dragRef as RefObject<HTMLElement>}
         handle=".handle"
@@ -79,7 +84,7 @@ function DraggableTooltip(props: { actor: Actor }) {
         onStop={onStopHandler}
         onStart={onStartHandler}
       >
-        <div className="bg-gray-200 m-2 mt-6 w-40" ref={dragRef}>
+        <div className="bg-gray-200 m-2 mt-6 w-40 shadow-xl" ref={dragRef}>
           <div
             className="handle bg-gray-500 cursor-grab select-none h-4 absolute w-full -top-4 pointer-events-auto"
             style={{ display: screenshotMode ? "none" : "block" }}
