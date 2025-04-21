@@ -149,6 +149,7 @@ export default function DeckGLLayers() {
     }
 
     setAttributions(attributions);
+    console.log("Attributions updated");
   }, [actors]);
 
   const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));
