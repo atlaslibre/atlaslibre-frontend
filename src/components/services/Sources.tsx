@@ -1,6 +1,11 @@
-import { Source } from "react-map-gl/maplibre";
+import { Layer, Source } from "react-map-gl/maplibre";
+import { useAppSelector } from "../../app/hooks";
+import { uniqueFilter } from "../../util/array";
+import { hash } from "../../util/string";
 
 export default function Sources() {
+  const { customAttribution } = useAppSelector((state) => state.gossip);
+
   return (
     <>
       <Source
@@ -62,6 +67,22 @@ export default function Sources() {
         data="topojson://./datasets/timezones.topo.json"
         id="timezones"
       />
+
+      {Object.values(customAttribution)
+        .flat()
+        .filter(uniqueFilter)
+        .map((a) => {
+          const id = hash(a);
+          return <Source
+            type="geojson"
+            data={{ type: "FeatureCollection", features: [] }}
+            attribution={a}
+            key={`attribution-source-${id}`}
+            id={`attribution-source-${id}`}
+          >
+            <Layer type="line" id={`attribution-layer-${id}`}></Layer>
+          </Source>;
+        })}
     </>
   );
 }

@@ -6,6 +6,7 @@ interface GossipState {
   actors: { [plugin: string]: Actor[] };
   tracked: { [plugin: string]: string[] };
   tracks: { [plugin: string]: Track[] };
+  customAttribution: { [key: string]: string[] };
 }
 
 interface GossipUpdate {
@@ -19,10 +20,16 @@ interface TrackingParams {
   actor: Actor;
 }
 
+interface CustomAttributionUpdate {
+  key: string;
+  attributions: string[];
+}
+
 const initialState: GossipState = {
   actors: {},
   tracked: {},
   tracks: {},
+  customAttribution: {}
 };
 
 export const gossipSlice = createSlice({
@@ -47,9 +54,12 @@ export const gossipSlice = createSlice({
         state.tracked[plugin] = [id];
       }
     },
+    setCustomAttribution: (state, action: PayloadAction<CustomAttributionUpdate>) => {
+      state.customAttribution[action.payload.key] = action.payload.attributions;
+    }
   },
 });
 
-export const { updateValidatedGossip, toggleTrack } = gossipSlice.actions;
+export const { updateValidatedGossip, toggleTrack, setCustomAttribution } = gossipSlice.actions;
 
 export default gossipSlice.reducer;

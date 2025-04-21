@@ -44,6 +44,8 @@ export default function MainMap() {
     (state) => state.map
   );
 
+  const { customAttribution } = useAppSelector((state) => state.gossip);
+
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
   const { debuggingEnabled, screenshotMode } = useAppSelector(
     (state) => state.flags
@@ -104,8 +106,13 @@ export default function MainMap() {
     ? { display: "none" }
     : { display: "block" };
 
+  useEffect(() => {}, [customAttribution]);
+
   return (
-    <div className="w-full h-full" style={{padding: screenshotMode ? "20px" : "0px"}}>
+    <div
+      className="w-full h-full"
+      style={{ padding: screenshotMode ? "20px" : "0px" }}
+    >
       <Map
         {...viewState}
         onMove={onMove}
@@ -118,9 +125,7 @@ export default function MainMap() {
         onLoad={onLoad}
         onMouseMove={onMouseMove}
         onClick={onClick}
-        attributionControl={{
-          compact: false,
-        }}
+        attributionControl={{ compact: false }}
       >
         <TimeControl position="top-right" />
         <NavigationControl position="top-left" style={screenshotHiddenStyle} />

@@ -8,7 +8,7 @@ import { LightingEffect } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { Actor } from "../../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
-import { toggleTrack } from "../../../features/gossip/gossipSlice";
+import { setCustomAttribution, toggleTrack } from "../../../features/gossip/gossipSlice";
 import {
   buoyModel,
   cargoModel,
@@ -25,9 +25,8 @@ import {
 } from "../../../features/gossip/models";
 import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
-import { Layer, Source } from "react-map-gl/maplibre";
 import actorTooltipLine from "./actorTooltipLine";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
@@ -37,8 +36,6 @@ export default function DeckGLLayers() {
   const { trackColorRange, scale } = useAppSelector(
     (state) => state.pluginSettings
   );
-
-  const [attributions, setAttributions] = useState<string[]>([]);
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
@@ -148,41 +145,17 @@ export default function DeckGLLayers() {
       }
     }
 
-    setAttributions(attributions);
-    console.log("Attributions updated");
+    dispatch(setCustomAttribution({key: "deckgl", attributions}));
   }, [actors]);
 
   const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));
 
   return (
-    <>
-      <Source
-        id="attribution-source"
-        type="geojson"
-        data={{
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {},
-              geometry: { type: "Point", coordinates: [0, 0] },
-            },
-          ],
-        }}
-        attribution={attributions.join(", ")}
-      >
-        <Layer
-          type="circle"
-          id="attribution-source-force-show"
-          paint={{ "circle-opacity": 0 }}
-        />
-      </Source>
-      <DeckGLOverlay
-        layers={[trackLayer, ...scenegraphLayers, tooltipLines]}
-        pickingRadius={10}
-        interleaved={true}
-        effects={[lightingEffect]}
-      />
-    </>
+    <DeckGLOverlay
+      layers={[trackLayer, ...scenegraphLayers, tooltipLines]}
+      pickingRadius={10}
+      interleaved={true}
+      effects={[lightingEffect]}
+    />
   );
 }
