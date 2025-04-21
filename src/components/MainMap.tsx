@@ -11,7 +11,7 @@ import {
   ScaleControl,
   ViewStateChangeEvent,
 } from "react-map-gl/maplibre";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector, useColorMode } from "../app/hooks";
 import { saveActiveCustomMap } from "../features/map/customMapSlice";
 import { geomanOptions, geomanSaveTriggers } from "../features/map/geoman";
 import { setBounds, setViewState } from "../features/map/mapSlice";
@@ -37,6 +37,7 @@ import TrackedTooltipControl from "./controls/TrackedTooltipControl";
 import TimeControl from "./controls/TimeControl";
 
 export default function MainMap() {
+  const c = useColorMode();
   const dispatch = useAppDispatch();
   const [geoman, setGeoman] = useState<Geoman | undefined>(undefined);
 
@@ -135,7 +136,7 @@ export default function MainMap() {
         )}
         <TooltipControl position="bottom-right" style={screenshotHiddenStyle} />
         <TrackColorScaleControl position="bottom-left" />
-        <ScaleControl unit={unitSystem} />
+        <ScaleControl unit={unitSystem} style={{borderColor: c("#333", "#fff")}}/>
         <TrackedTooltipControl />
 
         <MainMapSources />
