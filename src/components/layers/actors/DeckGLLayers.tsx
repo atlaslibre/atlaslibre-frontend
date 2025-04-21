@@ -158,10 +158,23 @@ export default function DeckGLLayers() {
       <Source
         id="attribution-source"
         type="geojson"
-        data={{ type: "FeatureCollection", features: [] }}
+        data={{
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: {},
+              geometry: { type: "Point", coordinates: [0, 0] },
+            },
+          ],
+        }}
         attribution={attributions.join(", ")}
       >
-        <Layer type="line" id="attribution-source-force-show" />
+        <Layer
+          type="circle"
+          id="attribution-source-force-show"
+          paint={{ "circle-opacity": 0 }}
+        />
       </Source>
       <DeckGLOverlay
         layers={[trackLayer, ...scenegraphLayers, tooltipLines]}
