@@ -27,6 +27,7 @@ import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
 import { Layer, Source } from "react-map-gl/maplibre";
 import actorTooltipLine from "./actorTooltipLine";
+import { useEffect, useState } from "react";
 
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
@@ -36,6 +37,8 @@ export default function DeckGLLayers() {
   const { trackColorRange, scale } = useAppSelector(
     (state) => state.pluginSettings
   );
+
+  const [attributions, setAttributions] = useState<string[]>([]);
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
@@ -132,17 +135,21 @@ export default function DeckGLLayers() {
 
   const trackLayer = actorTrackLayer(allTracks, allActors, trackColorRange);
 
-  const attributions = [];
-  for (let i = 0; i < plugins.length; i++) {
-    const attribution = plugins[i].attribution;
+  useEffect(() => {
+    const attributions = [];
+    for (let i = 0; i < plugins.length; i++) {
+      const attribution = plugins[i].attribution;
 
-    if (attribution == undefined) continue;
+      if (attribution == undefined) continue;
 
-    // show only active plugins as attributions
-    if (actors[plugins[i].id] && actors[plugins[i].id].length > 0) {
-      attributions.push(attribution);
+      // show only active plugins as attributions
+      if (actors[plugins[i].id] && actors[plugins[i].id].length > 0) {
+        attributions.push(attribution);
+      }
     }
-  }
+
+    setAttributions(attributions);
+  }, [actors]);
 
   const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));
 
