@@ -42,9 +42,7 @@ export default function TimeControl(props: { position: ControlPosition }) {
     else if (timezoneType == "system") time = time.local();
     setTime(time);
   }, 100);
-
-  //const time = ;
-
+  
   useEffect(() => {
     if (ref.current) control.attach(ref.current);
   }, [ref, control]);
