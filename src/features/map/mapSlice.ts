@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ViewState } from "react-map-gl/maplibre";
 
 export type UnitSystem = "metric" | "nautical" | "imperial";
+export type TimezoneType = "map" | "utc" | "system";
 
 interface LayerVisiblityMap {
   [key: string]: boolean;
@@ -14,7 +15,7 @@ interface MapState {
   unitSystem: UnitSystem;
   bounds: [number, number][];
   fixedTime?: string;
-  timezoneType: string;
+  timezoneType: TimezoneType;
   mapTimezone: string;
   mapTimezoneObjectId: number;
 }
@@ -68,7 +69,7 @@ export const mapSlice = createSlice({
     setMapTimezoneObjectId: (state, action: PayloadAction<number>) => {
       state.mapTimezoneObjectId = action.payload;
     },
-    setTimezoneType: (state, action: PayloadAction<string>) => {
+    setTimezoneType: (state, action: PayloadAction<TimezoneType>) => {
       state.timezoneType = action.payload;
     },
     setFixedTime: (state, action: PayloadAction<string | undefined>) => {

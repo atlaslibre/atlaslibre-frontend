@@ -34,6 +34,7 @@ import MainMapSources from "./services/Sources";
 import TrackColorScaleControl from "./controls/TrackColorScaleControl";
 import { toggleScreenshotMode } from "../features/flags/flagsSlice";
 import TrackedTooltipControl from "./controls/TrackedTooltipControl";
+import TimeControl from "./controls/TimeControl";
 
 export default function MainMap() {
   const dispatch = useAppDispatch();
@@ -121,6 +122,7 @@ export default function MainMap() {
           compact: false,
         }}
       >
+        <TimeControl position="top-right" />
         <NavigationControl position="top-left" style={screenshotHiddenStyle} />
         <MeasureControl />
         {debuggingEnabled && !screenshotMode && (

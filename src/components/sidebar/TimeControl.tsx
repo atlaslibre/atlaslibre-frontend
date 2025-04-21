@@ -15,6 +15,7 @@ import {
   setMapTimezone,
   setMapTimezoneObjectId,
   setTimezoneType,
+  TimezoneType,
 } from "../../features/map/mapSlice";
 import { useMap } from "react-map-gl/maplibre";
 
@@ -31,7 +32,7 @@ export default function TimeControl() {
   const dispatch = useAppDispatch();
   const map = useMap();
 
-  const updateTimezoneType = (tz: string) => {
+  const updateTimezoneType = (tz: TimezoneType) => {
     if (tz === null) return;
 
     dispatch(setTimezoneType(tz));
