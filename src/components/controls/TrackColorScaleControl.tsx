@@ -46,7 +46,7 @@ function TrackColorScaleByActor(props: { type: string }) {
   }, []);
 
   return (
-    <div className="mt-1 bg-gray-100 ">
+    <div className="mt-1 bg-gray-100 opacity-75">
       <div className="flex justify-between" style={{fontSize: "10px", padding: "0 3px 0 3px"}}>
         <div> {trackColorRange[props.type].min}</div>
         <div>

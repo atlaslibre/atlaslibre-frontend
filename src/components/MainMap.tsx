@@ -104,7 +104,7 @@ export default function MainMap() {
     : { display: "block" };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" style={{padding: screenshotMode ? "20px" : "0px"}}>
       <Map
         {...viewState}
         onMove={onMove}

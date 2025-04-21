@@ -1,15 +1,18 @@
-import { PickingInfo } from "deck.gl";
+import { Color, PickingInfo } from "deck.gl";
 import { Actor } from "../../../interfaces/actor";
 
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 import { ModelParams } from "../../../features/gossip/models";
+
+const darkHighlight = [200, 200, 200];
+const lightHighlight = [255, 255, 255];
 
 export default function actorScenegraphLayer(
   model: ModelParams,
   actors: Actor[],
   tracked: string[],
   onHover: (actor?: Actor) => void,
-  onClick: (actor?: Actor) => void
+  onClick: (actor?: Actor) => void,
 ): ScenegraphLayer<Actor> {
   return new ScenegraphLayer<Actor>({
     id: "gossip-layer-" + model.filename,
@@ -40,8 +43,8 @@ export default function actorScenegraphLayer(
       onClick(info.object);
     },
     getColor: (d) => {
-      if (tracked.find((a) => a == d.id)) return [200, 200, 200];
-      return [255, 255, 255];
+      if (tracked.find((a) => a == d.id)) return lightHighlight as Color;
+      return darkHighlight as Color;
     },
   });
 }

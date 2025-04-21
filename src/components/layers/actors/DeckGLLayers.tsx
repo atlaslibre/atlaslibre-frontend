@@ -26,9 +26,12 @@ import {
 import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
 import { Layer, Source } from "react-map-gl/maplibre";
+import actorTooltipLine from "./actorTooltipLine";
 
 export default function DeckGLLayers() {
   const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
+  const { trackedCoordinates } = useAppSelector((state) => state.tooltip);
+
   const { plugins } = useAppSelector((state) => state.plugin);
   const { trackColorRange, scale } = useAppSelector(
     (state) => state.pluginSettings
@@ -63,7 +66,7 @@ export default function DeckGLLayers() {
   const lightingEffect = new LightingEffect({
     ambientLight: new AmbientLight({
       color: [255, 255, 255],
-      intensity: c(5, 1),
+      intensity: c(5, 2),
     }),
     cameraLight: new _CameraLight({
       color: [255, 255, 255],
@@ -119,7 +122,7 @@ export default function DeckGLLayers() {
 
   const scenegraphLayers = layerConfig.map(([filter, model, scale]) =>
     actorScenegraphLayer(
-      {...model, scale: model.scale * scale},
+      { ...model, scale: model.scale * scale },
       allActors.filter(filter),
       allTracked,
       onHover,
@@ -141,6 +144,8 @@ export default function DeckGLLayers() {
     }
   }
 
+  const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));
+
   return (
     <>
       <Source
@@ -152,7 +157,7 @@ export default function DeckGLLayers() {
         <Layer type="line" id="attribution-source-force-show" />
       </Source>
       <DeckGLOverlay
-        layers={[trackLayer, ...scenegraphLayers]}
+        layers={[trackLayer, ...scenegraphLayers, tooltipLines]}
         pickingRadius={10}
         interleaved={true}
         effects={[lightingEffect]}

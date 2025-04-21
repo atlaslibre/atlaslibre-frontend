@@ -6,9 +6,15 @@ interface TooltipState {
   lat: number;
   lon: number;
   distance?: string | undefined;
+  trackedCoordinates: {
+    [id: string]: {
+      actor: { lat: number; lon: number; alt: number };
+      tooltip: { lat: number; lon: number };
+    };
+  };
 }
 
-const initialState: TooltipState = { lat: 0, lon: 0 };
+const initialState: TooltipState = { lat: 0, lon: 0, trackedCoordinates: {} };
 
 interface SetActorTooltipParams {
   type: "actor";
@@ -25,6 +31,19 @@ type SetTooltipParams = SetActorTooltipParams | SetDistanceToolipParams;
 interface SetLatLonParams {
   lat: number;
   lon: number;
+}
+
+interface SetTracktedTooltipCoordinates {
+  id: string;
+  actorCoordinates: {
+    lat: number;
+    lon: number;
+    alt: number;
+  };
+  tooltipCoordinates: {
+    lat: number;
+    lon: number;
+  };
 }
 
 export const tooltipSlice = createSlice({
@@ -47,9 +66,34 @@ export const tooltipSlice = createSlice({
       if (type == "actor") state.actor = undefined;
       else if (type == "distance") state.distance = undefined;
     },
+    clearTrackedTooltipCoordinates: (state, action: PayloadAction<string>) => {
+      delete state.trackedCoordinates[action.payload];
+    },
+    setTrackedTooltipCoordinates: (
+      state,
+      action: PayloadAction<SetTracktedTooltipCoordinates>
+    ) => {
+      state.trackedCoordinates[action.payload.id] = {
+        actor: {
+          lat: action.payload.actorCoordinates.lat,
+          lon: action.payload.actorCoordinates.lon,
+          alt: action.payload.actorCoordinates.alt,
+        },
+        tooltip: {
+          lat: action.payload.tooltipCoordinates.lat,
+          lon: action.payload.tooltipCoordinates.lon,
+        },
+      };
+    },
   },
 });
 
-export const { setTooltip, clearTooltip, setLatLon } = tooltipSlice.actions;
+export const {
+  setTooltip,
+  clearTooltip,
+  setLatLon,
+  setTrackedTooltipCoordinates,
+  clearTrackedTooltipCoordinates,
+} = tooltipSlice.actions;
 
 export default tooltipSlice.reducer;

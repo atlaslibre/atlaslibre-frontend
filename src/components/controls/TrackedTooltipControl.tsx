@@ -1,7 +1,7 @@
 import { IControl } from "maplibre-gl";
 import { useEffect, createRef, useRef, RefObject, useState } from "react";
 import { useControl, useMap } from "react-map-gl/maplibre";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector, useUnmount } from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
 import AircraftTooltip from "./tooltips/AircraftTooltip";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
@@ -11,6 +11,11 @@ import { toggleTrack } from "../../features/gossip/gossipSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { Stack } from "@mui/material";
 import dayjs from "dayjs";
+import {
+  clearTrackedTooltipCoordinates,
+  setTrackedTooltipCoordinates,
+} from "../../features/map/tooltipSlice";
+import { useMeasure } from "@uidotdev/usehooks";
 
 class TrackedTooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -32,17 +37,21 @@ class TrackedTooltip implements IControl {
 }
 
 function DraggableTooltip(props: { actor: Actor }) {
+  const offsetX = 20;
+  const offsetY = -50;
   const actor = props.actor;
 
   const map = useMap();
   const dispatch = useAppDispatch();
   const dragRef = useRef<HTMLDivElement>(null);
+  const [measureRef, { width, height }] = useMeasure();
 
   const [zindex, setZindex] = useState(0);
 
   const [visible, setVisible] = useState(true);
   const { screenshotMode } = useAppSelector((state) => state.flags);
   const { actors } = useAppSelector((state) => state.gossip);
+  const { viewState } = useAppSelector((state) => state.map);
 
   const rootPosition = map.default!.project([actor.pos.lon, actor.pos.lat]);
 
@@ -58,9 +67,10 @@ function DraggableTooltip(props: { actor: Actor }) {
   }
 
   function onStartHandler(_e: DraggableEvent, data: DraggableData) {
-    const today = dayjs().startOf('day').unix();
+    const today = dayjs().startOf("day").unix();
     setZindex(dayjs().unix() - today);
     setStartDragOffset(data);
+    clearTooltipLine();
   }
 
   function onStopHandler(_e: DraggableEvent, data: DraggableData) {
@@ -71,8 +81,42 @@ function DraggableTooltip(props: { actor: Actor }) {
       });
   }
 
+  function updateTooltipLine() {
+    if (!visible) return;
+    const { lat, lng } = map.default!.unproject([
+      rootPosition.x + offset.x + offsetX + (width ?? 100) / 2,
+      rootPosition.y + offset.y + offsetY + (height ?? 100) / 2,
+    ]);
+    dispatch(
+      setTrackedTooltipCoordinates({
+        id: actor.id,
+        actorCoordinates: {
+          lon: actor.pos.lon,
+          lat: actor.pos.lat,
+          alt: actor.pos.alt ?? 0,
+        },
+        tooltipCoordinates: {
+          lat: lat,
+          lon: lng,
+        },
+      })
+    );
+  }
+
+  function clearTooltipLine() {
+    dispatch(clearTrackedTooltipCoordinates(actor.id));
+  }
+
+  useEffect(() => {
+    updateTooltipLine();
+  }, [offset, width, height, viewState, actor.pos]);
+
+  useUnmount(() => {
+    clearTooltipLine();
+  });
+
   return (
-    <div className="absolute top-0 left-0" style={{zIndex: zindex}}>
+    <div className="absolute top-0 left-0" style={{ zIndex: zindex }}>
       <Draggable
         nodeRef={dragRef as RefObject<HTMLElement>}
         handle=".handle"
@@ -80,7 +124,7 @@ function DraggableTooltip(props: { actor: Actor }) {
           x: visible ? rootPosition.x + offset.x : 20,
           y: visible ? rootPosition.y + offset.y : 55,
         }}
-        positionOffset={{ x: 20, y: -50 }}
+        positionOffset={{ x: offsetX, y: offsetY }}
         onStop={onStopHandler}
         onStart={onStartHandler}
       >
@@ -102,7 +146,10 @@ function DraggableTooltip(props: { actor: Actor }) {
               </div>
               <button
                 className="cursor-pointer flex"
-                onClick={() => setVisible(!visible)}
+                onClick={() => {
+                  if (visible) clearTooltipLine();
+                  setVisible(!visible);
+                }}
               >
                 <VisibilityOffIcon
                   sx={{
@@ -142,6 +189,7 @@ function DraggableTooltip(props: { actor: Actor }) {
           <div
             className="p-2 cursor-default"
             style={{ display: visible ? "block" : "none" }}
+            ref={measureRef}
           >
             {actor.type == "ship" && <ShipTooltip ship={actor} />}
             {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}

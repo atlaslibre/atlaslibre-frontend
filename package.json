@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.17",
     "@turf/turf": "^7.2.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "colormap": "^2.3.2",
     "convert": "^5.9.0",
     "deck.gl": "^9.1.8",
