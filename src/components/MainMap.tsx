@@ -136,11 +136,12 @@ export default function MainMap() {
         )}
         <TooltipControl position="bottom-right" style={screenshotHiddenStyle} />
         <TrackColorScaleControl position="bottom-left" />
-        <ScaleControl unit={unitSystem} style={{borderColor: c("#333", "#fff")}}/>
+        <ScaleControl
+          unit={unitSystem}
+          style={{ borderColor: c("#333", "#fff") }}
+        />
         <TrackedTooltipControl />
-
         <MainMapSources />
-
         <BaseLayers />
         <BoundariesLayers />
         <UrbanLayers />

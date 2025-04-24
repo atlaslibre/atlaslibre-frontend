@@ -60,7 +60,12 @@ export const actorSchema = z.discriminatedUnion("type", [
   }),
   baseActorSchema.extend({
     type: z.literal("aircraft"),
-    hex: z.string().min(6).max(7),
+    hex: z
+      .string()
+      .min(6)
+      .max(7)
+      .nullish()
+      .transform((x) => x ?? undefined),
     reg: z
       .string()
       .nullish()
@@ -75,8 +80,6 @@ export const actorSchema = z.discriminatedUnion("type", [
       .transform((x) => x ?? undefined),
   }),
 ]);
-
-
 
 export type Track = z.infer<typeof trackSchema>;
 export type LocationRecord = z.infer<typeof locationRecordSchema>;
