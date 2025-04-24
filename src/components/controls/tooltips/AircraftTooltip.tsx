@@ -8,17 +8,21 @@ interface AircraftTooltipProps {
 
 export default function AircraftTooltip(props: AircraftTooltipProps) {
   const ac = props.aircraft;
-  const photos = useGetPhotosByHexQuery(ac.hex);
+
+  let photos;
+
+  if(ac.hex)
+     photos = useGetPhotosByHexQuery(ac.hex);
 
   return (
     <>
 
-      {photos.isSuccess && photos.data.photos.length > 0 &&  <img src={photos.data.photos[0].thumbnail.src} />}
+      {photos && photos.isSuccess && photos.data.photos.length > 0 &&  <img src={photos.data.photos[0].thumbnail.src} />}
      
 
       <p className="font-medium">{ac.name}</p>
       
-      <TooltipFact label="Hex">{ac.hex.toUpperCase()}</TooltipFact>
+      <TooltipFact label="Hex">{ac.hex?.toUpperCase()}</TooltipFact>
       <TooltipFact label="Registration">{ac.reg}</TooltipFact>
       <TooltipFact label="Squawk">{ac.squawk}</TooltipFact>
       <TooltipFact label="Speed">{ac.pos.speed}</TooltipFact>
