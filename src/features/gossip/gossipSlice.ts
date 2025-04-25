@@ -29,7 +29,7 @@ const initialState: GossipState = {
   actors: {},
   tracked: {},
   tracks: {},
-  customAttribution: {}
+  customAttribution: {},
 };
 
 export const gossipSlice = createSlice({
@@ -58,12 +58,20 @@ export const gossipSlice = createSlice({
         state.tracked[plugin] = [id];
       }
     },
-    setCustomAttribution: (state, action: PayloadAction<CustomAttributionUpdate>) => {
+    setCustomAttribution: (
+      state,
+      action: PayloadAction<CustomAttributionUpdate>
+    ) => {
       state.customAttribution[action.payload.key] = action.payload.attributions;
-    }
+    },
   },
 });
 
-export const { updateValidatedGossip, clearValidatedGossip, toggleTrack, setCustomAttribution } = gossipSlice.actions;
+export const {
+  updateValidatedGossip,
+  clearValidatedGossip,
+  toggleTrack,
+  setCustomAttribution,
+} = gossipSlice.actions;
 
 export default gossipSlice.reducer;
