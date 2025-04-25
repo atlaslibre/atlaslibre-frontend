@@ -1,13 +1,14 @@
 import { LocationSearching, Refresh } from "@mui/icons-material";
-import { IconButton, ListItem } from "@mui/material";
+import { Checkbox, IconButton, ListItem, ListItemIcon } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { updateValidatedGossip } from "../../../features/gossip/gossipSlice";
+import { clearValidatedGossip, updateValidatedGossip } from "../../../features/gossip/gossipSlice";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
+import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
 
 export function ActorPluginMenuItem({
   plugin,
@@ -15,6 +16,7 @@ export function ActorPluginMenuItem({
   const dispatch = useAppDispatch();
   const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
   const { tracked } = useAppSelector((state) => state.gossip);
+  const { enabled } = useAppSelector((state) => state.pluginSettings);
 
   const [status, setStatus] = useState("Connecting");
   const [updating, setUpdating] = useState(false);
@@ -30,6 +32,10 @@ export function ActorPluginMenuItem({
 
   const update = () => {
     if (updating) return;
+    if (!enabled[plugin.id]) {
+      dispatch(clearValidatedGossip(plugin.id));
+      return;
+    }
 
     setUpdating(true);
 
@@ -92,7 +98,7 @@ export function ActorPluginMenuItem({
 
   useEffect(() => {
     update();
-  }, [fixedTime, viewState, tracked]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fixedTime, viewState, tracked, enabled[plugin.id]]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -110,6 +116,17 @@ export function ActorPluginMenuItem({
           </>
         }
       >
+        <ListItemIcon>
+          <Checkbox
+            edge="start"
+            checked={enabled[plugin.id] ?? false}
+            tabIndex={-1}
+            disableRipple
+            onClick={() => {
+              dispatch(toggleEnabled(plugin.id)); 
+            }}
+          />
+        </ListItemIcon>
         <ListItemText primary={plugin.name} secondary={status} />
       </ListItem>
     </div>

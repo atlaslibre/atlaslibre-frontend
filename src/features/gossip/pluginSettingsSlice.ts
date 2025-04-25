@@ -26,6 +26,7 @@ export interface TrackColorRange {
 
 interface PluginSettingsState {
   settings: GossipPluginSettings[];
+  enabled: { [plugin: string]: boolean };
   trackColorRange: { [actorType: string]: TrackColorRange };
   scale: { [actorType: string]: number };
 }
@@ -56,6 +57,7 @@ const initialState: PluginSettingsState = {
     ship: 1,
     aircraft: 1,
   },
+  enabled: {},
 };
 
 export const pluginSettingsSlice = createSlice({
@@ -79,10 +81,13 @@ export const pluginSettingsSlice = createSlice({
     updateScale: (state, action: PayloadAction<UpdateScalePayload>) => {
       state.scale[action.payload.actorType] = action.payload.scale;
     },
+    toggleEnabled: (state, action: PayloadAction<string>) => {
+      state.enabled[action.payload] = !(state.enabled[action.payload] ?? false);
+    },
   },
 });
 
-export const { updateTrackColorRangeType, updateTrackColorRange, updateScale } =
+export const { updateTrackColorRangeType, updateTrackColorRange, updateScale, toggleEnabled } =
   pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;

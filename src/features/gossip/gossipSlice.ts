@@ -40,6 +40,10 @@ export const gossipSlice = createSlice({
       state.actors[action.payload.plugin] = action.payload.actors;
       state.tracks[action.payload.plugin] = action.payload.tracks;
     },
+    clearValidatedGossip: (state, action: PayloadAction<string>) => {
+      delete state.actors[action.payload];
+      delete state.tracks[action.payload];
+    },
     toggleTrack: (state, action: PayloadAction<TrackingParams>) => {
       const id = action.payload.actor.id;
       const plugin = action.payload.plugin;
@@ -60,6 +64,6 @@ export const gossipSlice = createSlice({
   },
 });
 
-export const { updateValidatedGossip, toggleTrack, setCustomAttribution } = gossipSlice.actions;
+export const { updateValidatedGossip, clearValidatedGossip, toggleTrack, setCustomAttribution } = gossipSlice.actions;
 
 export default gossipSlice.reducer;
