@@ -1,6 +1,8 @@
-import { Drawer } from "@mui/material";
+import { Divider, Drawer } from "@mui/material";
 import { drawerWidth } from "../../../App";
-import ActorPluginSettings from "./ActorPluginSettings";
+import GenericActorPluginSettings from "./GenericActorPluginSettings";
+import { useAppSelector } from "../../../app/hooks";
+import SpecificActorPluginSettings from "./SpecificActorPluginSettings";
 
 interface PluginSettingsProps {
   open: boolean;
@@ -8,6 +10,7 @@ interface PluginSettingsProps {
 }
 
 export default function PluginSettings(props: PluginSettingsProps) {
+  const { plugins } = useAppSelector((state) => state.plugin);
   return (
     <Drawer
       open={props.open}
@@ -23,9 +26,14 @@ export default function PluginSettings(props: PluginSettingsProps) {
         },
       }}
     >
-      <ActorPluginSettings type="aircraft" name="Aircraft" />
-      <ActorPluginSettings type="ship" name="Ships" />
+      <GenericActorPluginSettings type="aircraft" name="Aircraft" />
+      <GenericActorPluginSettings type="ship" name="Ships" />
 
+      <Divider />
+
+      {plugins.map((plugin) => (
+        <SpecificActorPluginSettings key={plugin.id} plugin={plugin.id} />
+      ))}
     </Drawer>
   );
 }

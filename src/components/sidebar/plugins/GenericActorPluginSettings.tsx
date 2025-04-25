@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+  ActorType,
   TrackColorRangeType,
   updateScale,
   updateTrackColorRange,
@@ -17,12 +18,12 @@ import {
 } from "../../../features/gossip/pluginSettingsSlice";
 import { ChangeEvent } from "react";
 
-interface ActorPluginSettingsProps {
-  type: "aircraft" | "ship";
+interface GenericActorPluginSettingsProps {
+  type: ActorType;
   name: string;
 }
 
-export default function ActorPluginSettings(props: ActorPluginSettingsProps) {
+export default function GenericActorPluginSettings(props: GenericActorPluginSettingsProps) {
   const { trackColorRange, scale } = useAppSelector(
     (state) => state.pluginSettings
   );
@@ -101,10 +102,11 @@ export default function ActorPluginSettings(props: ActorPluginSettingsProps) {
           min={0.1}
           max={5}
           step={0.1}
-          sx={{width: "50%"}}
+          sx={{ width: "50%" }}
           size="small"
           value={scale[props.type]}
-          marks={[{value: 1}]}
+          marks={[{ value: 1 }]}
+          valueLabelDisplay="auto"
           onChange={(_evt, value) => {
             dispatch(
               updateScale({

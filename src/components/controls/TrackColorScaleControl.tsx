@@ -5,6 +5,7 @@ import { useAppSelector } from "../../app/hooks";
 import { uniqueFilter } from "../../util/array";
 import { capitalize } from "@mui/material";
 import { rainbow } from "../layers/actors/actorTrackLayer";
+import { ActorType } from "../../features/gossip/pluginSettingsSlice";
 
 class TrackColorScale implements IControl {
   private _container: HTMLElement | undefined;
@@ -26,7 +27,7 @@ class TrackColorScale implements IControl {
   }
 }
 
-function TrackColorScaleByActor(props: { type: string }) {
+function TrackColorScaleByActor(props: { type: ActorType }) {
   const { trackColorRange } = useAppSelector((state) => state.pluginSettings);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);

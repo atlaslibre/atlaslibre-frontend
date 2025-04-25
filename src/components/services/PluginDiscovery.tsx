@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { discovered } from "../../features/gossip/pluginSlice";
 import { pluginDefinitionSchema } from "../../interfaces/plugins";
+import { initSettings } from "../../features/gossip/pluginSettingsSlice";
 
 const pluginPrefix = "data-albp-";
 
 const PluginDiscovery = () => {
   const dispatch = useAppDispatch();
+  const { settings } = useAppSelector((state) => state.pluginSettings);
 
   useEffect(() => {
     try {
@@ -38,6 +40,10 @@ const PluginDiscovery = () => {
           pluginDefinition.error
         );
         continue;
+      }
+
+      if (settings[id] === undefined) {
+        dispatch(initSettings({ plugin: id, type: pluginDefinition.data.type }));
       }
 
       dispatch(discovered({ id: id, ...pluginDefinition.data }));

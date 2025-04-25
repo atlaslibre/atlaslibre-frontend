@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface BaseGossipPluginSettings {
-  id: string;
+  enabled: boolean;
 }
 
 export interface ActorGossipPluginSettings extends BaseGossipPluginSettings {
   type: "actor";
+  query: {
+    maxAge: number;
+    maxTrack: number;
+  };
 }
 
 export interface TileGossipPluginSettings extends BaseGossipPluginSettings {
@@ -16,6 +20,8 @@ export type GossipPluginSettings =
   | ActorGossipPluginSettings
   | TileGossipPluginSettings;
 
+export type GossipPluginType = "actor" | "tile";
+export type ActorType = "aircraft" | "ship";
 export type TrackColorRangeType = "speed" | "altitude";
 
 export interface TrackColorRange {
@@ -25,30 +31,39 @@ export interface TrackColorRange {
 }
 
 interface PluginSettingsState {
-  settings: GossipPluginSettings[];
-  enabled: { [plugin: string]: boolean };
-  trackColorRange: { [actorType: string]: TrackColorRange };
-  scale: { [actorType: string]: number };
+  settings: { [plugin: string]: GossipPluginSettings };
+  trackColorRange: { [actorType in ActorType]: TrackColorRange };
+  scale: { [actorType in ActorType]: number };
 }
 
 interface UpdateTrackColorRangeTypePayload {
-  actorType: string;
+  actorType: ActorType;
   parameterType: TrackColorRangeType;
 }
 
 interface UpdateTrackColorRangePayload {
-  actorType: string;
+  actorType: ActorType;
   min: number;
   max: number;
 }
 
 interface UpdateScalePayload {
-  actorType: string;
+  actorType: ActorType;
   scale: number;
 }
 
+interface InitSettingsPayload {
+  plugin: string;
+  type: GossipPluginType;
+}
+
+interface NumericSettingsPayload {
+  plugin: string;
+  value: number;
+}
+
 const initialState: PluginSettingsState = {
-  settings: [],
+  settings: {},
   trackColorRange: {
     ship: { min: 5, max: 20, type: "speed" },
     aircraft: { min: 0, max: 30000, type: "altitude" },
@@ -57,7 +72,6 @@ const initialState: PluginSettingsState = {
     ship: 1,
     aircraft: 1,
   },
-  enabled: {},
 };
 
 export const pluginSettingsSlice = createSlice({
@@ -82,12 +96,46 @@ export const pluginSettingsSlice = createSlice({
       state.scale[action.payload.actorType] = action.payload.scale;
     },
     toggleEnabled: (state, action: PayloadAction<string>) => {
-      state.enabled[action.payload] = !(state.enabled[action.payload] ?? false);
+      state.settings[action.payload].enabled =
+        !state.settings[action.payload].enabled;
+    },
+    initSettings: (state, action: PayloadAction<InitSettingsPayload>) => {
+      if (action.payload.type === "actor")
+        state.settings[action.payload.plugin] = {
+          type: "actor",
+          enabled: true,
+          query: { maxAge: 300, maxTrack: 3600 },
+        };
+    },
+    updateSettingsQueryMaxAge: (
+      state,
+      action: PayloadAction<NumericSettingsPayload>
+    ) => {
+      const settings = state.settings[action.payload.plugin];
+      if (settings.type !== "actor")
+        throw new Error("Plugin is not of type 'actor'");
+      settings.query.maxAge = action.payload.value;
+    },
+    updateSettingsQueryMaxTrack: (
+      state,
+      action: PayloadAction<NumericSettingsPayload>
+    ) => {
+      const settings = state.settings[action.payload.plugin];
+      if (settings.type !== "actor")
+        throw new Error("Plugin is not of type 'actor'");
+      settings.query.maxTrack = action.payload.value;
     },
   },
 });
 
-export const { updateTrackColorRangeType, updateTrackColorRange, updateScale, toggleEnabled } =
-  pluginSettingsSlice.actions;
+export const {
+  updateTrackColorRangeType,
+  updateTrackColorRange,
+  updateScale,
+  toggleEnabled,
+  initSettings,
+  updateSettingsQueryMaxAge,
+  updateSettingsQueryMaxTrack,
+} = pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;

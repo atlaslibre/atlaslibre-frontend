@@ -4,7 +4,10 @@ import ListItemText from "@mui/material/ListItemText";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { clearValidatedGossip, updateValidatedGossip } from "../../../features/gossip/gossipSlice";
+import {
+  clearValidatedGossip,
+  updateValidatedGossip,
+} from "../../../features/gossip/gossipSlice";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
@@ -16,10 +19,14 @@ export function ActorPluginMenuItem({
   const dispatch = useAppDispatch();
   const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
   const { tracked } = useAppSelector((state) => state.gossip);
-  const { enabled } = useAppSelector((state) => state.pluginSettings);
+  const { settings } = useAppSelector((state) => state.pluginSettings);
 
   const [status, setStatus] = useState("Connecting");
   const [updating, setUpdating] = useState(false);
+
+  const setting = settings[plugin.id];
+
+  if (setting.type !== "actor") return false;
 
   const locate = () => {
     chrome.runtime.sendMessage(plugin.id, {
@@ -32,7 +39,7 @@ export function ActorPluginMenuItem({
 
   const update = () => {
     if (updating) return;
-    if (!enabled[plugin.id]) {
+    if (!setting.enabled) {
       dispatch(clearValidatedGossip(plugin.id));
       return;
     }
@@ -47,8 +54,8 @@ export function ActorPluginMenuItem({
         type: "query",
         tracks: tracked[plugin.id] ?? [],
         ts: ts.utc().unix(),
-        maxDelta: 600, // 5 min - TODO make configurable (per plugin?)
-        maxDeltaTrack: 60 * 60 * 10, // 1h - TODO make configurable (per plugin?)
+        maxDelta: setting.query.maxAge,
+        maxDeltaTrack: setting.query.maxTrack,
         limit: 10_000,
         bounds: bounds,
       },
@@ -98,7 +105,14 @@ export function ActorPluginMenuItem({
 
   useEffect(() => {
     update();
-  }, [fixedTime, viewState, tracked, enabled[plugin.id]]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    fixedTime,
+    viewState,
+    tracked,
+    setting.enabled,
+    setting.query.maxAge,
+    setting.query.maxTrack,
+  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -119,11 +133,11 @@ export function ActorPluginMenuItem({
         <ListItemIcon>
           <Checkbox
             edge="start"
-            checked={enabled[plugin.id] ?? false}
+            checked={setting.enabled}
             tabIndex={-1}
             disableRipple
             onClick={() => {
-              dispatch(toggleEnabled(plugin.id)); 
+              dispatch(toggleEnabled(plugin.id));
             }}
           />
         </ListItemIcon>
