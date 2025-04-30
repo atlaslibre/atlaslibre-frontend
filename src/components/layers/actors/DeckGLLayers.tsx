@@ -8,7 +8,10 @@ import { LightingEffect } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { Actor } from "../../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
-import { setCustomAttribution, toggleTrack } from "../../../features/gossip/gossipSlice";
+import {
+  setCustomAttribution,
+  toggleTrack,
+} from "../../../features/gossip/gossipSlice";
 import {
   buoyModel,
   cargoModel,
@@ -33,16 +36,30 @@ export default function DeckGLLayers() {
   const { trackedCoordinates } = useAppSelector((state) => state.tooltip);
 
   const { plugins } = useAppSelector((state) => state.plugin);
-  const { trackColorRange, scale } = useAppSelector(
+  const { trackColorRange, scale, filter } = useAppSelector(
     (state) => state.pluginSettings
   );
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
 
-  const allActors = Object.values(actors).flat();
+  let allActors = Object.values(actors).flat();
   const allTracks = Object.values(tracks).flat();
   const allTracked = Object.values(tracked).flat();
+
+  if (filter) {
+    const filterLines = filter.split("\n");
+
+    const filterFn = (a: Actor) => {
+      for (let i = 0; i < filterLines.length; i++) {
+        const line = filterLines[i];
+        if (a.name.indexOf(line) >= 0) return true;
+      }
+      return false;
+    };
+
+    allActors = allActors.filter(filterFn);
+  }
 
   const onHover = (actor?: Actor) => {
     if (actor) dispatch(setTooltip({ type: "actor", actor: actor }));
@@ -145,7 +162,7 @@ export default function DeckGLLayers() {
       }
     }
 
-    dispatch(setCustomAttribution({key: "deckgl", attributions}));
+    dispatch(setCustomAttribution({ key: "deckgl", attributions }));
   }, [actors]);
 
   const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));

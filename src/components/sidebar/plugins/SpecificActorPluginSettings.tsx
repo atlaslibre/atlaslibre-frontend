@@ -33,7 +33,7 @@ export default function SpecificActorPluginSettings(
 
   const secondsToLabel = (seconds: number) => {
     return humanizeDuration(seconds * 1000);
-  }
+  };
 
   return (
     <List
@@ -74,7 +74,7 @@ export default function SpecificActorPluginSettings(
 
         <Slider
           min={600}
-          max={3600 * 24}
+          max={3600 * 24 * 7}
           step={600}
           sx={{ width: "50%", zIndex: 10 }}
           size="small"

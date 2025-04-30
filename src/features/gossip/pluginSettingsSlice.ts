@@ -34,6 +34,7 @@ interface PluginSettingsState {
   settings: { [plugin: string]: GossipPluginSettings };
   trackColorRange: { [actorType in ActorType]: TrackColorRange };
   scale: { [actorType in ActorType]: number };
+  filter?: string;
 }
 
 interface UpdateTrackColorRangeTypePayload {
@@ -95,6 +96,9 @@ export const pluginSettingsSlice = createSlice({
     updateScale: (state, action: PayloadAction<UpdateScalePayload>) => {
       state.scale[action.payload.actorType] = action.payload.scale;
     },
+    setFilter: (state, action: PayloadAction<string | undefined>) => {
+      state.filter = action.payload;
+    },
     toggleEnabled: (state, action: PayloadAction<string>) => {
       state.settings[action.payload].enabled =
         !state.settings[action.payload].enabled;
@@ -136,6 +140,7 @@ export const {
   initSettings,
   updateSettingsQueryMaxAge,
   updateSettingsQueryMaxTrack,
+  setFilter,
 } = pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;
