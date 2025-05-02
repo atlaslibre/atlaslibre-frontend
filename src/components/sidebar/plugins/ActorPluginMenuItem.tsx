@@ -12,7 +12,6 @@ import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
 import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
-import { object } from "zod";
 
 export function ActorPluginMenuItem({
   plugin,
