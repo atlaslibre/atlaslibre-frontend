@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actorSchema, trackSchema } from "./actor";
+import { actorSchema, incomingActorSchema, trackSchema } from "./actor";
 
 const basePluginDefinitionSchema = z.object({
   name: z.string(),
@@ -32,7 +32,7 @@ export const pluginDefinitionSchema = z.discriminatedUnion("type", [
 
 export const pluginActorQueryResponseSchema = z.object({
   version: z.literal(1),
-  actors: z.array(actorSchema),
+  actors: z.array(incomingActorSchema),
   tracks: z.array(trackSchema),
 });
 

@@ -1,5 +1,6 @@
 import actorScenegraphLayer from "./actorScenegraphLayer";
 import {
+  useActors,
   useAppDispatch,
   useAppSelector,
   useColorMode,
@@ -8,10 +9,7 @@ import { LightingEffect } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { Actor } from "../../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
-import {
-  setCustomAttribution,
-  toggleTrack,
-} from "../../../features/gossip/gossipSlice";
+import { toggleTrack } from "../../../features/gossip/gossipSlice";
 import {
   buoyModel,
   cargoModel,
@@ -29,37 +27,20 @@ import {
 import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
 import actorTooltipLine from "./actorTooltipLine";
-import { useEffect } from "react";
 
 export default function DeckGLLayers() {
-  const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.gossip);
   const { trackedCoordinates } = useAppSelector((state) => state.tooltip);
+  const { actors, tracks } = useActors();
 
-  const { plugins } = useAppSelector((state) => state.plugin);
-  const { trackColorRange, scale, filter } = useAppSelector(
+  const { trackColorRange, scale } = useAppSelector(
     (state) => state.pluginSettings
   );
 
   const dispatch = useAppDispatch();
   const c = useColorMode();
 
-  let allActors = Object.values(actors).flat();
-  const allTracks = Object.values(tracks).flat();
   const allTracked = Object.values(tracked).flat();
-
-  if (filter) {
-    const filterLines = filter.split("\n");
-
-    const filterFn = (a: Actor) => {
-      for (let i = 0; i < filterLines.length; i++) {
-        const line = filterLines[i];
-        if (a.name.indexOf(line) >= 0) return true;
-      }
-      return false;
-    };
-
-    allActors = allActors.filter(filterFn);
-  }
 
   const onHover = (actor?: Actor) => {
     if (actor) dispatch(setTooltip({ type: "actor", actor: actor }));
@@ -68,16 +49,7 @@ export default function DeckGLLayers() {
 
   const onClick = (actor?: Actor) => {
     if (!actor) return;
-
-    const plugins = Object.keys(actors);
-    for (let i = 0; i < plugins.length; i++) {
-      const found = actors[plugins[i]].find((a) => a.id == actor.id);
-
-      if (found) {
-        dispatch(toggleTrack({ plugin: plugins[i], actor: found }));
-        return;
-      }
-    }
+    dispatch(toggleTrack(actor));
   };
 
   const lightingEffect = new LightingEffect({
@@ -140,31 +112,14 @@ export default function DeckGLLayers() {
   const scenegraphLayers = layerConfig.map(([filter, model, scale]) =>
     actorScenegraphLayer(
       { ...model, scale: model.scale * scale },
-      allActors.filter(filter),
+      actors.filter(filter),
       allTracked,
       onHover,
       onClick
     )
   );
 
-  const trackLayer = actorTrackLayer(allTracks, allActors, trackColorRange);
-
-  useEffect(() => {
-    const attributions = [];
-    for (let i = 0; i < plugins.length; i++) {
-      const attribution = plugins[i].attribution;
-
-      if (attribution == undefined) continue;
-
-      // show only active plugins as attributions
-      if (actors[plugins[i].id] && actors[plugins[i].id].length > 0) {
-        attributions.push(attribution);
-      }
-    }
-
-    dispatch(setCustomAttribution({ key: "deckgl", attributions }));
-  }, [actors]);
-
+  const trackLayer = actorTrackLayer(tracks, actors, trackColorRange);
   const tooltipLines = actorTooltipLine(trackedCoordinates, c("light", "dark"));
 
   return (

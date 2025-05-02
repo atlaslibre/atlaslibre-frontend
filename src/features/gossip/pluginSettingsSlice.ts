@@ -30,33 +30,36 @@ export interface TrackColorRange {
   max: number;
 }
 
+export type ActorOverrides = {
+  [actorId: string]: ActorOverride;
+};
+
 interface PluginSettingsState {
-  overrides: { [actorId: string]: ActorOverrides }
+  overrides: ActorOverrides;
   settings: { [plugin: string]: GossipPluginSettings };
   trackColorRange: { [actorType in ActorType]: TrackColorRange };
   scale: { [actorType in ActorType]: number };
   filter?: string;
 }
 
-type ActorOverrides = ShipActorOverrides | AircraftActorOverrides;
+type ActorOverride = ShipActorOverride | AircraftActorOverride;
 
-interface ShipActorOverrides {
+interface ShipActorOverride {
   type: "ship";
   name?: string;
   flag?: string;
   class?: string;
 }
 
-interface AircraftActorOverrides {
+interface AircraftActorOverride {
   type: "aircraft";
   name: string;
 }
 
 interface UpdateActorOverrides {
   id: string;
-  overrides: ActorOverrides;
+  override: ActorOverride;
 }
-
 
 interface UpdateTrackColorRangeTypePayload {
   actorType: ActorType;
@@ -122,7 +125,7 @@ export const pluginSettingsSlice = createSlice({
       state.filter = action.payload;
     },
     setOverrides: (state, action: PayloadAction<UpdateActorOverrides>) => {
-      state.overrides[action.payload.id] = action.payload.overrides;
+      state.overrides[action.payload.id] = action.payload.override;
     },
     clearOverrides: (state, action: PayloadAction<string>) => {
       delete state.overrides[action.payload];
@@ -170,7 +173,7 @@ export const {
   updateSettingsQueryMaxTrack,
   setFilter,
   setOverrides,
-  clearOverrides
+  clearOverrides,
 } = pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;

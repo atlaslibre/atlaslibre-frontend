@@ -1,15 +1,9 @@
 import { LocationSearching, Refresh } from "@mui/icons-material";
 import { Checkbox, IconButton, ListItem, ListItemIcon } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  clearValidatedGossip,
-  updateValidatedGossip,
-} from "../../../features/gossip/gossipSlice";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
-import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
 import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
 
@@ -17,14 +11,12 @@ export function ActorPluginMenuItem({
   plugin,
 }: PluginMenuItemProps<ActorGossipPlugin>) {
   const dispatch = useAppDispatch();
-  const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
-  const { tracked } = useAppSelector((state) => state.gossip);
-  const { settings, overrides } = useAppSelector(
+  const { bounds, viewState } = useAppSelector((state) => state.map);
+  const { settings } = useAppSelector(
     (state) => state.pluginSettings
   );
 
-  const [status, setStatus] = useState("Connecting");
-  const [updating, setUpdating] = useState(false);
+  const [status, setStatus] = useState("TODO");
 
   const setting = settings[plugin.id];
 
@@ -39,69 +31,6 @@ export function ActorPluginMenuItem({
     });
   };
 
-  const update = () => {
-    if (updating) return;
-    if (!setting.enabled) {
-      dispatch(clearValidatedGossip(plugin.id));
-      return;
-    }
-
-    setUpdating(true);
-
-    const ts: dayjs.Dayjs = fixedTime ? dayjs(fixedTime) : dayjs.utc();
-
-    chrome.runtime.sendMessage(
-      plugin.id,
-      {
-        type: "query",
-        tracks: tracked[plugin.id] ?? [],
-        ts: ts.utc().unix(),
-        maxDelta: setting.query.maxAge,
-        maxDeltaTrack: setting.query.maxTrack,
-        limit: 10_000,
-        bounds: bounds,
-      },
-      (response) => {
-        if (response.actors)
-          for (let i = 0; i < response.actors.length; i++) {
-            const actor = response.actors[i];
-            const override = overrides[actor.id];
-            if (override) {
-              const keys = Object.keys(override);
-              const values = Object.values(override);
-
-              for (let k = 0; k < keys.length; k++) {
-                const key = keys[k];
-                if (key === "type") continue;
-                actor[key] = values[k];
-              }
-            }
-          }
-
-        const parseResult = pluginActorQueryResponseSchema.safeParse(response);
-
-        if (!parseResult.success) {
-          console.error(
-            "Failed to parse query response from plugin",
-            parseResult.error,
-            response
-          );
-          setUpdating(false);
-          return;
-        }
-
-        dispatch(
-          updateValidatedGossip({
-            plugin: plugin.id,
-            actors: parseResult.data.actors,
-            tracks: parseResult.data.tracks,
-          })
-        );
-        setUpdating(false);
-      }
-    );
-  };
-
   const updateStatus = () => {
     chrome.runtime.sendMessage(
       plugin.id,
@@ -111,26 +40,6 @@ export function ActorPluginMenuItem({
       (response) => setStatus(response)
     );
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      updateStatus();
-
-      if (!fixedTime) update();
-    }, 1000);
-    return () => clearInterval(interval);
-  });
-
-  useEffect(() => {
-    update();
-  }, [
-    fixedTime,
-    viewState,
-    tracked,
-    setting.enabled,
-    setting.query.maxAge,
-    setting.query.maxTrack,
-  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -142,7 +51,7 @@ export function ActorPluginMenuItem({
                 <LocationSearching />
               </IconButton>
             )}
-            <IconButton edge="end" onClick={update} disabled={updating}>
+            <IconButton edge="end" onClick={() => alert("TODO")}>
               <Refresh />
             </IconButton>
           </>

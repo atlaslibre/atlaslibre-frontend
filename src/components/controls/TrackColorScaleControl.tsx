@@ -1,7 +1,7 @@
 import { IControl, ControlPosition } from "maplibre-gl";
 import { useEffect, createRef, useRef } from "react";
 import { useControl } from "react-map-gl/maplibre";
-import { useAppSelector } from "../../app/hooks";
+import { useActors, useAppSelector } from "../../app/hooks";
 import { uniqueFilter } from "../../util/array";
 import { capitalize } from "@mui/material";
 import { rainbow } from "../layers/actors/actorTrackLayer";
@@ -66,12 +66,13 @@ export default function TrackColorScaleControl(props: {
   const control = useControl(() => new TrackColorScale(), props);
   const ref = createRef<HTMLDivElement>();
 
-  const { tracked, actors } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.gossip);
+  const { actors } = useActors();
+  
 
   const trackedIds = Object.values(tracked).flat();
 
-  const trackedActors = Object.values(actors)
-    .flat()
+  const trackedActors = actors
     .filter((a) => trackedIds.find((t) => t == a.id));
 
   const trackedActorTypes = trackedActors

@@ -1,10 +1,10 @@
 import { Layer, Source } from "react-map-gl/maplibre";
-import { useAppSelector } from "../../app/hooks";
+import { useActors } from "../../app/hooks";
 import { uniqueFilter } from "../../util/array";
 import { hash } from "../../util/string";
 
 export default function Sources() {
-  const { customAttribution } = useAppSelector((state) => state.gossip);
+  const { attributions } = useActors();
 
   return (
     <>
@@ -68,21 +68,20 @@ export default function Sources() {
         id="timezones"
       />
 
-      {Object.values(customAttribution)
-        .flat()
-        .filter(uniqueFilter)
-        .map((a) => {
-          const id = hash(a);
-          return <Source
+      {attributions.filter(uniqueFilter).map((attribution) => {
+        const id = hash(attribution);
+        return (
+          <Source
             type="geojson"
             data={{ type: "FeatureCollection", features: [] }}
-            attribution={a}
+            attribution={attribution}
             key={`attribution-source-${id}`}
             id={`attribution-source-${id}`}
           >
             <Layer type="line" id={`attribution-layer-${id}`}></Layer>
-          </Source>;
-        })}
+          </Source>
+        );
+      })}
     </>
   );
 }

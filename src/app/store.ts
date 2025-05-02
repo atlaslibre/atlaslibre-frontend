@@ -1,5 +1,5 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { gossipSlice } from "../features/gossip/gossipSlice";
+import { gossipApiSlice, gossipSlice } from "../features/gossip/gossipSlice";
 import { mapSlice } from "../features/map/mapSlice";
 import { flagsSlice } from "../features/flags/flagsSlice";
 import { customMapSlice } from "../features/map/customMapSlice";
@@ -12,6 +12,7 @@ import { pluginSettingsSlice } from "../features/gossip/pluginSettingsSlice";
 
 const rootReducer = combineSlices(
   gossipSlice,
+  gossipApiSlice,
   mapSlice,
   flagsSlice,
   customMapSlice,
@@ -40,7 +41,8 @@ export const store = configureStore({
       },
     })
       .prepend(listenerMiddleware.middleware)
-      .concat(plancespotterSlice.middleware),
+      .concat(plancespotterSlice.middleware)
+      .concat(gossipApiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

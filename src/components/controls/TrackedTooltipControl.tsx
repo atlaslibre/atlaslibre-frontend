@@ -1,7 +1,7 @@
 import { IControl } from "maplibre-gl";
 import { useEffect, createRef, useRef, RefObject, useState } from "react";
 import { useControl, useMap } from "react-map-gl/maplibre";
-import { useAppDispatch, useAppSelector, useUnmount } from "../../app/hooks";
+import { useActors, useAppDispatch, useAppSelector, useUnmount } from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
 import AircraftTooltip from "./tooltips/AircraftTooltip";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
@@ -52,7 +52,6 @@ function DraggableTooltip(props: { actor: Actor }) {
 
   const [visible, setVisible] = useState(true);
   const { screenshotMode } = useAppSelector((state) => state.flags);
-  const { actors } = useAppSelector((state) => state.gossip);
   const { viewState } = useAppSelector((state) => state.map);
 
   const rootPosition = map.default!.project([actor.pos.lon, actor.pos.lat]);
@@ -60,14 +59,6 @@ function DraggableTooltip(props: { actor: Actor }) {
   const [overrideDialogVisible, setOverrideDialogVisible] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [startDragOffset, setStartDragOffset] = useState({ x: 0, y: 0 });
-
-  const plugins = Object.keys(actors);
-
-  let plugin: string;
-  for (let i = 0; i < plugins.length; i++) {
-    plugin = plugins[i];
-    if (actors[plugins[i]].find((a) => a.id == actor.id)) break;
-  }
 
   function onStartHandler(_e: DraggableEvent, data: DraggableData) {
     const today = dayjs().startOf("day").unix();
@@ -196,10 +187,7 @@ function DraggableTooltip(props: { actor: Actor }) {
                   className="cursor-pointer flex"
                   onClick={() =>
                     dispatch(
-                      toggleTrack({
-                        plugin: plugin,
-                        actor: actor,
-                      })
+                      toggleTrack(actor)
                     )
                   }
                 >
@@ -237,17 +225,17 @@ export default function TrackedTooltipControl() {
   });
   const ref = createRef<HTMLDivElement>();
 
-  const { tracked, actors } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.gossip);
+  const { actors } = useActors();
 
   useEffect(() => {
     if (ref.current) control.attach(ref.current);
   }, [ref, control]);
 
-  const allActors = Object.values(actors).flat();
   const allTracked = Object.values(tracked).flat();
 
   const renderTooltip = (id: string) => {
-    const actor = allActors.find((a) => a.id === id);
+    const actor = actors.find((a) => a.id === id);
     if (!actor) return false;
     return <DraggableTooltip actor={actor} key={id} />;
   };

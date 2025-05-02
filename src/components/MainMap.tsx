@@ -45,8 +45,6 @@ export default function MainMap() {
     (state) => state.map
   );
 
-  const { customAttribution } = useAppSelector((state) => state.gossip);
-
   const { activeCustomMap } = useAppSelector((state) => state.customMap);
   const { debuggingEnabled, screenshotMode } = useAppSelector(
     (state) => state.flags
@@ -106,8 +104,6 @@ export default function MainMap() {
   const screenshotHiddenStyle = screenshotMode
     ? { display: "none" }
     : { display: "block" };
-
-  useEffect(() => {}, [customAttribution]);
 
   return (
     <div

@@ -54,7 +54,7 @@ export default function ShipTooltipOverride({
             dispatch(
               setOverrides({
                 id: actor.id,
-                overrides: {
+                override: {
                   type: "ship",
                   name: clearIfUnchanged(formJson.name),
                   flag: clearIfUnchanged(formJson.flag),

@@ -32,53 +32,66 @@ const baseActorSchema = z.object({
   pos: locationRecordSchema,
 });
 
+const aircraftActorSchema = baseActorSchema.extend({
+  type: z.literal("aircraft"),
+  hex: z
+    .string()
+    .min(6)
+    .max(7)
+    .nullish()
+    .transform((x) => x ?? undefined),
+  reg: z
+    .string()
+    .nullish()
+    .transform((x) => x ?? undefined),
+  flight: z
+    .string()
+    .nullish()
+    .transform((x) => x ?? undefined),
+  squawk: z
+    .string()
+    .nullish()
+    .transform((x) => x ?? undefined),
+});
+
+const shipActorSchema = baseActorSchema.extend({
+  type: z.literal("ship"),
+  flag: z
+    .string()
+    .length(2)
+    .nullish()
+    .transform((x) => x ?? undefined),
+  class: z.enum([
+    "cargo",
+    "container",
+    "ferry",
+    "fishing",
+    "highspeed",
+    "military",
+    "navigation",
+    "other",
+    "recreational",
+    "special",
+    "tanker",
+  ]),
+  mmsi: z
+    .string()
+    .nullish()
+    .transform((x) => x ?? undefined),
+});
+
+export const incomingActorSchema = z.discriminatedUnion("type", [
+  shipActorSchema,
+  aircraftActorSchema
+]);
+
+const pluginExtension = {
+  plugin: z.string()
+}
+
 export const actorSchema = z.discriminatedUnion("type", [
-  baseActorSchema.extend({
-    type: z.literal("ship"),
-    flag: z
-      .string()
-      .length(2)
-      .nullish()
-      .transform((x) => x ?? undefined),
-    class: z.enum([
-      "cargo",
-      "container",
-      "ferry",
-      "fishing",
-      "highspeed",
-      "military",
-      "navigation",
-      "other",
-      "recreational",
-      "special",
-      "tanker",
-    ]),
-    mmsi: z
-      .string()
-      .nullish()
-      .transform((x) => x ?? undefined),
-  }),
-  baseActorSchema.extend({
-    type: z.literal("aircraft"),
-    hex: z
-      .string()
-      .min(6)
-      .max(7)
-      .nullish()
-      .transform((x) => x ?? undefined),
-    reg: z
-      .string()
-      .nullish()
-      .transform((x) => x ?? undefined),
-    flight: z
-      .string()
-      .nullish()
-      .transform((x) => x ?? undefined),
-    squawk: z
-      .string()
-      .nullish()
-      .transform((x) => x ?? undefined),
-  }),
+  shipActorSchema.extend(pluginExtension),
+  aircraftActorSchema.extend(pluginExtension)
 ]);
 
 export type Track = z.infer<typeof trackSchema>;

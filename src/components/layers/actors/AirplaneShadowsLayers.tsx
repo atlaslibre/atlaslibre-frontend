@@ -1,19 +1,18 @@
 import { Layer, Source } from "react-map-gl/maplibre";
-import { useAppSelector, useColorMode } from "../../../app/hooks";
+import { useActors, useAppSelector, useColorMode } from "../../../app/hooks";
 import { FeatureCollection } from "geojson";
 
 export default function AirplaneShadowsLayers() {
   const { viewState } = useAppSelector((state) => state.map);
-  const { actors, tracks, tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.gossip);
+  const { actors, tracks } = useActors();
 
   const c = useColorMode();
 
-  const planeActors = Object.values(actors)
-    .flat()
+  const planeActors = actors
     .filter((a) => a.type == "aircraft");
 
-  const planeTracks = Object.values(tracks)
-    .flat()
+  const planeTracks = tracks
     .filter((t) => planeActors.find((a) => a.id == t.id));
 
   const trackedPlaneIds = Object.values(tracked)
