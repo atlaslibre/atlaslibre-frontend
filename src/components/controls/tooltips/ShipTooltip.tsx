@@ -8,9 +8,10 @@ interface ShipTooltipProps {
 
 export default function ShipTooltip(props: ShipTooltipProps) {
   const ship = props.ship;
+  const ccMatch = /^[A-Za-z]{2}$/;
   return (
     <>
-      {ship.flag && (
+      {ship.flag && ccMatch.test(ship.flag) && (
         <p>
           <ReactCountryFlag countryCode={ship.flag} svg />
         </p>

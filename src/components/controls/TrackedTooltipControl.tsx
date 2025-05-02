@@ -9,6 +9,7 @@ import { Actor } from "../../interfaces/actor";
 import CloseIcon from "@mui/icons-material/Close";
 import { toggleTrack } from "../../features/gossip/gossipSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Stack } from "@mui/material";
 import dayjs from "dayjs";
 import {
@@ -16,6 +17,7 @@ import {
   setTrackedTooltipCoordinates,
 } from "../../features/map/tooltipSlice";
 import { useMeasure } from "@uidotdev/usehooks";
+import ShipTooltipOverride from "./tooltips/ShipTooltipOverride";
 
 class TrackedTooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -55,6 +57,7 @@ function DraggableTooltip(props: { actor: Actor }) {
 
   const rootPosition = map.default!.project([actor.pos.lon, actor.pos.lat]);
 
+  const [overrideDialogVisible, setOverrideDialogVisible] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [startDragOffset, setStartDragOffset] = useState({ x: 0, y: 0 });
 
@@ -116,87 +119,115 @@ function DraggableTooltip(props: { actor: Actor }) {
   });
 
   return (
-    <div className="absolute top-0 left-0" style={{ zIndex: zindex }}>
-      <Draggable
-        nodeRef={dragRef as RefObject<HTMLElement>}
-        handle=".handle"
-        position={{
-          x: visible ? rootPosition.x + offset.x : 20,
-          y: visible ? rootPosition.y + offset.y : 55,
-        }}
-        positionOffset={{ x: offsetX, y: offsetY }}
-        onStop={onStopHandler}
-        onStart={onStartHandler}
-      >
-        <div className="bg-gray-200 m-2 mt-6 w-40 shadow-xl" ref={dragRef}>
-          <div
-            className="handle bg-gray-500 cursor-grab select-none h-4 absolute w-full -top-4 pointer-events-auto"
-            style={{ display: screenshotMode ? "none" : "block" }}
-          >
-            <Stack direction="row" justifyContent="right">
-              <div
-                className="left flex-auto pl-1 relative -top-0.5"
-                style={{
-                  color: "white",
-                  fontSize: "10px",
-                  display: visible ? "none" : "block",
-                }}
-              >
-                {actor.name}
-              </div>
-              <button
-                className="cursor-pointer flex"
-                onClick={() => {
-                  if (visible) clearTooltipLine();
-                  setVisible(!visible);
-                }}
-              >
-                <VisibilityOffIcon
-                  sx={{
-                    width: "14px",
-                    height: "14px",
-                    position: "relative",
-                    top: "1px",
-                    fill: "white",
+    <>
+      {actor.type === "ship" && (
+        <ShipTooltipOverride
+          actor={actor}
+          visible={overrideDialogVisible}
+          onClose={() => setOverrideDialogVisible(false)}
+        />
+      )}
+      <div className="absolute top-0 left-0" style={{ zIndex: zindex }}>
+        <Draggable
+          nodeRef={dragRef as RefObject<HTMLElement>}
+          handle=".handle"
+          position={{
+            x: visible ? rootPosition.x + offset.x : 20,
+            y: visible ? rootPosition.y + offset.y : 55,
+          }}
+          positionOffset={{ x: offsetX, y: offsetY }}
+          onStop={onStopHandler}
+          onStart={onStartHandler}
+        >
+          <div className="bg-gray-200 m-2 mt-6 w-40 shadow-xl" ref={dragRef}>
+            <div
+              className="handle bg-gray-500 cursor-grab select-none h-4 absolute w-full -top-4 pointer-events-auto"
+              style={{ display: screenshotMode ? "none" : "block" }}
+            >
+              <Stack direction="row" justifyContent="right">
+                <div
+                  className="left flex-auto pl-1 relative -top-0.5"
+                  style={{
+                    color: "white",
+                    fontSize: "10px",
+                    display: visible ? "none" : "block",
                   }}
-                />
-              </button>
+                >
+                  {actor.name}
+                </div>
 
-              <button
-                className="cursor-pointer flex"
-                onClick={() =>
-                  dispatch(
-                    toggleTrack({
-                      plugin: plugin,
-                      actor: actor,
-                    })
-                  )
-                }
-              >
-                <CloseIcon
-                  sx={{
-                    width: "14px",
-                    height: "14px",
-                    position: "relative",
-                    top: "1px",
-                    fill: "white",
+                {visible && (
+                  <button
+                    className="cursor-pointer flex"
+                    onClick={() => setOverrideDialogVisible(true)}
+                  >
+                    <EditNoteIcon
+                      sx={{
+                        width: "14px",
+                        height: "14px",
+                        position: "relative",
+                        top: "1px",
+                        marginRight: "2px",
+                        fill: "white",
+                      }}
+                    />
+                  </button>
+                )}
+
+                <button
+                  className="cursor-pointer flex"
+                  onClick={() => {
+                    if (visible) clearTooltipLine();
+                    setVisible(!visible);
                   }}
-                />
-              </button>
-            </Stack>
-          </div>
+                >
+                  <VisibilityOffIcon
+                    sx={{
+                      width: "14px",
+                      height: "14px",
+                      position: "relative",
+                      top: "1px",
+                      fill: "white",
+                    }}
+                  />
+                </button>
 
-          <div
-            className="p-2 cursor-default"
-            style={{ display: visible ? "block" : "none" }}
-            ref={measureRef}
-          >
-            {actor.type == "ship" && <ShipTooltip ship={actor} />}
-            {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}
+                <button
+                  className="cursor-pointer flex"
+                  onClick={() =>
+                    dispatch(
+                      toggleTrack({
+                        plugin: plugin,
+                        actor: actor,
+                      })
+                    )
+                  }
+                >
+                  <CloseIcon
+                    sx={{
+                      width: "14px",
+                      height: "14px",
+                      position: "relative",
+                      top: "1px",
+                      fill: "white",
+                    }}
+                  />
+                </button>
+              </Stack>
+            </div>
+
+            <div
+              className="p-2 cursor-default"
+              style={{ display: visible ? "block" : "none" }}
+              ref={measureRef}
+            >
+              {actor.type == "ship" && <ShipTooltip ship={actor} />}
+              {actor.type == "aircraft" && <AircraftTooltip aircraft={actor} />}
+            </div>
           </div>
-        </div>
-      </Draggable>
-    </div>
+        </Draggable>
+      </div>
+    </>
   );
 }
 

@@ -12,6 +12,7 @@ import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { pluginActorQueryResponseSchema } from "../../../interfaces/plugins";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
 import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
+import { object } from "zod";
 
 export function ActorPluginMenuItem({
   plugin,
@@ -19,7 +20,9 @@ export function ActorPluginMenuItem({
   const dispatch = useAppDispatch();
   const { bounds, viewState, fixedTime } = useAppSelector((state) => state.map);
   const { tracked } = useAppSelector((state) => state.gossip);
-  const { settings } = useAppSelector((state) => state.pluginSettings);
+  const { settings, overrides } = useAppSelector(
+    (state) => state.pluginSettings
+  );
 
   const [status, setStatus] = useState("Connecting");
   const [updating, setUpdating] = useState(false);
@@ -60,6 +63,22 @@ export function ActorPluginMenuItem({
         bounds: bounds,
       },
       (response) => {
+        if (response.actors)
+          for (let i = 0; i < response.actors.length; i++) {
+            const actor = response.actors[i];
+            const override = overrides[actor.id];
+            if (override) {
+              const keys = Object.keys(override);
+              const values = Object.values(override);
+
+              for (let k = 0; k < keys.length; k++) {
+                const key = keys[k];
+                if (key === "type") continue;
+                actor[key] = values[k];
+              }
+            }
+          }
+
         const parseResult = pluginActorQueryResponseSchema.safeParse(response);
 
         if (!parseResult.success) {

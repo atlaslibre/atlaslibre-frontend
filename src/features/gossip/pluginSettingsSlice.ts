@@ -31,11 +31,32 @@ export interface TrackColorRange {
 }
 
 interface PluginSettingsState {
+  overrides: { [actorId: string]: ActorOverrides }
   settings: { [plugin: string]: GossipPluginSettings };
   trackColorRange: { [actorType in ActorType]: TrackColorRange };
   scale: { [actorType in ActorType]: number };
   filter?: string;
 }
+
+type ActorOverrides = ShipActorOverrides | AircraftActorOverrides;
+
+interface ShipActorOverrides {
+  type: "ship";
+  name?: string;
+  flag?: string;
+  class?: string;
+}
+
+interface AircraftActorOverrides {
+  type: "aircraft";
+  name: string;
+}
+
+interface UpdateActorOverrides {
+  id: string;
+  overrides: ActorOverrides;
+}
+
 
 interface UpdateTrackColorRangeTypePayload {
   actorType: ActorType;
@@ -65,6 +86,7 @@ interface NumericSettingsPayload {
 
 const initialState: PluginSettingsState = {
   settings: {},
+  overrides: {},
   trackColorRange: {
     ship: { min: 5, max: 20, type: "speed" },
     aircraft: { min: 0, max: 30000, type: "altitude" },
@@ -98,6 +120,12 @@ export const pluginSettingsSlice = createSlice({
     },
     setFilter: (state, action: PayloadAction<string | undefined>) => {
       state.filter = action.payload;
+    },
+    setOverrides: (state, action: PayloadAction<UpdateActorOverrides>) => {
+      state.overrides[action.payload.id] = action.payload.overrides;
+    },
+    clearOverrides: (state, action: PayloadAction<string>) => {
+      delete state.overrides[action.payload];
     },
     toggleEnabled: (state, action: PayloadAction<string>) => {
       state.settings[action.payload].enabled =
@@ -141,6 +169,8 @@ export const {
   updateSettingsQueryMaxAge,
   updateSettingsQueryMaxTrack,
   setFilter,
+  setOverrides,
+  clearOverrides
 } = pluginSettingsSlice.actions;
 
 export default pluginSettingsSlice.reducer;
