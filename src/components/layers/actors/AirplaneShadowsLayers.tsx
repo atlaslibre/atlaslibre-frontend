@@ -4,7 +4,7 @@ import { FeatureCollection } from "geojson";
 
 export default function AirplaneShadowsLayers() {
   const { viewState } = useAppSelector((state) => state.map);
-  const { tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.actorTracking);
   const { actors, tracks } = useActors();
 
   const c = useColorMode();

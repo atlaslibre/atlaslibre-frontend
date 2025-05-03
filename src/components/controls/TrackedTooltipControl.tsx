@@ -12,7 +12,6 @@ import AircraftTooltip from "./tooltips/AircraftTooltip";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { Actor } from "../../interfaces/actor";
 import CloseIcon from "@mui/icons-material/Close";
-import { toggleTrack, TrackedActor } from "../../features/gossip/gossipApiSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Stack } from "@mui/material";
@@ -23,6 +22,7 @@ import {
 } from "../../features/map/tooltipSlice";
 import { useMeasure } from "@uidotdev/usehooks";
 import ShipTooltipOverride from "./tooltips/ShipTooltipOverride";
+import { toggleTrack, TrackedActor } from "../../features/gossip/actorTrackingSlice";
 
 class TrackedTooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -226,7 +226,7 @@ export default function TrackedTooltipControl() {
   });
   const ref = createRef<HTMLDivElement>();
 
-  const { tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.actorTracking);
   const { actors } = useActors();
 
   useEffect(() => {

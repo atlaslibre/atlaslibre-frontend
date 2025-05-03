@@ -1,4 +1,3 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import dayjs from "dayjs";
 import { Actor, Track } from "../../interfaces/actor";
@@ -6,46 +5,9 @@ import { pluginActorQueryResponseSchema } from "../../interfaces/plugins";
 import { ActorOverrides, PluginSettings } from "./pluginSettingsSlice";
 import { GossipPlugin } from "./pluginSlice";
 import { applyOverride } from "../../util/overrides";
+import { TrackedActor } from "./actorTrackingSlice";
 
 
-
-
-const initialState: GossipState = {
-  tracked: [],
-};
-
-export interface TrackedActor {
-  id: string;
-  plugin: string;
-}
-
-interface GossipState {
-  tracked: TrackedActor[];
-}
-
-export const gossipSlice = createSlice({
-  name: "gossip",
-  initialState,
-  reducers: {
-    toggleTrack: (state, action: PayloadAction<Actor>) => {
-      const id = action.payload.id;
-      const plugin = action.payload.plugin;
-
-      const found = state.tracked.findIndex(
-        (t) => t.id == id && t.plugin == plugin
-      );
-
-      if (found === -1) {
-        state.tracked.push({ id, plugin });
-      } else {
-        state.tracked.splice(found, 1);
-      }
-    },
-  },
-});
-
-export const { toggleTrack } = gossipSlice.actions;
-export default gossipSlice.reducer;
 
 interface GossipUpdate {
   actors: Actor[];

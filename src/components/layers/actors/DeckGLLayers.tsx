@@ -9,7 +9,6 @@ import { LightingEffect } from "deck.gl";
 import { _CameraLight, AmbientLight } from "@deck.gl/core";
 import { Actor } from "../../../interfaces/actor";
 import { setTooltip, clearTooltip } from "../../../features/map/tooltipSlice";
-import { toggleTrack } from "../../../features/gossip/gossipApiSlice";
 import {
   buoyModel,
   cargoModel,
@@ -27,9 +26,10 @@ import {
 import DeckGLOverlay from "./DeckGLOverlay";
 import actorTrackLayer from "./actorTrackLayer";
 import actorTooltipLine from "./actorTooltipLine";
+import { toggleTrack } from "../../../features/gossip/actorTrackingSlice";
 
 export default function DeckGLLayers() {
-  const { tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.actorTracking);
   const { trackedCoordinates } = useAppSelector((state) => state.tooltip);
   const { actors, tracks } = useActors();
 

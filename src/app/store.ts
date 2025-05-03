@@ -1,5 +1,5 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { gossipApiSlice, gossipSlice } from "../features/gossip/gossipApiSlice";
+import { gossipApiSlice } from "../features/gossip/gossipApiSlice";
 import { mapSlice } from "../features/map/mapSlice";
 import { flagsSlice } from "../features/flags/flagsSlice";
 import { customMapSlice } from "../features/map/customMapSlice";
@@ -9,9 +9,10 @@ import { rememberReducer, rememberEnhancer } from "redux-remember";
 import { planespotterSlice } from "../features/gossip/planespotterSlice";
 import { listenerMiddleware } from "./listenerMiddleware";
 import { pluginSettingsSlice } from "../features/gossip/pluginSettingsSlice";
+import { actorTrackingSlice } from "../features/gossip/actorTrackingSlice";
 
 const rootReducer = combineSlices(
-  gossipSlice,
+  actorTrackingSlice,
   gossipApiSlice,
   mapSlice,
   flagsSlice,

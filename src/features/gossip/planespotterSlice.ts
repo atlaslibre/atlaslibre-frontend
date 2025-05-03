@@ -18,7 +18,7 @@ export interface PhotoQueryResponse {
   }[];
 }
 
-export const plancespotterSlice = createApi({
+export const planespotterSlice = createApi({
   reducerPath: "planespotter",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.planespotters.net/",
@@ -31,4 +31,4 @@ export const plancespotterSlice = createApi({
   }),
 });
 
-export const { useGetPhotosByHexQuery } = plancespotterSlice;
+export const { useGetPhotosByHexQuery } = planespotterSlice;

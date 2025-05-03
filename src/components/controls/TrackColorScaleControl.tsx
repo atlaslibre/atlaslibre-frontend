@@ -69,7 +69,7 @@ export default function TrackColorScaleControl(props: {
   const control = useControl(() => new TrackColorScale(), props);
   const ref = createRef<HTMLDivElement>();
 
-  const { tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.actorTracking);
   const { actors } = useActors();
 
   const trackedIds = tracked.map((t) => t.id);

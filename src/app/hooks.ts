@@ -34,7 +34,7 @@ export const useActors = (): {
     (state) => state.pluginSettings
   );
   const { bounds, fixedTime } = useAppSelector((state) => state.map);
-  const { tracked } = useAppSelector((state) => state.gossip);
+  const { tracked } = useAppSelector((state) => state.actorTracking);
 
   const attributions: string[] = [];
 
