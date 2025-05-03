@@ -1,11 +1,11 @@
-import { LocationSearching, Refresh } from "@mui/icons-material";
+import { LocationSearching } from "@mui/icons-material";
 import { Checkbox, IconButton, ListItem, ListItemIcon } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
-import {  useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { PluginMenuItemProps } from "../../../interfaces/properties";
 import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
+import { useGetStatusQuery } from "../../../features/gossip/gossipSlice";
 
 export function ActorPluginMenuItem({
   plugin,
@@ -16,7 +16,7 @@ export function ActorPluginMenuItem({
     (state) => state.pluginSettings
   );
 
-  const [status, setStatus] = useState("TODO");
+  const status = useGetStatusQuery({pluginId: plugin.id});
 
   const setting = settings[plugin.id];
 
@@ -31,29 +31,16 @@ export function ActorPluginMenuItem({
     });
   };
 
-  const updateStatus = () => {
-    chrome.runtime.sendMessage(
-      plugin.id,
-      {
-        type: "status",
-      },
-      (response) => setStatus(response)
-    );
-  };
-
   return (
     <div>
       <ListItem
         secondaryAction={
           <>
             {plugin.locate && (
-              <IconButton onClick={locate}>
+              <IconButton edge="end"  onClick={locate}>
                 <LocationSearching />
               </IconButton>
             )}
-            <IconButton edge="end" onClick={() => alert("TODO")}>
-              <Refresh />
-            </IconButton>
           </>
         }
       >
@@ -68,7 +55,7 @@ export function ActorPluginMenuItem({
             }}
           />
         </ListItemIcon>
-        <ListItemText primary={plugin.name} secondary={status} />
+        <ListItemText primary={plugin.name} secondary={status.data} />
       </ListItem>
     </div>
   );

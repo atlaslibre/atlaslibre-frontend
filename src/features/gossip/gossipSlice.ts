@@ -21,6 +21,10 @@ const initialState: GossipState = {
   tracked: {},
 };
 
+interface GetStatusParams {
+  pluginId: string;
+}
+
 interface QueryActorsParams {
   pluginId: string;
   bounds: [number, number][];
@@ -43,14 +47,17 @@ export const gossipApiSlice = createApi({
   keepUnusedDataFor: 0.5,
   refetchOnMountOrArgChange: 1,
   endpoints: (builder) => ({
+    getStatus: builder.query<string, GetStatusParams>({
+      query: ({pluginId}) => [pluginId, {type: "status"}]
+    }),
     getActors: builder.query<GossipUpdate, QueryActorsParams>({
-      serializeQueryArgs: ({queryArgs}) => {
-        const { pluginId, alreadyTracked, fixedTime, settings} = queryArgs;
-        return {pluginId, alreadyTracked, fixedTime, settings};
+      serializeQueryArgs: ({ queryArgs }) => {
+        const { pluginId, alreadyTracked, fixedTime, settings } = queryArgs;
+        return { pluginId, alreadyTracked, fixedTime, settings };
       },
       query: ({ pluginId, alreadyTracked, fixedTime, settings, bounds }) => {
         const ts: dayjs.Dayjs = fixedTime ? dayjs(fixedTime) : dayjs.utc();
-        console.log(pluginId, alreadyTracked, fixedTime, settings, bounds)
+        console.log(pluginId, alreadyTracked, fixedTime, settings, bounds);
         return [
           pluginId,
           {
@@ -69,7 +76,6 @@ export const gossipApiSlice = createApi({
         _meta: any,
         { pluginId, overrides }
       ) => {
-
         /* 
   if (filter) {
     const filterLines = filter.split("\n");
@@ -144,12 +150,12 @@ export const gossipSlice = createSlice({
       } else {
         state.tracked[plugin] = [id];
       }
-    }
+    },
   },
 });
 
 export const { toggleTrack } = gossipSlice.actions;
 
-export const { useGetActorsQuery } = gossipApiSlice;
+export const { useGetActorsQuery, useGetStatusQuery } = gossipApiSlice;
 
 export default gossipSlice.reducer;
