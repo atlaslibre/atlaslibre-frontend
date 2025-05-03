@@ -7,8 +7,6 @@ import { GossipPlugin } from "./pluginSlice";
 import { applyOverride } from "../../util/overrides";
 import { TrackedActor } from "./actorTrackingSlice";
 
-
-
 interface GossipUpdate {
   actors: Actor[];
   tracks: Track[];
@@ -42,6 +40,7 @@ interface SuccessResult {
 export const gossipApiSlice = createApi({
   reducerPath: "gossipApi",
   baseQuery: async (args: [pluginId: string, payload: object]) => {
+    console.debug("Sending Gossip API request", args);
     const data = new Promise<any>((resolve) => {
       chrome.runtime.sendMessage(args[0], args[1], (response) => {
         resolve(response);
@@ -75,6 +74,7 @@ export const gossipApiSlice = createApi({
         const results = await Promise.all(
           plugins
             .filter((p) => p.type === "actor")
+            .filter((p) => settings[p.id].enabled)
             .map(async (plugin) => {
               const tracks = alreadyTracked
                 .filter((t) => t.plugin == plugin.id)
@@ -153,4 +153,3 @@ export const gossipApiSlice = createApi({
 });
 
 export const { useGetActorsQuery, useGetStatusQuery } = gossipApiSlice;
-
