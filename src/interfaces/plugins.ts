@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { actorSchema, incomingActorSchema, trackSchema } from "./actor";
+import { incomingActorSchema, trackSchema } from "./actor";
 
 const basePluginDefinitionSchema = z.object({
   name: z.string(),

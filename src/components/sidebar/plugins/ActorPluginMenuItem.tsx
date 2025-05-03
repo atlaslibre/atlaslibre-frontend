@@ -2,7 +2,7 @@ import { LocationSearching } from "@mui/icons-material";
 import { Checkbox, IconButton, ListItem, ListItemIcon } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { useGetStatusQuery } from "../../../features/gossip/gossipSlice";
+import { useGetStatusQuery } from "../../../features/gossip/gossipApiSlice";
 import { toggleEnabled } from "../../../features/gossip/pluginSettingsSlice";
 import { ActorGossipPlugin } from "../../../features/gossip/pluginSlice";
 import { PluginMenuItemProps } from "../../../interfaces/properties";

@@ -34,9 +34,11 @@ export type ActorOverrides = {
   [actorId: string]: ActorOverride;
 };
 
+export type PluginSettings = { [plugin: string]: GossipPluginSettings };
+
 interface PluginSettingsState {
   overrides: ActorOverrides;
-  settings: { [plugin: string]: GossipPluginSettings };
+  settings: PluginSettings;
   trackColorRange: { [actorType in ActorType]: TrackColorRange };
   scale: { [actorType in ActorType]: number };
   filter?: string;

@@ -48,7 +48,10 @@ function TrackColorScaleByActor(props: { type: ActorType }) {
 
   return (
     <div className="mt-1 bg-gray-100 opacity-75">
-      <div className="flex justify-between" style={{fontSize: "10px", padding: "0 3px 0 3px"}}>
+      <div
+        className="flex justify-between"
+        style={{ fontSize: "10px", padding: "0 3px 0 3px" }}
+      >
         <div> {trackColorRange[props.type].min}</div>
         <div>
           {capitalize(props.type)} ({trackColorRange[props.type].type})
@@ -68,12 +71,10 @@ export default function TrackColorScaleControl(props: {
 
   const { tracked } = useAppSelector((state) => state.gossip);
   const { actors } = useActors();
-  
 
-  const trackedIds = Object.values(tracked).flat();
+  const trackedIds = tracked.map((t) => t.id);
 
-  const trackedActors = actors
-    .filter((a) => trackedIds.find((t) => t == a.id));
+  const trackedActors = actors.filter((a) => trackedIds.find((t) => t == a.id));
 
   const trackedActorTypes = trackedActors
     .map((a) => a.type)

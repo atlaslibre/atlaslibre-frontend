@@ -1,12 +1,12 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
-import { gossipApiSlice, gossipSlice } from "../features/gossip/gossipSlice";
+import { gossipApiSlice, gossipSlice } from "../features/gossip/gossipApiSlice";
 import { mapSlice } from "../features/map/mapSlice";
 import { flagsSlice } from "../features/flags/flagsSlice";
 import { customMapSlice } from "../features/map/customMapSlice";
 import { tooltipSlice } from "../features/map/tooltipSlice";
 import { pluginSlice } from "../features/gossip/pluginSlice";
 import { rememberReducer, rememberEnhancer } from "redux-remember";
-import { plancespotterSlice } from "../features/gossip/planespotterSlice";
+import { planespotterSlice } from "../features/gossip/planespotterSlice";
 import { listenerMiddleware } from "./listenerMiddleware";
 import { pluginSettingsSlice } from "../features/gossip/pluginSettingsSlice";
 
@@ -19,7 +19,7 @@ const rootReducer = combineSlices(
   tooltipSlice,
   pluginSlice,
   pluginSettingsSlice,
-  plancespotterSlice
+  planespotterSlice
 );
 
 const rememberedSlices = ["map", "customMap", "pluginSettings", "flags"];
@@ -41,7 +41,7 @@ export const store = configureStore({
       },
     })
       .prepend(listenerMiddleware.middleware)
-      .concat(plancespotterSlice.middleware)
+      .concat(planespotterSlice.middleware)
       .concat(gossipApiSlice.middleware),
 });
 

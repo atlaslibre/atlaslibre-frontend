@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "./store";
 import { useMediaQuery } from "@mui/material";
 import { useEffect, useRef } from "react";
-import { useGetActorsQuery } from "../features/gossip/gossipSlice";
+import { useGetActorsQuery } from "../features/gossip/gossipApiSlice";
 import { Actor, Track } from "../interfaces/actor";
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -24,7 +24,11 @@ export const useUnmount = (fn: () => void) => {
   useEffect(() => () => fnRef.current(), []);
 };
 
-export const useActors = (): {actors: Actor[], tracks: Track[], attributions: string[]} => {
+export const useActors = (): {
+  actors: Actor[];
+  tracks: Track[];
+  attributions: string[];
+} => {
   const { plugins } = useAppSelector((state) => state.plugin);
   const { settings, overrides } = useAppSelector(
     (state) => state.pluginSettings
@@ -32,35 +36,35 @@ export const useActors = (): {actors: Actor[], tracks: Track[], attributions: st
   const { bounds, fixedTime } = useAppSelector((state) => state.map);
   const { tracked } = useAppSelector((state) => state.gossip);
 
-  const actors: Actor[] = [];
-  const tracks: Track[] = [];
   const attributions: string[] = [];
-  for (let i = 0; i < plugins.length; i++) {
-    const pluginId = plugins[i].id;
-    const actorSettings = settings[pluginId];
-    const attribution = plugins[i].attribution;
 
-    if (plugins[i].type !== "actor" || actorSettings.type !== "actor") continue;
-    if (!actorSettings.enabled) continue;
+  const pluginResults = useGetActorsQuery({
+    plugins,
+    alreadyTracked: tracked,
+    settings,
+    fixedTime,
+    bounds,
+    overrides,
+  });
 
-    const alreadyTracked = tracked[pluginId];
-    const pluginResults = useGetActorsQuery({
-      pluginId,
-      alreadyTracked,
-      settings: actorSettings,
-      fixedTime,
-      bounds,
-      overrides,
-    });
+  if (pluginResults.isSuccess)
+    for (let i = 0; i < plugins.length; i++) {
+      const attribution = plugins[i].attribution;
 
-    if (pluginResults.isSuccess) {
-      actors.push(...pluginResults.data.actors);
-      tracks.push(...pluginResults.data.tracks);
+      if (!attribution) continue;
 
-      if(attribution && pluginResults.data.actors.length > 0)
-        attributions.push(attribution)
+      const actorsForPlugin = pluginResults.data.actors.filter(
+        (a) => a.plugin == plugins[i].id
+      );
+
+      if (actorsForPlugin.length == 0) continue;
+
+      attributions.push(attribution);
     }
-  }
-  
-  return {actors, tracks, attributions};
+
+  return {
+    actors: pluginResults.data?.actors ?? [],
+    tracks: pluginResults.data?.tracks ?? [],
+    attributions,
+  };
 };

@@ -9,30 +9,29 @@ export default function AirplaneShadowsLayers() {
 
   const c = useColorMode();
 
-  const planeActors = actors
-    .filter((a) => a.type == "aircraft");
+  const planeActors = actors.filter((a) => a.type == "aircraft");
 
-  const planeTracks = tracks
-    .filter((t) => planeActors.find((a) => a.id == t.id));
+  const planeTracks = tracks.filter((t) =>
+    planeActors.find((a) => a.id == t.id)
+  );
 
-  const trackedPlaneIds = Object.values(tracked)
-    .flat()
+  const trackedPlaneIds = tracked
+    .map((t) => t.id)
     .filter((id) => planeActors.find((a) => a.id == id));
 
   // shadow under the line
   const tracksFeatures: FeatureCollection = {
     type: "FeatureCollection",
-    features: planeTracks
-      .map((t) => {
-        return {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: t.track.map((r) => [r.lon, r.lat]),
-          },
-          properties: {},
-        };
-      }),
+    features: planeTracks.map((t) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: t.track.map((r) => [r.lon, r.lat]),
+        },
+        properties: {},
+      };
+    }),
   };
 
   // shadow under plane at current position

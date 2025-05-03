@@ -1,13 +1,18 @@
 import { IControl } from "maplibre-gl";
 import { useEffect, createRef, useRef, RefObject, useState } from "react";
 import { useControl, useMap } from "react-map-gl/maplibre";
-import { useActors, useAppDispatch, useAppSelector, useUnmount } from "../../app/hooks";
+import {
+  useActors,
+  useAppDispatch,
+  useAppSelector,
+  useUnmount,
+} from "../../app/hooks";
 import ShipTooltip from "./tooltips/ShipTooltip";
 import AircraftTooltip from "./tooltips/AircraftTooltip";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import { Actor } from "../../interfaces/actor";
 import CloseIcon from "@mui/icons-material/Close";
-import { toggleTrack } from "../../features/gossip/gossipSlice";
+import { toggleTrack, TrackedActor } from "../../features/gossip/gossipApiSlice";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Stack } from "@mui/material";
@@ -185,11 +190,7 @@ function DraggableTooltip(props: { actor: Actor }) {
 
                 <button
                   className="cursor-pointer flex"
-                  onClick={() =>
-                    dispatch(
-                      toggleTrack(actor)
-                    )
-                  }
+                  onClick={() => dispatch(toggleTrack(actor))}
                 >
                   <CloseIcon
                     sx={{
@@ -234,7 +235,8 @@ export default function TrackedTooltipControl() {
 
   const allTracked = Object.values(tracked).flat();
 
-  const renderTooltip = (id: string) => {
+  const renderTooltip = (trackedActor: TrackedActor) => {
+    const id = trackedActor.id;
     const actor = actors.find((a) => a.id === id);
     if (!actor) return false;
     return <DraggableTooltip actor={actor} key={id} />;
