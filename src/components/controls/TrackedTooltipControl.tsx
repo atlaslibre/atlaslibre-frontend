@@ -22,7 +22,11 @@ import {
 } from "../../features/map/tooltipSlice";
 import { useMeasure } from "@uidotdev/usehooks";
 import ShipTooltipOverride from "./tooltips/ShipTooltipOverride";
-import { toggleTrack, TrackedActor } from "../../features/gossip/actorTrackingSlice";
+import {
+  toggleTrack,
+  TrackedActor,
+} from "../../features/gossip/actorTrackingSlice";
+import AircraftTooltipOverride from "./tooltips/AircraftTooltipOverride";
 
 class TrackedTooltip implements IControl {
   private _container: HTMLElement | undefined;
@@ -118,6 +122,14 @@ function DraggableTooltip(props: { actor: Actor }) {
     <>
       {actor.type === "ship" && (
         <ShipTooltipOverride
+          actor={actor}
+          visible={overrideDialogVisible}
+          onClose={() => setOverrideDialogVisible(false)}
+        />
+      )}
+
+      {actor.type === "aircraft" && (
+        <AircraftTooltipOverride
           actor={actor}
           visible={overrideDialogVisible}
           onClose={() => setOverrideDialogVisible(false)}
