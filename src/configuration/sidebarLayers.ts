@@ -28,6 +28,11 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
         id: "osm_basemap",
         title: "OpenStreetMap basemap",
       },
+      {
+        type: "layer",
+        id: "osm_sea",
+        title: "OpenSeaMap",
+      },
     ],
   },
 

@@ -29,6 +29,14 @@ export default function Sources() {
       />
 
       <Source
+        type="raster"
+        tiles={["https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"]}
+        tileSize={256}
+        attribution="<a href='https://www.openstreetmap.org/copyright'>© OpenStreetMap</a>"
+        id="osm-sea"
+      />
+
+      <Source
         type="vector"
         url="https://tiles.basemaps.cartocdn.com/vector/carto.streets/v1/tiles.json"
         id="carto"

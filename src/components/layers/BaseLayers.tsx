@@ -197,6 +197,14 @@ export default function BaseLayers() {
       ></ToggleableLayer>
 
       <ToggleableLayer
+        type="raster"
+        id="osm_sea"
+        source="osm-sea"
+      >
+      </ToggleableLayer>
+
+
+      <ToggleableLayer
         group="borders"
         type="line"
         id="boundary_country_outline"
