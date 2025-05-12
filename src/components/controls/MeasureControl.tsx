@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { UnitSystem } from "../../features/map/mapSlice";
 import { clearTooltip, setTooltip } from "../../features/map/tooltipSlice";
 import convert, { BestKind } from "convert";
+import { setTrackable } from "../../features/gossip/actorTrackingSlice";
 
 class MeasureControlImpl implements IControl {
   private _map?: Map;
@@ -18,16 +19,19 @@ class MeasureControlImpl implements IControl {
   private _setter;
   private _onClickSubscription?: Subscription;
   private _unitSystem: string;
+  private _setActive: (active: boolean) => void;
 
   constructor(
     unitSystem: UnitSystem,
     setGeoJson: (
       featureCollection: FeatureCollection,
       distanceLabel: string | undefined
-    ) => void
+    ) => void,
+    setActive: (active: boolean) => void
   ) {
     this._fc = { type: "FeatureCollection", features: [] };
     this._active = false;
+    this._setActive = setActive;
     this._setter = setGeoJson;
     this._button = document.createElement("button");
     this._button.className = "maplibregl-ctrl-icon";
@@ -73,6 +77,7 @@ class MeasureControlImpl implements IControl {
 
   private _onToggle = () => {
     this._active = !this._active;
+    this._setActive(this._active);
 
     if (this._active) this._button.classList.add("active");
     else this._button.classList.remove("active");
@@ -187,13 +192,22 @@ export default function MeasureControl() {
     features: [],
   });
 
+  const setActive = (active: boolean) => {
+    dispatch(setTrackable(!active));
+  };
+
   const impl = useControl(
     () =>
-      new MeasureControlImpl(unitSystem, (fc, label) => {
-        setGeoJson(fc);
-        if (label) dispatch(setTooltip({ type: "distance", distance: label }));
-        else dispatch(clearTooltip("distance"));
-      }),
+      new MeasureControlImpl(
+        unitSystem,
+        (fc, label) => {
+          setGeoJson(fc);
+          if (label)
+            dispatch(setTooltip({ type: "distance", distance: label }));
+          else dispatch(clearTooltip("distance"));
+        },
+        setActive
+      ),
     {
       position: "top-left",
     }

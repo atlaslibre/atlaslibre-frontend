@@ -93,6 +93,32 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
       },
     ],
   },
+  {
+    type: "group",
+    title: "Land Use",
+    layers: [
+      {
+        type: "layer",
+        id: "landuse_military",
+        title: "Military",
+      },
+      {
+        type: "layer",
+        id: "landuse_industrial",
+        title: "Industrial",
+      },
+      {
+        type: "layer",
+        id: "landcover_farmland",
+        title: "Farmland",
+      },
+      {
+        type: "layer",
+        id: "landcover_wood",
+        title: "Woodlands",
+      }
+    ],
+  },
 
   {
     type: "group",

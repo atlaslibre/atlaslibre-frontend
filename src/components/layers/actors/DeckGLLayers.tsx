@@ -29,7 +29,7 @@ import actorTooltipLine from "./actorTooltipLine";
 import { toggleTrack } from "../../../features/gossip/actorTrackingSlice";
 
 export default function DeckGLLayers() {
-  const { tracked } = useAppSelector((state) => state.actorTracking);
+  const { tracked, trackable } = useAppSelector((state) => state.actorTracking);
   const { trackedCoordinates } = useAppSelector((state) => state.tooltip);
   const { actors, tracks } = useActors();
 
@@ -127,6 +127,7 @@ export default function DeckGLLayers() {
       layers={[trackLayer, ...scenegraphLayers, tooltipLines]}
       pickingRadius={10}
       interleaved={true}
+      _pickable={trackable}
       effects={[lightingEffect]}
     />
   );

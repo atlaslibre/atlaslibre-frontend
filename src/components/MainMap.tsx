@@ -35,6 +35,8 @@ import TrackColorScaleControl from "./controls/TrackColorScaleControl";
 import { toggleScreenshotMode } from "../features/flags/flagsSlice";
 import TrackedTooltipControl from "./controls/TrackedTooltipControl";
 import TimeControl from "./controls/TimeControl";
+import { setTrackable } from "../features/gossip/actorTrackingSlice";
+import LandUseLayers from "./layers/LandUseLayers";
 
 export default function MainMap() {
   const c = useColorMode();
@@ -70,6 +72,12 @@ export default function MainMap() {
           }
           if (name == "gm:loaded")
             geoman.features.importGeoJson(activeCustomMap);
+
+          if(name == "gm:drawstart")
+            dispatch(setTrackable(false))
+
+          if(name == "gm:drawend")
+            dispatch(setTrackable(true))
         }
       }
     );
@@ -141,6 +149,7 @@ export default function MainMap() {
         <BaseLayers />
         <BoundariesLayers />
         <UrbanLayers />
+        <LandUseLayers />
         <TransportInfrastructure />
         <OtherInfrastructureLayers />
         <AirplaneShadowsLayers />

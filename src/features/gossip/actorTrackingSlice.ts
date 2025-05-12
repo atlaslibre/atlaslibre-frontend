@@ -3,6 +3,7 @@ import { Actor } from "../../interfaces/actor";
 
 const initialState: GossipState = {
   tracked: [],
+  trackable: true
 };
 
 export interface TrackedActor {
@@ -12,6 +13,7 @@ export interface TrackedActor {
 
 interface GossipState {
   tracked: TrackedActor[];
+  trackable: boolean;
 }
 
 export const actorTrackingSlice = createSlice({
@@ -32,8 +34,11 @@ export const actorTrackingSlice = createSlice({
         state.tracked.splice(found, 1);
       }
     },
+    setTrackable: (state, action: PayloadAction<boolean>) => {
+      state.trackable = action.payload;
+    }
   },
 });
 
-export const { toggleTrack } = actorTrackingSlice.actions;
+export const { toggleTrack, setTrackable } = actorTrackingSlice.actions;
 export default actorTrackingSlice.reducer;

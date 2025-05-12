@@ -12,7 +12,7 @@ export default function actorScenegraphLayer(
   actors: Actor[],
   tracked: string[],
   onHover: (actor?: Actor) => void,
-  onClick: (actor?: Actor) => void,
+  onClick: (actor?: Actor) => void
 ): ScenegraphLayer<Actor> {
   return new ScenegraphLayer<Actor>({
     id: "gossip-layer-" + model.filename,
@@ -23,11 +23,11 @@ export default function actorScenegraphLayer(
     sizeMinPixels: model.minSize,
     sizeMaxPixels: model.maxSize,
     autoHighlight: true,
-    getPosition: (d) => [
-      d.pos.lon ?? 0,
-      d.pos.lat ?? 0,
-      d.pos.alt ? d.pos.alt : 0,
-    ],
+    getPosition: (d) => {
+      let alt = d.pos.alt ? d.pos.alt : 0;
+      if (alt < 1) alt = 10;
+      return [d.pos.lon ?? 0, d.pos.lat ?? 0, alt];
+    },
     _animations: {
       "*": { speed: 1 },
     },
