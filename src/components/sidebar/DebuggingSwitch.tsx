@@ -3,7 +3,7 @@ import { ToggleButton } from "@mui/material";
 import { toggleDebugging } from "../../features/flags/flagsSlice";
 import { PestControl } from "@mui/icons-material";
 
-export default function ProjectionSwitch() {
+export default function DebuggingSwitch() {
   const { debuggingEnabled } = useAppSelector((state) => state.flags);
   const dispatch = useAppDispatch();
 

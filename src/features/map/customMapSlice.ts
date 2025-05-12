@@ -1,4 +1,5 @@
 import {
+  GeoJsonImportFeature,
   GeoJsonImportFeatureCollection,
   GeoJsonShapeFeatureCollection,
 } from "@geoman-io/maplibre-geoman-free";
@@ -31,7 +32,8 @@ const initialState: CustomMapState = {
   inactiveCustomMap: [],
 };
 
-const randomHsl = () => `hsla(${Math.trunc(Math.random() * 360)}, 100%, 50%, 1)`;
+const randomHsl = () =>
+  `hsla(${Math.trunc(Math.random() * 360)}, 100%, 50%, 1)`;
 
 export const customMapSlice = createSlice({
   name: "customMap",
@@ -51,6 +53,15 @@ export const customMapSlice = createSlice({
         color: randomHsl(),
       });
       state.activeCustomMap = emptyGeoJson();
+    },
+    addFeatureToActiveMap: (
+      state,
+      action: PayloadAction<GeoJsonImportFeature>
+    ) => {
+      state.activeCustomMap.features = [
+        action.payload,
+        ...state.activeCustomMap.features,
+      ];
     },
     setInactiveMapToActive: (state, action: PayloadAction<number>) => {
       const [customMap] = state.inactiveCustomMap.splice(action.payload, 1);
@@ -77,6 +88,7 @@ export const {
   deleteInactiveMap,
   toggleVisibilityOfInactiveMap,
   setInactiveMapColor,
+  addFeatureToActiveMap,
 } = customMapSlice.actions;
 
 export default customMapSlice.reducer;
