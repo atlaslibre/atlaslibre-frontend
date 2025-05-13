@@ -12,6 +12,13 @@ export const geomanSaveTriggers: GmFwdEventNameWithPrefix[] = [
 ];
 
 export const geomanOptions: GmOptionsPartial = {
+  layerStyles: {
+    marker: {
+      "gm_main": [
+        {type: "symbol", "layout": {"icon-size": 0.1}}
+      ]
+    }
+  },
   settings: {
     controlsPosition: "top-left",
     throttlingDelay: 10,
