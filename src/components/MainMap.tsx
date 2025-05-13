@@ -4,7 +4,7 @@ import {
 } from "@geoman-io/maplibre-geoman-free";
 import maplibregl, { MapLayerMouseEvent, MapLibreEvent } from "maplibre-gl";
 import { addProtocols as addVectorTextProtocols } from "maplibre-gl-vector-text-protocol";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Map,
   NavigationControl,
@@ -35,13 +35,20 @@ import TrackColorScaleControl from "./controls/TrackColorScaleControl";
 import { toggleScreenshotMode } from "../features/flags/flagsSlice";
 import TrackedTooltipControl from "./controls/TrackedTooltipControl";
 import TimeControl from "./controls/TimeControl";
-import { setTrackable } from "../features/gossip/actorTrackingSlice";
 import LandUseLayers from "./layers/LandUseLayers";
+import PlaceTemplateControl from "./controls/PlaceTemplateControl";
+import { setTrackable } from "../features/gossip/actorTrackingSlice";
+
+type ControlEnabled = "measure" | "placeTemplate" | "geoman" | undefined;
 
 export default function MainMap() {
   const c = useColorMode();
   const dispatch = useAppDispatch();
   const [geoman, setGeoman] = useState<Geoman | undefined>(undefined);
+  const [controlEnabled, setControlEnabled] =
+    useState<ControlEnabled>(undefined);
+
+  const controlEnabledRef = useRef<ControlEnabled>(undefined);
 
   const { projection, viewState, unitSystem } = useAppSelector(
     (state) => state.map
@@ -57,7 +64,6 @@ export default function MainMap() {
     setGeoman(geoman);
     geoman.setGlobalEventsListener(
       ({ type, name }: GlobalEventsListenerParameters) => {
-        if (!geoman) return;
         if (type == "converted") {
           // import and export based on events fired
           if (geomanSaveTriggers.find((t) => t == name)) {
@@ -73,11 +79,17 @@ export default function MainMap() {
           if (name == "gm:loaded")
             geoman.features.importGeoJson(activeCustomMap);
 
-          if(name == "gm:drawstart")
-            dispatch(setTrackable(false))
+          const numGeomanModesEnabled =
+            geoman.getActiveDrawModes().length +
+            geoman.getActiveEditModes().length;
 
-          if(name == "gm:drawend")
-            dispatch(setTrackable(true))
+          if (numGeomanModesEnabled > 0) {
+            controlEnabledRef.current = "geoman";
+            setControlEnabled("geoman");
+          } else if (controlEnabledRef.current == "geoman") {
+            controlEnabledRef.current = undefined;
+            setControlEnabled(undefined);
+          }
         }
       }
     );
@@ -109,6 +121,21 @@ export default function MainMap() {
     }
   }, [screenshotMode, geoman]);
 
+  useEffect(() => {
+    controlEnabledRef.current = controlEnabled;
+
+    if (controlEnabled !== "geoman") {
+      geoman?.disableDraw();
+      geoman?.disableGlobalEditMode();
+      geoman?.disableGlobalDragMode();
+      geoman?.disableGlobalRemovalMode();
+    }
+
+    dispatch(setTrackable(controlEnabled === undefined));
+
+    console.log("control enabled", controlEnabled);
+  }, [controlEnabled]);
+
   const screenshotHiddenStyle = screenshotMode
     ? { display: "none" }
     : { display: "block" };
@@ -133,8 +160,17 @@ export default function MainMap() {
         attributionControl={{ compact: false }}
       >
         <TimeControl position="top-right" />
-        <NavigationControl position="top-left" style={screenshotHiddenStyle} />
-        <MeasureControl />
+        <NavigationControl position="top-left" style={screenshotHiddenStyle} visualizePitch={true} />
+        <MeasureControl
+          active={controlEnabled == "measure"}
+          onActivate={() => setControlEnabled("measure")}
+          onDeactivate={() => setControlEnabled(undefined)}
+        />
+        <PlaceTemplateControl
+          active={controlEnabled == "placeTemplate"}
+          onActivate={() => setControlEnabled("placeTemplate")}
+          onDeactivate={() => setControlEnabled(undefined)}
+        />
         {debuggingEnabled && !screenshotMode && (
           <InspectControl position="top-left" />
         )}

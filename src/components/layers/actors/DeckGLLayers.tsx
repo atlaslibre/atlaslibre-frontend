@@ -128,6 +128,11 @@ export default function DeckGLLayers() {
       pickingRadius={10}
       interleaved={true}
       _pickable={trackable}
+      getCursor={(state) => {
+        if (!trackable) return "crosshair";
+        if (state.isHovering) return "pointer";
+        return "grab";
+      }}
       effects={[lightingEffect]}
     />
   );

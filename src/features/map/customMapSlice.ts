@@ -4,6 +4,7 @@ import {
   GeoJsonShapeFeatureCollection,
 } from "@geoman-io/maplibre-geoman-free";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CustomTemplate } from "./template";
 
 export interface CustomMap {
   geoJson: GeoJsonImportFeatureCollection;
@@ -15,6 +16,7 @@ export interface CustomMap {
 interface CustomMapState {
   activeCustomMap: GeoJsonImportFeatureCollection;
   inactiveCustomMap: CustomMap[];
+  activeTemplate?: CustomTemplate;
 }
 
 interface SetColorParams {
@@ -58,9 +60,20 @@ export const customMapSlice = createSlice({
       state,
       action: PayloadAction<GeoJsonImportFeature>
     ) => {
+      const matcher = /feature-(\d+)/;
+
+      const ids = state.activeCustomMap.features
+        .map((f) => {
+          if (f.id === undefined) return undefined;
+          const match = matcher.exec(f.id.toString());
+          if (match === null) return undefined;
+          return parseInt(match[1]);
+        })
+        .filter((id) => id !== undefined);
+
       state.activeCustomMap.features = [
-        action.payload,
         ...state.activeCustomMap.features,
+        { id: `template-feature-${Math.max(-1, ...ids) + 1}`, ...action.payload },
       ];
     },
     setInactiveMapToActive: (state, action: PayloadAction<number>) => {
@@ -78,6 +91,9 @@ export const customMapSlice = createSlice({
       state.inactiveCustomMap[action.payload.index].color =
         action.payload.color;
     },
+    setActiveTemplate: (state, action: PayloadAction<CustomTemplate>) => {
+      state.activeTemplate = action.payload;
+    },
   },
 });
 
@@ -89,6 +105,7 @@ export const {
   toggleVisibilityOfInactiveMap,
   setInactiveMapColor,
   addFeatureToActiveMap,
+  setActiveTemplate,
 } = customMapSlice.actions;
 
 export default customMapSlice.reducer;

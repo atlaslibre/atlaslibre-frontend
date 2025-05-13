@@ -1,4 +1,3 @@
-import { Geoman } from "@geoman-io/maplibre-geoman-free";
 import { length as turfDistance } from "@turf/turf";
 import { Feature, FeatureCollection, LineString, Point } from "geojson";
 import { IControl, Map, MapMouseEvent, Subscription } from "maplibre-gl";
@@ -8,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { UnitSystem } from "../../features/map/mapSlice";
 import { clearTooltip, setTooltip } from "../../features/map/tooltipSlice";
 import convert, { BestKind } from "convert";
-import { setTrackable } from "../../features/gossip/actorTrackingSlice";
 
 class MeasureControlImpl implements IControl {
   private _map?: Map;
@@ -72,25 +70,27 @@ class MeasureControlImpl implements IControl {
   }
 
   hideControls(): void {
-    if (this._container !== undefined) this._container.style.display = "none";
+    if (this._container !== undefined) {
+      this._container.style.display = "none";
+      this.disable();
+    }
   }
 
-  private _onToggle = () => {
+  disable(): void {
+    if (this._active) this._onToggle(false);
+  }
+
+  enable(): void {
+    if (!this._active) this._onToggle(false);
+  }
+
+  private _onToggle = (user: boolean = true) => {
     this._active = !this._active;
-    this._setActive(this._active);
+
+    if (user) this._setActive(this._active);
 
     if (this._active) this._button.classList.add("active");
     else this._button.classList.remove("active");
-
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    const geoman = (this._map as any).gm as Geoman | undefined;
-    if (geoman) {
-      geoman.disableDraw();
-    }
-
-    if (this._map) {
-      this._map.getCanvas().style.cursor = this._active ? "crosshair" : "grab";
-    }
   };
 
   private _convertedLabel = (meters: number) => {
@@ -182,7 +182,13 @@ class MeasureControlImpl implements IControl {
   getDefaultPosition?: () => "top-left";
 }
 
-export default function MeasureControl() {
+interface MeasureControlProps {
+  active: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+}
+
+export default function MeasureControl(props: MeasureControlProps) {
   const dispatch = useAppDispatch();
   const { unitSystem } = useAppSelector((state) => state.map);
   const { screenshotMode } = useAppSelector((state) => state.flags);
@@ -193,7 +199,8 @@ export default function MeasureControl() {
   });
 
   const setActive = (active: boolean) => {
-    dispatch(setTrackable(!active));
+    if (active) props.onActivate();
+    else props.onDeactivate();
   };
 
   const impl = useControl(
@@ -221,6 +228,14 @@ export default function MeasureControl() {
     if (screenshotMode) impl.hideControls();
     else impl.showControls();
   }, [screenshotMode]);
+
+  useEffect(() => {
+    if (!props.active) {
+      impl.disable();
+    } else {
+      impl.enable();
+    }
+  }, [props.active]);
 
   return (
     <>

@@ -12,3 +12,9 @@
   color: #005f7c;
   background-color: #c4eaff;
 }
+
+
+.maplibregl-place-template button.active {
+  color: #005f7c;
+  background-color: #c4eaff;
+}
