@@ -1,5 +1,5 @@
 import { Geoman } from "@geoman-io/maplibre-geoman-free";
-import { convert as convertCoord } from "geo-coordinates-parser";
+import Coordinates from 'coordinate-parser';
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import SaveIcon from "@mui/icons-material/Save";
@@ -135,10 +135,10 @@ export default function CustomMapMenu() {
 
                 try {
                   coord = coord.replace(replacer, " ");
-                  const parsed = convertCoord(coord);
+                  const parsed = new Coordinates(coord);
                   parsedCoordinates.push([
-                    parsed.decimalLongitude,
-                    parsed.decimalLatitude,
+                    parsed.getLongitude(),
+                    parsed.getLatitude(),
                   ]);
                 } catch (e: any) {
                   console.error(e);
