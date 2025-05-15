@@ -119,13 +119,19 @@ export default function CustomMapMenu() {
               const formData = new FormData(event.currentTarget);
               const formJson = Object.fromEntries((formData as any).entries());
               const coordinates = formJson.coords.split("\n") as string[];
-              const parsedCoordinates = [];
+              let parsedCoordinates: number[][] = [];
+              const allParsedCoordinates = [parsedCoordinates];
+
               const replacer = /(?<=\d)[-](?=\d)/g;
 
               for (let i = 0; i < coordinates.length; i++) {
                 let coord = coordinates[i].trim();
 
-                if (coord.length === 0) continue;
+                if (coord.length === 0) {
+                  parsedCoordinates = [];
+                  allParsedCoordinates.push(parsedCoordinates);
+                  continue;
+                }
 
                 try {
                   coord = coord.replace(replacer, " ");
@@ -136,40 +142,46 @@ export default function CustomMapMenu() {
                   ]);
                 } catch (e: any) {
                   console.error(e);
-                  setCoordinateParseError(`Line ${i + 1}: ${e.toString()}: ${coord}`);
+                  setCoordinateParseError(
+                    `Line ${i + 1}: ${e.toString()}: ${coord}`
+                  );
                   return;
                 }
               }
 
-              if (parsedCoordinates.length < 3) {
-                for (let i = 0; i < parsedCoordinates.length; i++) {
+              for (let j = 0; j < allParsedCoordinates.length; j++) {
+                parsedCoordinates = allParsedCoordinates[j];
+
+                if (parsedCoordinates.length < 3) {
+                  for (let i = 0; i < parsedCoordinates.length; i++) {
+                    dispatch(
+                      addFeatureToActiveMap({
+                        type: "Feature",
+                        geometry: {
+                          type: "Point",
+                          coordinates: parsedCoordinates[i],
+                        },
+                        properties: {
+                          shape: "marker",
+                        },
+                      })
+                    );
+                  }
+                } else {
+                  parsedCoordinates.push(parsedCoordinates[0]);
                   dispatch(
                     addFeatureToActiveMap({
                       type: "Feature",
                       geometry: {
-                        type: "Point",
-                        coordinates: parsedCoordinates[i],
+                        type: "Polygon",
+                        coordinates: [parsedCoordinates],
                       },
                       properties: {
-                        shape: "marker",
+                        shape: "polygon",
                       },
                     })
                   );
                 }
-              } else {
-                parsedCoordinates.push(parsedCoordinates[0]);
-                dispatch(
-                  addFeatureToActiveMap({
-                    type: "Feature",
-                    geometry: {
-                      type: "Polygon",
-                      coordinates: [parsedCoordinates],
-                    },
-                    properties: {
-                      shape: "polygon",
-                    },
-                  })
-                );
               }
 
               setCoordinateParseError(undefined);
@@ -182,7 +194,9 @@ export default function CustomMapMenu() {
         <DialogContent>
           <DialogContentText>
             Add coordinates to the map, must be latitude first if not specified
-            otherwise. One coordinate pair per line only.
+            otherwise. One coordinate pair per line only. Blank lines will
+            create new polygons. Less than 3 points will generate singular
+            markers.
           </DialogContentText>
 
           <TextField
