@@ -1,6 +1,7 @@
 import { Geoman } from "@geoman-io/maplibre-geoman-free";
-
+import { convert as convertCoord } from "geo-coordinates-parser";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import SaveIcon from "@mui/icons-material/Save";
 import { IconButton, ListItem, ListItemText, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -18,6 +19,7 @@ import { useMap } from "react-map-gl/maplibre";
 import { useFilePicker } from "use-file-picker";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  addFeatureToActiveMap,
   saveActiveCustomMap,
   setActiveMapToInactive,
 } from "../../features/map/customMapSlice";
@@ -29,7 +31,12 @@ export default function CustomMapMenu() {
   );
   const dispatch = useAppDispatch();
 
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [layerNameDialogOpen, setLayerNameDialogOpen] = React.useState(false);
+  const [importCoordinatesDialogOpen, setImportCoordinatesDialogOpen] =
+    React.useState(false);
+  const [coordinateParseError, setCoordinateParseError] = React.useState<
+    string | undefined
+  >(undefined);
 
   const { openFilePicker, filesContent } = useFilePicker({
     accept: ".geojson",
@@ -62,8 +69,8 @@ export default function CustomMapMenu() {
   return (
     <>
       <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        open={layerNameDialogOpen}
+        onClose={() => setLayerNameDialogOpen(false)}
         slotProps={{
           paper: {
             component: "form",
@@ -72,7 +79,7 @@ export default function CustomMapMenu() {
               const formData = new FormData(event.currentTarget);
               const formJson = Object.fromEntries((formData as any).entries());
               await dispatch(setActiveMapToInactive(formJson.name));
-              setDialogOpen(false);
+              setLayerNameDialogOpen(false);
             },
           },
         }}
@@ -96,8 +103,109 @@ export default function CustomMapMenu() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setLayerNameDialogOpen(false)}>Cancel</Button>
           <Button type="submit">Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={importCoordinatesDialogOpen}
+        onClose={() => setImportCoordinatesDialogOpen(false)}
+        slotProps={{
+          paper: {
+            component: "form",
+            onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData as any).entries());
+              const coordinates = formJson.coords.split("\n") as string[];
+              const parsedCoordinates = [];
+              const replacer = /(?<=\d)[-](?=\d)/g;
+
+              for (let i = 0; i < coordinates.length; i++) {
+                let coord = coordinates[i].trim();
+
+                if (coord.length === 0) continue;
+
+                try {
+                  coord = coord.replace(replacer, " ");
+                  const parsed = convertCoord(coord);
+                  parsedCoordinates.push([
+                    parsed.decimalLongitude,
+                    parsed.decimalLatitude,
+                  ]);
+                } catch (e: any) {
+                  console.error(e);
+                  setCoordinateParseError(`Line ${i + 1}: ${e.toString()}: ${coord}`);
+                  return;
+                }
+              }
+
+              if (parsedCoordinates.length < 3) {
+                for (let i = 0; i < parsedCoordinates.length; i++) {
+                  dispatch(
+                    addFeatureToActiveMap({
+                      type: "Feature",
+                      geometry: {
+                        type: "Point",
+                        coordinates: parsedCoordinates[i],
+                      },
+                      properties: {
+                        shape: "marker",
+                      },
+                    })
+                  );
+                }
+              } else {
+                parsedCoordinates.push(parsedCoordinates[0]);
+                dispatch(
+                  addFeatureToActiveMap({
+                    type: "Feature",
+                    geometry: {
+                      type: "Polygon",
+                      coordinates: [parsedCoordinates],
+                    },
+                    properties: {
+                      shape: "polygon",
+                    },
+                  })
+                );
+              }
+
+              setCoordinateParseError(undefined);
+              setImportCoordinatesDialogOpen(false);
+            },
+          },
+        }}
+      >
+        <DialogTitle>Add coordinates</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Add coordinates to the map, must be latitude first if not specified
+            otherwise. One coordinate pair per line only.
+          </DialogContentText>
+
+          <TextField
+            autoFocus
+            required
+            autoComplete="off"
+            margin="dense"
+            id="coords"
+            name="coords"
+            label={coordinateParseError ?? "Coordinates"}
+            type="text"
+            multiline
+            minRows={10}
+            fullWidth
+            variant="standard"
+            error={!!coordinateParseError}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setImportCoordinatesDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button type="submit">Add</Button>
         </DialogActions>
       </Dialog>
 
@@ -123,8 +231,12 @@ export default function CustomMapMenu() {
           dense
           secondaryAction={
             <>
+              <IconButton onClick={() => setImportCoordinatesDialogOpen(true)}>
+                <AddLocationAltIcon />
+              </IconButton>
+
               <IconButton
-                onClick={() => setDialogOpen(true)}
+                onClick={() => setLayerNameDialogOpen(true)}
                 edge="end"
                 disabled={activeCustomMap.features.length === 0}
               >

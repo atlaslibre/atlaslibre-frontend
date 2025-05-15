@@ -25,6 +25,7 @@
     "colormap": "^2.3.2",
     "convert": "^5.9.0",
     "deck.gl": "^9.1.8",
+    "geo-coordinates-parser": "^1.7.4",
     "humanize-duration": "^3.32.1",
     "maplibre-gl": "^5.3.0",
     "maplibre-gl-vector-text-protocol": "^0.0.5",

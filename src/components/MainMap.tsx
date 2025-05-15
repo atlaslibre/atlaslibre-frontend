@@ -132,8 +132,6 @@ export default function MainMap() {
     }
 
     dispatch(setTrackable(controlEnabled === undefined));
-
-    console.log("control enabled", controlEnabled);
   }, [controlEnabled]);
 
   const screenshotHiddenStyle = screenshotMode
