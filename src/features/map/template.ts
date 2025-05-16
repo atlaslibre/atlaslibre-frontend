@@ -62,6 +62,21 @@ export const TEMP_TEMPLATES: CustomTemplate[] = [
       },
     ],
   },
+   {
+    id: "oreshnik",
+    name: "Oreshnik",
+    description: "Estimated 5500 km range",
+    components: [
+      {
+        type: "circle",
+        radius: 5_500_000,
+      },
+      { type: "center" },
+      {
+        type: "text",
+      },
+    ],
+  },
 ];
 
 export interface CustomTemplate {
