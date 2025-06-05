@@ -76,6 +76,12 @@ export default function Sources() {
         id="timezones"
       />
 
+       <Source
+        type="geojson"
+        data="topojson://./datasets/countries-10m.json"
+        id="countries-10m"
+      />
+
       {attributions.filter(uniqueFilter).map((attribution) => {
         const id = hash(attribution);
         return (

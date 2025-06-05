@@ -38,6 +38,7 @@ import TimeControl from "./controls/TimeControl";
 import LandUseLayers from "./layers/LandUseLayers";
 import PlaceTemplateControl from "./controls/PlaceTemplateControl";
 import { setTrackable } from "../features/gossip/actorTrackingSlice";
+import PoliticalLayers from "./layers/PoliticalLayers";
 
 type ControlEnabled = "measure" | "placeTemplate" | "geoman" | undefined;
 
@@ -182,6 +183,7 @@ export default function MainMap() {
         <MainMapSources />
         <BaseLayers />
         <BoundariesLayers />
+        <PoliticalLayers />
         <UrbanLayers />
         <LandUseLayers />
         <TransportInfrastructure />

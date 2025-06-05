@@ -69,6 +69,22 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
   },
   {
     type: "group",
+    title: "Political",
+    layers: [
+      {
+        type: "layer",
+        id: "eu",
+        title: "European Union",
+      },
+      {
+        type: "layer",
+        id: "nato",
+        title: "NATO",
+      },
+    ],
+  },
+  {
+    type: "group",
     title: "Urban",
     layers: [
       {
@@ -116,7 +132,7 @@ export const sidebarConfiguration: (SidebarLayerGroup | SidebarLayer)[] = [
         type: "layer",
         id: "landcover_wood",
         title: "Woodlands",
-      }
+      },
     ],
   },
 
